@@ -397,6 +397,40 @@
       footer{flex-direction:column;text-align:center}
       .terminal-body{padding:18px;font-size:10px}
     }
+  
+/* ===== Premium V2 additions ===== */
+.social-float{position:fixed;left:16px;bottom:18px;z-index:850;display:flex;flex-direction:column;gap:8px}
+.social-float a{width:40px;height:40px;border:1px solid var(--line);background:rgba(10,10,18,.78);backdrop-filter:blur(14px);border-radius:12px;display:grid;place-items:center;font-size:13px;transition:.25s}
+body.light .social-float a{background:rgba(255,255,255,.82)}
+.social-float a:hover{transform:translateX(4px) scale(1.04);border-color:rgba(34,211,238,.4)}
+.toast{position:fixed;right:20px;bottom:20px;z-index:4000;padding:12px 15px;border:1px solid var(--line);background:rgba(12,12,20,.94);color:#fff;border-radius:12px;font-size:11px;opacity:0;transform:translateY(15px);pointer-events:none;transition:.3s}
+.toast.show{opacity:1;transform:none}
+.search-wrap{display:flex;gap:10px;align-items:center;margin-bottom:20px}
+.project-search{flex:1;min-width:180px;padding:11px 14px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;outline:none;font-size:11px}
+.project-search:focus{border-color:rgba(139,92,246,.55);box-shadow:0 0 0 3px rgba(139,92,246,.08)}
+.no-results{display:none;padding:28px;border:1px dashed var(--line);border-radius:18px;color:var(--muted);text-align:center;grid-column:1/-1}
+.testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.quote-card{position:relative;border:1px solid var(--line);background:var(--panel);border-radius:20px;padding:24px}
+.quote-mark{font:700 40px Georgia;color:var(--purple);line-height:.7}
+.quote-card p{font-size:12px;color:var(--muted);margin:12px 0 17px}
+.quote-author{font-size:10px;font-weight:800}.quote-role{font-size:9px;color:var(--muted);margin-top:2px}
+.services-v2{grid-template-columns:repeat(3,1fr)}
+.service .service-link{display:inline-flex;margin-top:14px;color:var(--cyan);font-size:10px;font-weight:800}
+.contact-form{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px;text-align:left}
+.contact-form .full{grid-column:1/-1}
+.contact-form input,.contact-form textarea{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--text);border-radius:11px;padding:12px;font-size:11px;outline:none}
+.contact-form textarea{min-height:120px;resize:vertical}
+.contact-form input:focus,.contact-form textarea:focus{border-color:rgba(139,92,246,.5)}
+.counter-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:25px}
+.counter-box{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:15px;padding:15px;text-align:center}
+.counter-box strong{display:block;font:700 24px "Space Grotesk"}.counter-box span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.error404{display:none;position:fixed;inset:0;z-index:5000;background:var(--bg);align-items:center;justify-content:center;text-align:center;padding:25px}
+.error404.open{display:flex}.error404 h2{font:700 80px "Space Grotesk";letter-spacing:-5px}.error404 p{color:var(--muted);margin:8px 0 20px}
+.testimonial-controls{display:flex;justify-content:center;gap:8px;margin-top:18px}
+.testimonial-controls button{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--text);cursor:pointer}
+@media(max-width:900px){.testimonial-grid,.services-v2{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.social-float{left:auto;right:14px;bottom:72px;flex-direction:row}.social-float a{width:36px;height:36px}.testimonial-grid,.services-v2,.counter-grid{grid-template-columns:1fr}.contact-form{grid-template-columns:1fr}.contact-form .full{grid-column:auto}.search-wrap{flex-direction:column;align-items:stretch}}
+
   </style>
 </head>
 
@@ -417,6 +451,7 @@
         <li><a href="#projects">Projects</a></li>
         <li><a href="#journey">Journey</a></li>
         <li><a href="#services">Services</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
 
@@ -433,6 +468,7 @@
     <a href="#projects">Projects</a>
     <a href="#journey">Journey</a>
     <a href="#services">Services</a>
+    <a href="#testimonials">Testimonials</a>
     <a href="#contact">Contact</a>
   </div>
 
@@ -558,6 +594,9 @@
         <p class="section-desc">Interactive games, creative web projects, automation and programming experiments.</p>
       </div>
 
+      <div class="search-wrap reveal">
+        <input class="project-search" id="projectSearch" type="search" placeholder="Search projects, technologies or keywords..." aria-label="Search projects">
+      </div>
       <div class="filter-row reveal">
         <button class="filter active" data-filter="all">ALL</button>
         <button class="filter" data-filter="game">GAMES</button>
@@ -649,6 +688,7 @@
         </article>
 
       </div>
+      <div class="no-results" id="noResults">No project matched your search. Try another keyword.</div>
     </section>
 
     <section id="journey">
@@ -704,6 +744,36 @@
       </div>
     </section>
 
+
+    <section id="testimonials">
+      <div class="section-head reveal">
+        <div class="section-label">05 / TESTIMONIALS</div>
+        <h2 class="section-title">A space ready for future feedback.</h2>
+        <p class="section-desc">When teachers, teammates, clients or collaborators share feedback, it can live here.</p>
+      </div>
+      <div class="testimonial-grid" id="testimonialGrid">
+        <article class="quote-card reveal">
+          <div class="quote-mark">“</div>
+          <p>Imtiaz approaches practical projects with curiosity and keeps improving the result through testing and debugging.</p>
+          <div class="quote-author">Future Collaborator</div><div class="quote-role">Project / Development</div>
+        </article>
+        <article class="quote-card reveal">
+          <div class="quote-mark">“</div>
+          <p>A dedicated learner who enjoys experimenting with programming, web technologies and creative project ideas.</p>
+          <div class="quote-author">Future Mentor</div><div class="quote-role">Learning Journey</div>
+        </article>
+        <article class="quote-card reveal">
+          <div class="quote-mark">“</div>
+          <p>Projects are treated as experiments: build something, find the bugs, understand them and make it better.</p>
+          <div class="quote-author">Future Teammate</div><div class="quote-role">Collaboration</div>
+        </article>
+      </div>
+      <div class="testimonial-controls">
+        <button id="prevQuote" aria-label="Previous testimonial">←</button>
+        <button id="nextQuote" aria-label="Next testimonial">→</button>
+      </div>
+    </section>
+
     <section id="services">
       <div class="section-head reveal">
         <div class="section-label">05 / WHAT I BUILD</div>
@@ -712,20 +782,22 @@
       </div>
 
       <div class="service-grid">
-        <div class="service reveal"><div class="service-icon">🖥️</div><h3>Web Experiences</h3><p>Responsive websites, landing pages, portfolios, UI components and interactive front-end experiences.</p></div>
-        <div class="service reveal"><div class="service-icon">🎮</div><h3>Browser Games</h3><p>Canvas-based games with movement, collisions, score systems, effects and custom themes.</p></div>
-        <div class="service reveal"><div class="service-icon">🐍</div><h3>Python Projects</h3><p>Programming experiments, automation, computer vision and command-based utilities.</p></div>
+        <div class="service reveal"><div class="service-icon">🖥️</div><h3>Web Experiences</h3><p>Responsive websites, landing pages, portfolios, UI components and interactive front-end experiences.</p><a class="service-link" href="#projects">Explore projects →</a></div>
+        <div class="service reveal"><div class="service-icon">🎮</div><h3>Browser Games</h3><p>Canvas-based games with movement, collisions, score systems, effects and custom themes.</p><a class="service-link" href="#projects">See game lab →</a></div>
+        <div class="service reveal"><div class="service-icon">🐍</div><h3>Python Projects</h3><p>Programming experiments, automation, computer vision and command-based utilities.</p><a class="service-link" href="#skills">View Python stack →</a></div>
         <div class="service reveal"><div class="service-icon">🗄️</div><h3>Database Concepts</h3><p>MySQL fundamentals, data handling and database-driven application concepts.</p></div>
         <div class="service reveal"><div class="service-icon">🛡️</div><h3>Cyber & Computer Tech</h3><p>Exploring computer hardware, maintenance, security concepts and safe digital practices.</p></div>
         <div class="service reveal"><div class="service-icon">🤖</div><h3>AI Exploration</h3><p>Learning how AI and intelligent automation can be combined with practical software projects.</p></div>
       </div>
     </section>
 
+
     <section id="contact">
       <div class="contact reveal">
-        <div class="section-label">06 / CONTACT</div>
+        <div class="section-label">07 / CONTACT</div>
         <h2>Let's build something interesting.</h2>
-        <p>Have an idea, project or collaboration in mind? Connect with me through any of the platforms below.</p>
+        <p>Have an idea, project or collaboration in mind? Send a message or connect with me directly.</p>
+
         <div class="contact-links">
           <a href="https://wa.me/917908830316" target="_blank" rel="noopener">💬 WhatsApp</a>
           <a href="mailto:imtiazali31122002@gmail.com">✉️ Email</a>
@@ -733,13 +805,27 @@
           <a href="https://www.instagram.com/itz_imtiaz_7777/" target="_blank" rel="noopener">◎ Instagram</a>
           <a href="https://github.com/imtiaz2002" target="_blank" rel="noopener">◈ GitHub</a>
         </div>
+
+        <form class="contact-form" id="contactForm">
+          <input name="name" type="text" placeholder="Your name" required>
+          <input name="email" type="email" placeholder="Your email" required>
+          <input class="full" name="subject" type="text" placeholder="Subject" required>
+          <textarea class="full" name="message" placeholder="Write your message..." required></textarea>
+          <button class="btn primary full" type="submit">Prepare Email →</button>
+        </form>
+
+        <div class="counter-grid">
+          <div class="counter-box"><strong id="visitCount">0</strong><span>Portfolio Visits</span></div>
+          <div class="counter-box"><strong>10+</strong><span>Projects</span></div>
+          <div class="counter-box"><strong>15+</strong><span>Technologies</span></div>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
     <span>© 2026 Imtiaz Ali. Built with HTML, CSS & JavaScript.</span>
-    <span>Learn • Build • Debug • Repeat</span>
+    <span>Learn • Build • Debug • Repeat • © 2026</span>
   </footer>
 
   <button id="top" aria-label="Back to top">↑</button>
@@ -754,6 +840,24 @@
         </div>
       </div>
       <div class="code-body"><pre id="codeText"></pre></div>
+    </div>
+  </div>
+
+
+  <div class="social-float" aria-label="Social links">
+    <a href="https://wa.me/917908830316" target="_blank" rel="noopener" title="WhatsApp">W</a>
+    <a href="https://www.instagram.com/itz_imtiaz_7777/" target="_blank" rel="noopener" title="Instagram">I</a>
+    <a href="https://github.com/imtiaz2002" target="_blank" rel="noopener" title="GitHub">G</a>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="error404" id="error404">
+    <div>
+      <div class="section-label">SYSTEM MESSAGE</div>
+      <h2>404</h2>
+      <p>This page wandered into another dimension.</p>
+      <a class="btn primary" href="#home" id="backHome">← Back to Home</a>
     </div>
   </div>
 
@@ -1235,6 +1339,108 @@ gameLoop();`
     }, {rootMargin: "-40% 0px -50% 0px"});
 
     sections.forEach(section => activeObserver.observe(section));
+    // Project search
+    const projectSearch = document.getElementById("projectSearch");
+    const noResults = document.getElementById("noResults");
+
+    function applyProjectFilter() {
+      const selected = document.querySelector(".filter.active")?.dataset.filter || "all";
+      const query = (projectSearch?.value || "").toLowerCase().trim();
+      let count = 0;
+
+      projectCards.forEach(card => {
+        const categories = card.dataset.category.split(" ");
+        const searchable = card.textContent.toLowerCase();
+        const matchesFilter = selected === "all" || categories.includes(selected);
+        const matchesSearch = !query || searchable.includes(query);
+        const visible = matchesFilter && matchesSearch;
+
+        card.style.display = visible ? "flex" : "none";
+        if (visible) count++;
+      });
+
+      if (noResults) noResults.style.display = count ? "none" : "block";
+    }
+
+    if (projectSearch) {
+      projectSearch.addEventListener("input", applyProjectFilter);
+    }
+
+    filters.forEach(filter => {
+      filter.addEventListener("click", applyProjectFilter);
+    });
+
+    // Toast helper
+    const toast = document.getElementById("toast");
+    function showToast(message) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    // Contact form prepares a mailto instead of requiring a backend.
+    const contactForm = document.getElementById("contactForm");
+    if (contactForm) {
+      contactForm.addEventListener("submit", event => {
+        event.preventDefault();
+        const data = new FormData(contactForm);
+        const subject = encodeURIComponent(data.get("subject"));
+        const body = encodeURIComponent(
+          "Name: " + data.get("name") + "\n" +
+          "Email: " + data.get("email") + "\n\n" +
+          data.get("message")
+        );
+        window.location.href =
+          "mailto:imtiazali31122002@gmail.com?subject=" + subject + "&body=" + body;
+        showToast("Opening your email app...");
+      });
+    }
+
+    // Local visit counter — works on static GitHub Pages.
+    const visitKey = "imtiaz-portfolio-visits";
+    let visits = Number(localStorage.getItem(visitKey) || "0") + 1;
+    localStorage.setItem(visitKey, visits);
+    const visitCount = document.getElementById("visitCount");
+    if (visitCount) visitCount.textContent = visits.toLocaleString();
+
+    // Testimonial slider
+    const quoteCards = [...document.querySelectorAll(".quote-card")];
+    let quoteIndex = 0;
+
+    function showQuote(index) {
+      if (window.innerWidth > 620) {
+        quoteCards.forEach(card => card.style.display = "block");
+        return;
+      }
+      quoteCards.forEach((card, i) => card.style.display = i === index ? "block" : "none");
+    }
+
+    document.getElementById("prevQuote")?.addEventListener("click", () => {
+      quoteIndex = (quoteIndex - 1 + quoteCards.length) % quoteCards.length;
+      showQuote(quoteIndex);
+    });
+
+    document.getElementById("nextQuote")?.addEventListener("click", () => {
+      quoteIndex = (quoteIndex + 1) % quoteCards.length;
+      showQuote(quoteIndex);
+    });
+
+    showQuote(quoteIndex);
+    window.addEventListener("resize", () => showQuote(quoteIndex));
+
+    // Lightweight custom 404 behavior for paths on this single-page site.
+    const knownPaths = ["/", "/index.html", "/ImtiazAli-Portfolio/", "/ImtiazAli-Portfolio/index.html"];
+    const path = window.location.pathname;
+    const error404 = document.getElementById("error404");
+    if (path && !knownPaths.some(p => path.endsWith(p))) {
+      if (error404) error404.classList.add("open");
+    }
+
+    document.getElementById("backHome")?.addEventListener("click", () => {
+      error404.classList.remove("open");
+    });
+
   </script>
 </body>
 </html>
