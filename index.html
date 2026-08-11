@@ -1,0 +1,2591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description"
+content="Imtiaz Ali - Developer, Programmer and Technology Enthusiast">
+
+<meta name="author" content="Imtiaz Ali">
+
+<title>Imtiaz Ali | Developer Portfolio</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+/* =========================
+   GLOBAL
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Inter,sans-serif;
+    background:#07070d;
+    color:#f8fafc;
+    line-height:1.6;
+    overflow-x:hidden;
+    transition:.3s;
+}
+
+body.light{
+    background:#f5f7fb;
+    color:#111827;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+button{
+    font-family:inherit;
+    cursor:pointer;
+}
+
+/* Background Glow */
+
+body::before,
+body::after{
+    content:"";
+    position:fixed;
+    width:430px;
+    height:430px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.14;
+    z-index:-1;
+    pointer-events:none;
+}
+
+body::before{
+    background:#7c3aed;
+    top:-180px;
+    left:-150px;
+}
+
+body::after{
+    background:#06b6d4;
+    right:-170px;
+    bottom:-180px;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+nav{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+    background:#07070ddd;
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid #ffffff12;
+}
+
+.light nav{
+    background:#ffffffdd;
+    border-bottom:1px solid #00000012;
+}
+
+.nav{
+    max-width:1150px;
+    margin:auto;
+    padding:16px 22px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    font:700 25px "Space Grotesk";
+}
+
+.logo span{
+    color:#8b5cf6;
+}
+
+.nav-links{
+    display:flex;
+    gap:25px;
+    list-style:none;
+}
+
+.nav-links a{
+    color:#999;
+    font-size:13px;
+    transition:.25s;
+}
+
+.nav-links a:hover{
+    color:#a78bfa;
+}
+
+.theme-btn{
+    width:40px;
+    height:40px;
+
+    border-radius:11px;
+    border:1px solid #ffffff18;
+
+    background:#ffffff08;
+    color:white;
+
+    font-size:17px;
+}
+
+.light .theme-btn{
+    color:#111827;
+    border-color:#00000015;
+}
+
+/* Mobile Menu */
+
+.menu-btn{
+    display:none;
+
+    width:40px;
+    height:40px;
+
+    border-radius:10px;
+    border:1px solid #ffffff18;
+
+    background:#ffffff08;
+    color:white;
+
+    font-size:20px;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    max-width:1150px;
+    min-height:100vh;
+
+    margin:auto;
+    padding:145px 22px 80px;
+
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+
+    gap:60px;
+    align-items:center;
+}
+
+.badge{
+    display:inline-block;
+
+    padding:7px 13px;
+
+    border-radius:50px;
+
+    border:1px solid #8b5cf633;
+    background:#8b5cf610;
+
+    color:#c4b5fd;
+
+    font-size:11px;
+    font-weight:700;
+
+    margin-bottom:20px;
+}
+
+.hero h1{
+    font:700 clamp(55px,8vw,92px)/.95 "Space Grotesk";
+
+    letter-spacing:-4px;
+}
+
+.gradient{
+    background:linear-gradient(
+        90deg,
+        #a78bfa,
+        #22d3ee
+    );
+
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero-text{
+    color:#999;
+
+    max-width:650px;
+
+    margin:25px 0;
+
+    font-size:17px;
+}
+
+.typing{
+    color:#67e8f9;
+    font-weight:800;
+}
+
+.cursor{
+    color:#67e8f9;
+    animation:blink .7s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:0;
+    }
+}
+
+.hero-buttons{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    display:inline-block;
+
+    padding:12px 19px;
+
+    border-radius:11px;
+
+    border:1px solid #ffffff18;
+
+    font-size:13px;
+    font-weight:700;
+
+    transition:.25s;
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+}
+
+.primary{
+    background:linear-gradient(
+        90deg,
+        #7c3aed,
+        #2563eb
+    );
+
+    box-shadow:0 0 30px #7c3aed35;
+}
+
+/* Terminal */
+
+.terminal{
+    background:#0d0d15;
+
+    border:1px solid #ffffff12;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    box-shadow:0 25px 80px #0009;
+
+    animation:float 5s ease-in-out infinite;
+}
+
+@keyframes float{
+
+    50%{
+        transform:translateY(-10px) rotate(-1deg);
+    }
+
+}
+
+.terminal-bar{
+    height:43px;
+
+    display:flex;
+    align-items:center;
+
+    padding-left:15px;
+
+    border-bottom:1px solid #ffffff0d;
+}
+
+.dot{
+    width:10px;
+    height:10px;
+
+    background:#555;
+
+    border-radius:50%;
+
+    margin-right:6px;
+}
+
+.terminal-body{
+    padding:25px;
+
+    min-height:300px;
+
+    font:13px/2 monospace;
+}
+
+.green{
+    color:#86efac;
+}
+
+.cyan{
+    color:#67e8f9;
+}
+
+.purple{
+    color:#c084fc;
+}
+
+.orange{
+    color:#fdba74;
+}
+
+/* =========================
+   COMMON SECTION
+========================= */
+
+section{
+    max-width:1150px;
+
+    margin:auto;
+
+    padding:95px 22px;
+}
+
+.eyebrow{
+    color:#8b5cf6;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:3px;
+}
+
+.section-title{
+    font:700 43px "Space Grotesk";
+
+    margin:8px 0 12px;
+}
+
+.section-desc{
+    color:#888;
+
+    max-width:700px;
+
+    margin-bottom:35px;
+}
+
+/* =========================
+   ABOUT
+========================= */
+
+.about-grid{
+    display:grid;
+
+    grid-template-columns:1.2fr .8fr;
+
+    gap:20px;
+}
+
+.card{
+    background:#ffffff06;
+
+    border:1px solid #ffffff0d;
+
+    border-radius:19px;
+
+    padding:28px;
+}
+
+.light .card{
+    background:#ffffff;
+    border-color:#0000000d;
+}
+
+.card p{
+    color:#92929e;
+}
+
+.info{
+    list-style:none;
+}
+
+.info li{
+    display:flex;
+
+    justify-content:space-between;
+
+    padding:13px 0;
+
+    border-bottom:1px solid #ffffff0d;
+
+    color:#888;
+
+    gap:20px;
+}
+
+.info strong{
+    color:inherit;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:14px;
+
+    margin-top:25px;
+}
+
+.stat{
+    text-align:center;
+
+    padding:23px;
+
+    background:#ffffff05;
+
+    border:1px solid #ffffff0d;
+
+    border-radius:16px;
+}
+
+.stat b{
+    display:block;
+
+    font:700 31px "Space Grotesk";
+
+    color:#c4b5fd;
+}
+
+.stat small{
+    color:#888;
+}
+
+/* =========================
+   SKILLS
+========================= */
+
+.skills{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:15px;
+}
+
+.skill{
+    padding:25px;
+
+    background:#ffffff06;
+
+    border:1px solid #ffffff0d;
+
+    border-radius:18px;
+
+    transition:.3s;
+}
+
+.skill:hover{
+    transform:translateY(-6px);
+
+    border-color:#8b5cf655;
+}
+
+.light .skill{
+    background:#fff;
+    border-color:#0000000d;
+}
+
+.skill-icon{
+    font-size:28px;
+}
+
+.skill h3{
+    margin:8px 0;
+}
+
+.skill small{
+    color:#888;
+}
+
+.level{
+    display:inline-block;
+
+    margin-top:11px;
+
+    padding:3px 9px;
+
+    border-radius:20px;
+
+    font-size:9px;
+
+    background:#8b5cf61a;
+
+    color:#c4b5fd;
+}
+
+.learning{
+    background:#06b6d41a;
+    color:#67e8f9;
+}
+
+.exploring{
+    background:#f59e0b1a;
+    color:#fbbf24;
+}
+
+/* =========================
+   PROJECTS
+========================= */
+
+.project-filters{
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+    margin:25px 0 40px;
+}
+
+.filter-btn{
+    padding:10px 18px;
+
+    border-radius:10px;
+
+    border:1px solid #ffffff12;
+
+    background:#ffffff08;
+
+    color:#aaa;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    transition:.25s;
+}
+
+.filter-btn.active,
+.filter-btn:hover{
+    background:linear-gradient(
+        90deg,
+        #4338ca,
+        #6366f1
+    );
+
+    color:white;
+}
+
+.project-grid{
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:22px;
+}
+
+.project-card{
+    overflow:hidden;
+
+    background:#ffffff06;
+
+    border:1px solid #ffffff10;
+
+    border-radius:20px;
+
+    transition:.3s;
+}
+
+.project-card:hover{
+    transform:translateY(-7px);
+
+    border-color:#8b5cf655;
+
+    box-shadow:0 20px 55px #0004;
+}
+
+.light .project-card{
+    background:#fff;
+    border-color:#0000000d;
+}
+
+.project-preview{
+    height:190px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+    radial-gradient(
+        circle at 50% 30%,
+        #7c3aed45,
+        transparent 65%
+    );
+}
+
+.preview-window{
+    width:92%;
+    height:100%;
+
+    border-radius:12px;
+
+    border:1px solid #ffffff18;
+
+    background:#10111b;
+
+    overflow:hidden;
+
+    box-shadow:0 15px 40px #0008;
+}
+
+.preview-bar{
+    height:25px;
+
+    background:#1c1e29;
+
+    display:flex;
+
+    align-items:center;
+
+    padding-left:10px;
+
+    gap:5px;
+}
+
+.preview-bar i{
+    width:7px;
+    height:7px;
+
+    border-radius:50%;
+
+    background:#666;
+}
+
+.preview-content{
+    padding:18px;
+
+    text-align:center;
+}
+
+.preview-icon{
+    font-size:42px;
+}
+
+.preview-content h4{
+    margin-top:5px;
+}
+
+.preview-content p{
+    color:#777;
+
+    font-size:9px;
+}
+
+.project-content{
+    padding:22px 24px 25px;
+}
+
+.project-number{
+    color:#8b5cf6;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+}
+
+.project-content h3{
+    font-size:21px;
+
+    margin:7px 0;
+}
+
+.project-content p{
+    color:#92929e;
+
+    font-size:13px;
+
+    min-height:42px;
+}
+
+.tags{
+    display:flex;
+
+    gap:7px;
+
+    flex-wrap:wrap;
+
+    margin-top:13px;
+}
+
+.tag{
+    padding:4px 9px;
+
+    border-radius:20px;
+
+    background:#8b5cf612;
+
+    color:#bdb3ff;
+
+    font-size:10px;
+}
+
+.project-buttons{
+    display:flex;
+
+    gap:9px;
+
+    flex-wrap:wrap;
+
+    margin-top:17px;
+}
+
+.project-btn{
+    padding:9px 13px;
+
+    border-radius:9px;
+
+    border:1px solid #ffffff18;
+
+    background:#ffffff08;
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    transition:.25s;
+}
+
+.project-btn:hover{
+    transform:translateY(-2px);
+}
+
+.project-btn.demo{
+    background:linear-gradient(
+        90deg,
+        #7c3aed,
+        #2563eb
+    );
+
+    border:0;
+}
+
+/* =========================
+   JOURNEY
+========================= */
+
+.timeline{
+    border-left:2px solid #312e81;
+
+    padding-left:28px;
+}
+
+.timeline-item{
+    position:relative;
+
+    margin-bottom:32px;
+}
+
+.timeline-item::before{
+    content:"";
+
+    position:absolute;
+
+    width:11px;
+    height:11px;
+
+    border-radius:50%;
+
+    background:#8b5cf6;
+
+    left:-35px;
+    top:7px;
+
+    box-shadow:0 0 16px #8b5cf6;
+}
+
+.timeline-item span{
+    color:#8b5cf6;
+
+    font-size:11px;
+
+    font-weight:700;
+}
+
+.timeline-item h3{
+    margin:4px 0;
+}
+
+.timeline-item p{
+    color:#888;
+}
+
+/* =========================
+   CONTACT
+========================= */
+
+.contact-box{
+    text-align:center;
+
+    padding:65px 25px;
+
+    border-radius:25px;
+
+    border:1px solid #ffffff0d;
+
+    background:
+    radial-gradient(
+        circle,
+        #7c3aed22,
+        transparent 65%
+    );
+}
+
+.contact-box h2{
+    font:700 40px "Space Grotesk";
+
+    margin:10px 0;
+}
+
+.contact-box p{
+    color:#888;
+
+    max-width:600px;
+
+    margin:0 auto 25px;
+}
+
+.contact-buttons{
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    text-align:center;
+
+    padding:35px 20px;
+
+    border-top:1px solid #ffffff0d;
+
+    color:#666;
+
+    font-size:12px;
+}
+
+.footer-name{
+    color:#a78bfa;
+}
+
+/* =========================
+   BACK TO TOP
+========================= */
+
+#topBtn{
+    position:fixed;
+
+    right:18px;
+    bottom:18px;
+
+    width:43px;
+    height:43px;
+
+    border:0;
+
+    border-radius:50%;
+
+    background:#7c3aed;
+
+    color:white;
+
+    display:none;
+
+    z-index:900;
+
+    font-size:18px;
+
+    box-shadow:0 8px 30px #7c3aed55;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:850px){
+
+    .nav-links{
+        display:none;
+
+        position:absolute;
+
+        top:72px;
+        left:15px;
+        right:15px;
+
+        padding:20px;
+
+        flex-direction:column;
+
+        background:#101019;
+
+        border:1px solid #ffffff12;
+
+        border-radius:15px;
+    }
+
+    .light .nav-links{
+        background:white;
+    }
+
+    .nav-links.show{
+        display:flex;
+    }
+
+    .menu-btn{
+        display:block;
+    }
+
+    .hero{
+        grid-template-columns:1fr;
+
+        text-align:center;
+
+        padding-top:125px;
+    }
+
+    .hero-text{
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+    .hero-buttons{
+        justify-content:center;
+    }
+
+    .about-grid{
+        grid-template-columns:1fr;
+    }
+
+    .skills{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    section{
+        padding:70px 18px;
+    }
+
+    .hero{
+        padding-left:18px;
+        padding-right:18px;
+    }
+
+    .hero h1{
+        font-size:54px;
+        letter-spacing:-2px;
+    }
+
+    .section-title{
+        font-size:34px;
+    }
+
+    .skills,
+    .project-grid,
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .terminal-body{
+        font-size:11px;
+    }
+
+    .info li{
+        font-size:13px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav>
+
+<div class="nav">
+
+<div class="logo">
+Imtiaz<span>.</span>
+</div>
+
+<ul class="nav-links" id="navLinks">
+
+<li><a href="#home">Home</a></li>
+<li><a href="#about">About</a></li>
+<li><a href="#skills">Skills</a></li>
+<li><a href="#projects">Projects</a></li>
+<li><a href="#journey">Journey</a></li>
+<li><a href="#contact">Contact</a></li>
+
+</ul>
+
+<div style="display:flex;gap:8px">
+
+<button class="theme-btn" id="themeBtn">
+☾
+</button>
+
+<button class="menu-btn" id="menuBtn">
+☰
+</button>
+
+</div>
+
+</div>
+
+</nav>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<header class="hero" id="home">
+
+<div>
+
+<span class="badge">
+● DEVELOPER • PROGRAMMER • TECH ENTHUSIAST
+</span>
+
+<h1>
+Hi, I'm
+<span class="gradient">
+Imtiaz Ali.
+</span>
+</h1>
+
+<p class="hero-text">
+
+I'm a
+<span class="typing" id="typing"></span>
+<span class="cursor">|</span>
+
+passionate about programming, web development,
+computer technology and creative digital projects.
+
+</p>
+
+<div class="hero-buttons">
+
+<a href="#projects" class="btn primary">
+Explore Projects →
+</a>
+
+<a href="#contact" class="btn">
+Contact Me
+</a>
+
+</div>
+
+</div>
+
+
+<!-- Terminal -->
+
+<div class="terminal">
+
+<div class="terminal-bar">
+
+<i class="dot"></i>
+<i class="dot"></i>
+<i class="dot"></i>
+
+</div>
+
+<div class="terminal-body">
+
+<div class="green">$ whoami</div>
+
+<div class="cyan">
+Imtiaz Ali
+</div>
+
+<div class="green">$ skills</div>
+
+<div class="purple">
+HTML • CSS • JavaScript
+</div>
+
+<div class="purple">
+Python • Java • MySQL
+</div>
+
+<div class="purple">
+Cyber Security • AI
+</div>
+
+<div class="green">$ status</div>
+
+<div class="orange">
+Learning • Building • Improving
+</div>
+
+<div class="green">$ motto</div>
+
+<div class="cyan">
+Eat • Sleep • Code • Repeat
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+
+<!-- =========================
+     ABOUT
+========================= -->
+
+<section id="about">
+
+<div class="eyebrow">
+ABOUT ME
+</div>
+
+<h2 class="section-title">
+Curious mind. Builder mindset.
+</h2>
+
+<p class="section-desc">
+I enjoy learning technology, programming and building creative
+digital projects while continuously improving my skills.
+</p>
+
+
+<div class="about-grid">
+
+<div class="card">
+
+<p>
+
+Hello! I'm <strong>Imtiaz Ali</strong>, a developer and
+technology enthusiast interested in software development,
+web technologies, automation, computer vision, databases
+and modern artificial intelligence.
+
+</p>
+
+<br>
+
+<p>
+
+I believe in learning by experimenting, building projects
+and solving problems through technology.
+
+</p>
+
+</div>
+
+
+<div class="card">
+
+<ul class="info">
+
+<li>
+Name
+<strong>Imtiaz Ali</strong>
+</li>
+
+<li>
+Focus
+<strong>Programming & Web</strong>
+</li>
+
+<li>
+Interests
+<strong>AI • Security • Tech</strong>
+</li>
+
+<li>
+Learning
+<strong>Modern Development</strong>
+</li>
+
+<li>
+Motto
+<strong>Learn • Build • Repeat</strong>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+<b>10+</b>
+<small>Projects</small>
+</div>
+
+<div class="stat">
+<b>12+</b>
+<small>Technologies</small>
+</div>
+
+<div class="stat">
+<b>∞</b>
+<small>Ideas</small>
+</div>
+
+<div class="stat">
+<b>24/7</b>
+<small>Learning</small>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     SKILLS
+========================= -->
+
+<section id="skills">
+
+<div class="eyebrow">
+TECH STACK
+</div>
+
+<h2 class="section-title">
+Skills & Expertise.
+</h2>
+
+<p class="section-desc">
+Technologies and areas I work with, learn and explore.
+</p>
+
+
+<div class="skills">
+
+<div class="skill">
+<div class="skill-icon">🌐</div>
+<h3>HTML & CSS</h3>
+<small>Responsive websites & modern UI</small>
+<br>
+<span class="level">CORE</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">⚡</div>
+<h3>JavaScript</h3>
+<small>Interactive web applications</small>
+<br>
+<span class="level">CORE</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">🐍</div>
+<h3>Python</h3>
+<small>Programming & automation</small>
+<br>
+<span class="level">CORE</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">☕</div>
+<h3>Java</h3>
+<small>Object-oriented programming</small>
+<br>
+<span class="level">CORE</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">🗄️</div>
+<h3>MySQL</h3>
+<small>Database management</small>
+<br>
+<span class="level">CORE</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">🔐</div>
+<h3>Cyber Security</h3>
+<small>Security concepts & awareness</small>
+<br>
+<span class="level">CORE</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">🐙</div>
+<h3>Git & GitHub</h3>
+<small>Version control & deployment</small>
+<br>
+<span class="level learning">LEARNING</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">⚛️</div>
+<h3>React & Node.js</h3>
+<small>Modern web development</small>
+<br>
+<span class="level learning">LEARNING</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">📱</div>
+<h3>Flutter</h3>
+<small>Mobile application development</small>
+<br>
+<span class="level learning">LEARNING</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">🤖</div>
+<h3>AI & Machine Learning</h3>
+<small>Intelligent systems</small>
+<br>
+<span class="level exploring">EXPLORING</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">👁️</div>
+<h3>Computer Vision</h3>
+<small>OpenCV & MediaPipe</small>
+<br>
+<span class="level exploring">EXPLORING</span>
+</div>
+
+
+<div class="skill">
+<div class="skill-icon">🧠</div>
+<h3>Agentic AI</h3>
+<small>AI agents & automation</small>
+<br>
+<span class="level exploring">EXPLORING</span>
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     PROJECTS
+========================= -->
+
+<section id="projects">
+
+<div class="eyebrow">
+PROJECT SHOWCASE
+</div>
+
+<h2 class="section-title">
+Things I've Worked On.
+</h2>
+
+<p class="section-desc">
+A collection of programming, web development, game and
+creative technology projects showcased in my portfolio.
+</p>
+
+
+<div class="project-filters">
+
+<button class="filter-btn active" data-filter="all">
+All
+</button>
+
+<button class="filter-btn" data-filter="web">
+Web
+</button>
+
+<button class="filter-btn" data-filter="game">
+Games
+</button>
+
+<button class="filter-btn" data-filter="python">
+Python
+</button>
+
+</div>
+
+
+<div class="project-grid">
+
+
+<!-- PROJECT 1 -->
+
+<div class="project-card" data-category="python">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+👁️
+</div>
+
+<h4>Air Canvas</h4>
+
+<p>Computer Vision</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+01 / COMPUTER VISION
+</div>
+
+<h3>
+Air Canvas
+</h3>
+
+<p>
+A virtual drawing project using hand tracking and
+computer vision technology.
+</p>
+
+<div class="tags">
+
+<span class="tag">Python</span>
+<span class="tag">OpenCV</span>
+<span class="tag">MediaPipe</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 2 -->
+
+<div class="project-card" data-category="web">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+🎂
+</div>
+
+<h4>Birthday Surprise</h4>
+
+<p>Creative Web Project</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+02 / WEB
+</div>
+
+<h3>
+Birthday Surprise
+</h3>
+
+<p>
+A creative interactive birthday webpage with animations
+and responsive design.
+</p>
+
+<div class="tags">
+
+<span class="tag">HTML</span>
+<span class="tag">CSS</span>
+<span class="tag">JavaScript</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 3 -->
+
+<div class="project-card" data-category="python">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+🎙️
+</div>
+
+<h4>Voice Assistant</h4>
+
+<p>Python Automation</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+03 / AUTOMATION
+</div>
+
+<h3>
+Voice Assistant
+</h3>
+
+<p>
+A voice-based assistant concept for performing
+computer tasks through commands.
+</p>
+
+<div class="tags">
+
+<span class="tag">Python</span>
+<span class="tag">Voice</span>
+<span class="tag">Automation</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 4 -->
+
+<div class="project-card" data-category="game">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+🚀
+</div>
+
+<h4>Missile Command</h4>
+
+<p>Arcade Game</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+04 / GAME
+</div>
+
+<h3>
+Missile Command
+</h3>
+
+<p>
+An arcade-style defence game featuring waves,
+missiles and visual effects.
+</p>
+
+<div class="tags">
+
+<span class="tag">HTML</span>
+<span class="tag">CSS</span>
+<span class="tag">JavaScript</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 5 -->
+
+<div class="project-card" data-category="game">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+❄️🔥
+</div>
+
+<h4>Ice vs Fire</h4>
+
+<p>Tic Tac Toe</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+05 / GAME
+</div>
+
+<h3>
+Ice vs Fire Tic Tac Toe
+</h3>
+
+<p>
+A themed Tic Tac Toe game with player modes,
+animations and interactive gameplay.
+</p>
+
+<div class="tags">
+
+<span class="tag">HTML</span>
+<span class="tag">CSS</span>
+<span class="tag">JavaScript</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 6 -->
+
+<div class="project-card" data-category="game">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+🔥
+</div>
+
+<h4>Flappy Magma Seahorse</h4>
+
+<p>Arcade Game</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+06 / GAME
+</div>
+
+<h3>
+Flappy Magma Seahorse
+</h3>
+
+<p>
+A creative arcade game inspired by classic
+flappy-style gameplay.
+</p>
+
+<div class="tags">
+
+<span class="tag">HTML</span>
+<span class="tag">CSS</span>
+<span class="tag">JavaScript</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 7 -->
+
+<div class="project-card" data-category="game">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+🦸
+</div>
+
+<h4>Stick Hero</h4>
+
+<p>Arcade Game</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+07 / GAME
+</div>
+
+<h3>
+Stick Hero
+</h3>
+
+<p>
+A timing-based arcade game with procedural
+platform generation.
+</p>
+
+<div class="tags">
+
+<span class="tag">HTML</span>
+<span class="tag">CSS</span>
+<span class="tag">JavaScript</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 8 -->
+
+<div class="project-card" data-category="game">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+🌋
+</div>
+
+<h4>Lava Game</h4>
+
+<p>JavaScript Game</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+08 / GAME
+</div>
+
+<h3>
+Lava Game
+</h3>
+
+<p>
+A dynamic JavaScript game with obstacles,
+movement and collectible elements.
+</p>
+
+<div class="tags">
+
+<span class="tag">JavaScript</span>
+<span class="tag">HTML</span>
+<span class="tag">CSS</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 9 -->
+
+<div class="project-card" data-category="game">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+❄️🔥
+</div>
+
+<h4>Catch The Falling Elements</h4>
+
+<p>Arcade Game</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+09 / ARCADE
+</div>
+
+<h3>
+Catch The Falling Elements
+</h3>
+
+<p>
+An arcade game where players catch falling elements
+while managing score and lives.
+</p>
+
+<div class="tags">
+
+<span class="tag">JavaScript</span>
+<span class="tag">Canvas</span>
+<span class="tag">CSS</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- PROJECT 10 -->
+
+<div class="project-card" data-category="web">
+
+<div class="project-preview">
+
+<div class="preview-window">
+
+<div class="preview-bar">
+<i></i><i></i><i></i>
+</div>
+
+<div class="preview-content">
+
+<div class="preview-icon">
+🔐
+</div>
+
+<h4>Login Form Animation</h4>
+
+<p>HTML & CSS</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="project-content">
+
+<div class="project-number">
+10 / WEB DESIGN
+</div>
+
+<h3>
+Login Form Animation
+</h3>
+
+<p>
+A modern animated login and registration interface
+built for responsive web experiences.
+</p>
+
+<div class="tags">
+
+<span class="tag">HTML</span>
+<span class="tag">CSS</span>
+<span class="tag">Animation</span>
+
+</div>
+
+<div class="project-buttons">
+
+<a class="project-btn demo"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+View Code
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     JOURNEY
+========================= -->
+
+<section id="journey">
+
+<div class="eyebrow">
+MY JOURNEY
+</div>
+
+<h2 class="section-title">
+Learning. Building. Growing.
+</h2>
+
+<p class="section-desc">
+My technology journey is focused on continuously learning
+new tools and turning knowledge into practical projects.
+</p>
+
+
+<div class="timeline">
+
+<div class="timeline-item">
+
+<span>START</span>
+
+<h3>
+Computer & Programming
+</h3>
+
+<p>
+Started exploring computer technology, programming
+fundamentals and software concepts.
+</p>
+
+</div>
+
+
+<div class="timeline-item">
+
+<span>WEB DEVELOPMENT</span>
+
+<h3>
+HTML • CSS • JavaScript
+</h3>
+
+<p>
+Started building responsive websites and interactive
+web experiences.
+</p>
+
+</div>
+
+
+<div class="timeline-item">
+
+<span>PROGRAMMING</span>
+
+<h3>
+Python • Java • MySQL
+</h3>
+
+<p>
+Explored programming languages, databases and
+application development.
+</p>
+
+</div>
+
+
+<div class="timeline-item">
+
+<span>EXPLORING</span>
+
+<h3>
+AI • Computer Vision • Automation
+</h3>
+
+<p>
+Exploring artificial intelligence, computer vision,
+automation and modern technology.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     CONTACT
+========================= -->
+
+<section id="contact">
+
+<div class="contact-box">
+
+<div class="eyebrow">
+GET IN TOUCH
+</div>
+
+<h2>
+Let's Connect.
+</h2>
+
+<p>
+Have an idea, project or simply want to talk about
+technology? Feel free to contact me.
+</p>
+
+<div class="contact-buttons">
+
+<a
+class="btn primary"
+href="mailto:imtiazali31122002@gmail.com">
+📧 Email Me
+</a>
+
+<a
+class="btn"
+href="https://github.com/Imtiaz2002"
+target="_blank">
+🐙 GitHub
+</a>
+
+</div>
+
+<br>
+
+<p style="font-size:13px">
+imtiazali31122002@gmail.com
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+<p>
+© <span id="year"></span>
+<span class="footer-name">
+Imtiaz Ali
+</span>
+. All Rights Reserved.
+</p>
+
+<p style="margin-top:6px">
+Designed & developed with ❤️ and code.
+</p>
+
+</footer>
+
+
+<!-- BACK TO TOP -->
+
+<button id="topBtn">
+↑
+</button>
+
+
+<!-- =========================
+     JAVASCRIPT
+     IMPORTANT:
+     পুরো JS এই SCRIPT TAG-এর ভিতরে
+========================= -->
+
+<script>
+
+/* =========================
+   TYPING EFFECT
+========================= */
+
+const typingElement = document.getElementById("typing");
+
+const words = [
+    "Developer",
+    "Programmer",
+    "Web Developer",
+    "Python Enthusiast",
+    "Technology Enthusiast"
+];
+
+let wordIndex = 0;
+let charIndex = 0;
+let deleting = false;
+
+function typeEffect(){
+
+    const currentWord = words[wordIndex];
+
+    if(!deleting){
+
+        typingElement.textContent =
+            currentWord.substring(0,charIndex + 1);
+
+        charIndex++;
+
+        if(charIndex === currentWord.length){
+
+            deleting = true;
+
+            setTimeout(typeEffect,1200);
+
+            return;
+        }
+
+    }else{
+
+        typingElement.textContent =
+            currentWord.substring(0,charIndex - 1);
+
+        charIndex--;
+
+        if(charIndex === 0){
+
+            deleting = false;
+
+            wordIndex++;
+
+            if(wordIndex >= words.length){
+                wordIndex = 0;
+            }
+
+        }
+
+    }
+
+    setTimeout(
+        typeEffect,
+        deleting ? 55 : 100
+    );
+}
+
+typeEffect();
+
+
+/* =========================
+   DARK / LIGHT MODE
+========================= */
+
+const themeBtn =
+    document.getElementById("themeBtn");
+
+themeBtn.addEventListener("click",function(){
+
+    document.body.classList.toggle("light");
+
+    if(document.body.classList.contains("light")){
+
+        themeBtn.textContent = "☀";
+
+        localStorage.setItem(
+            "theme",
+            "light"
+        );
+
+    }else{
+
+        themeBtn.textContent = "☾";
+
+        localStorage.setItem(
+            "theme",
+            "dark"
+        );
+
+    }
+
+});
+
+
+/* Load saved theme */
+
+if(localStorage.getItem("theme") === "light"){
+
+    document.body.classList.add("light");
+
+    themeBtn.textContent = "☀";
+
+}
+
+
+/* =========================
+   MOBILE MENU
+========================= */
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+const navLinks =
+    document.getElementById("navLinks");
+
+menuBtn.addEventListener("click",function(){
+
+    navLinks.classList.toggle("show");
+
+});
+
+
+/* Close mobile menu */
+
+document.querySelectorAll(".nav-links a")
+.forEach(function(link){
+
+    link.addEventListener("click",function(){
+
+        navLinks.classList.remove("show");
+
+    });
+
+});
+
+
+/* =========================
+   PROJECT FILTER
+========================= */
+
+const filterButtons =
+    document.querySelectorAll(".filter-btn");
+
+const projectCards =
+    document.querySelectorAll(".project-card");
+
+
+filterButtons.forEach(function(button){
+
+    button.addEventListener("click",function(){
+
+        filterButtons.forEach(function(btn){
+
+            btn.classList.remove("active");
+
+        });
+
+        button.classList.add("active");
+
+        const filter =
+            button.dataset.filter;
+
+
+        projectCards.forEach(function(card){
+
+            const category =
+                card.dataset.category;
+
+
+            if(
+                filter === "all" ||
+                category === filter
+            ){
+
+                card.style.display = "block";
+
+            }else{
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+    });
+
+});
+
+
+/* =========================
+   BACK TO TOP
+========================= */
+
+const topBtn =
+    document.getElementById("topBtn");
+
+
+window.addEventListener("scroll",function(){
+
+    if(window.scrollY > 500){
+
+        topBtn.style.display = "block";
+
+    }else{
+
+        topBtn.style.display = "none";
+
+    }
+
+});
+
+
+topBtn.addEventListener("click",function(){
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+});
+
+
+/* =========================
+   FOOTER YEAR
+========================= */
+
+document.getElementById("year")
+.textContent = new Date().getFullYear();
+
+
+/* =========================
+   PROJECT BUTTON FEEDBACK
+========================= */
+
+document.querySelectorAll(".project-btn")
+.forEach(function(button){
+
+    button.addEventListener("click",function(){
+
+        button.style.transform =
+            "translateY(-2px)";
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
