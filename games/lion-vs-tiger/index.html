@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Lion vs Tiger - Jungle Battle</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#fff}
+body{min-height:100vh;overflow-x:hidden;background:#07130c}
+body:before{content:"";position:fixed;inset:0;z-index:-3;background:
+radial-gradient(circle at 12% 22%,rgba(130,190,50,.22),transparent 30%),
+radial-gradient(circle at 88% 25%,rgba(255,100,10,.20),transparent 31%),
+linear-gradient(180deg,#06130b 0%,#132b17 48%,#050b07 100%)}
+body:after{content:"";position:fixed;inset:0;z-index:-2;opacity:.35;
+background-image:radial-gradient(circle at 10% 85%,#315c2c 0 2px,transparent 3px),
+radial-gradient(circle at 90% 75%,#45652a 0 2px,transparent 3px);background-size:70px 90px,90px 110px}
+.app{width:min(100%,600px);min-height:100vh;margin:auto;padding:15px 16px 28px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{text-align:center;flex:1}.brand small{display:block;text-transform:uppercase;letter-spacing:4px;color:#d7b75e;font-size:10px;font-weight:900}
+.brand h1{margin:2px 0 0;font-size:clamp(25px,7vw,39px);line-height:1;font-weight:1000;text-shadow:0 4px 20px #000}
+.icon{width:42px;height:42px;border-radius:13px;border:1px solid #ffffff22;background:#07120dcc;color:#fff;font-size:19px;cursor:pointer}
+.score{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:17px 0 10px}
+.card{position:relative;overflow:hidden;border:1px solid #ffffff1c;border-radius:20px;padding:12px;background:#07120dcc;box-shadow:0 15px 35px #0007,inset 0 1px #fff1}
+.card:after{content:"";position:absolute;inset:auto -20% -55%;height:90px;background:currentColor;filter:blur(30px);opacity:.12}
+.card.lion{color:#ffd34f}.card.tiger{color:#ff7626}
+.animal{font-size:30px;filter:drop-shadow(0 0 9px currentColor)}.name{font-size:12px;letter-spacing:2px;font-weight:1000}
+.points{font-size:30px;font-weight:1000;margin-top:1px}
+.turn{text-align:center;height:32px;font-weight:900;font-size:15px}.turn.lion{color:#ffd34f}.turn.tiger{color:#ff7626}
+.arena{width:min(94vw,450px);aspect-ratio:1;margin:3px auto 0;padding:13px;border-radius:30px;position:relative;
+background:linear-gradient(145deg,#172e1b,#07100a 45%,#281507);
+box-shadow:0 25px 60px #000b,0 0 0 1px #ffffff18,inset 0 1px #ffffff18}
+.arena:before{content:"";position:absolute;inset:5px;border-radius:25px;border:1px solid #d8a94455;pointer-events:none}
+.board{height:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:9px;position:relative}
+.cell{border:1px solid #ffffff1b;border-radius:16px;background:linear-gradient(145deg,#ffffff12,#00000025);
+box-shadow:inset 0 1px #ffffff12,0 8px 12px #0005;display:flex;align-items:center;justify-content:center;
+cursor:pointer;transition:.16s transform,.16s background;position:relative;overflow:hidden}
+.cell:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 35% 25%,#fff2,transparent 38%);pointer-events:none}
+.cell:hover{transform:translateY(-2px);background:#ffffff16}.cell:active{transform:scale(.96)}
+.mark{font-size:clamp(47px,16vw,84px);line-height:1;animation:enter .22s cubic-bezier(.2,1.4,.4,1);filter:drop-shadow(0 5px 9px #000)}
+.lionMark{filter:drop-shadow(0 0 15px #ffc92899) drop-shadow(0 5px 9px #000)}
+.tigerMark{filter:drop-shadow(0 0 15px #ff4e1b99) drop-shadow(0 5px 9px #000)}
+@keyframes enter{from{opacity:0;transform:scale(.2) rotate(-15deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+.cell.win{animation:win .55s ease-in-out infinite alternate}
+@keyframes win{to{transform:scale(.95);box-shadow:0 0 35px currentColor,inset 0 0 30px currentColor}}
+.controls{display:flex;gap:10px;margin:17px auto 0;width:min(94vw,450px)}
+.btn{flex:1;border:0;border-radius:14px;padding:14px 10px;color:#fff;font-weight:1000;font-size:14px;cursor:pointer;box-shadow:0 10px 22px #0006}
+.btn:active{transform:scale(.97)}.new{background:linear-gradient(135deg,#d7ad31,#79510e)}.mode{background:linear-gradient(135deg,#ff7c28,#a62d0c)}
+.hint{text-align:center;color:#aeb9ad;font-size:11px;margin-top:12px}
+.leaf{position:fixed;top:-30px;font-size:24px;opacity:.55;z-index:-1;animation:fall linear forwards}
+@keyframes fall{to{transform:translate3d(var(--x),110vh,0) rotate(500deg);opacity:0}}
+.overlay{position:fixed;inset:0;background:#000b;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal{width:min(92vw,390px);padding:26px;border-radius:25px;text-align:center;background:linear-gradient(145deg,#132018,#090e0a);
+border:1px solid #ffffff20;box-shadow:0 30px 100px #000}
+.modal .big{font-size:72px;filter:drop-shadow(0 0 18px #ffb52d66)}
+.modal h2{margin:2px 0 6px;font-size:29px}.modal p{color:#b9c3b9}
+.modal button{border:0;border-radius:13px;padding:12px 25px;font-weight:1000;background:#f2d26a;color:#161006;cursor:pointer}
+@media(max-height:700px){.app{padding-top:8px}.score{margin-top:10px}.card{padding:8px}.arena{max-width:370px}.controls{margin-top:10px}}
+
+/* AGGRESSIVE BATTLE EFFECTS */
+.arena{isolation:isolate}
+.arena:after{
+ content:"";position:absolute;inset:0;border-radius:30px;pointer-events:none;z-index:3;
+ background:radial-gradient(circle at 25% 50%,rgba(255,210,50,.10),transparent 28%),
+            radial-gradient(circle at 75% 50%,rgba(255,65,20,.10),transparent 28%);
+}
+.battle-flash{
+ position:fixed;inset:0;pointer-events:none;z-index:30;opacity:0;
+ background:radial-gradient(circle,rgba(255,190,45,.35),transparent 45%);
+}
+.battle-flash.show{animation:flash .38s ease-out}
+@keyframes flash{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
+.cell.attack-lion{animation:lionAttack .45s ease-out}
+.cell.attack-tiger{animation:tigerAttack .45s ease-out}
+@keyframes lionAttack{
+ 0%{transform:scale(1) rotate(0);box-shadow:inset 0 0 0 transparent}
+ 35%{transform:scale(1.08) rotate(-3deg);box-shadow:0 0 38px #ffd34f,inset 0 0 25px #ffd34f}
+ 100%{transform:scale(1) rotate(0)}
+}
+@keyframes tigerAttack{
+ 0%{transform:scale(1) rotate(0);box-shadow:inset 0 0 0 transparent}
+ 35%{transform:scale(1.08) rotate(3deg);box-shadow:0 0 38px #ff5a20,inset 0 0 25px #ff5a20}
+ 100%{transform:scale(1) rotate(0)}
+}
+.mark.lionMark{animation:roarLion .5s cubic-bezier(.2,1.5,.4,1)}
+.mark.tigerMark{animation:roarTiger .5s cubic-bezier(.2,1.5,.4,1)}
+@keyframes roarLion{
+ 0%{transform:scale(.2);filter:drop-shadow(0 0 0 #ffd34f)}
+ 45%{transform:scale(1.3) rotate(-5deg);filter:drop-shadow(0 0 24px #ffd34f)}
+ 100%{transform:scale(1)}
+}
+@keyframes roarTiger{
+ 0%{transform:scale(.2);filter:drop-shadow(0 0 0 #ff4b19)}
+ 45%{transform:scale(1.3) rotate(5deg);filter:drop-shadow(0 0 24px #ff4b19)}
+ 100%{transform:scale(1)}
+}
+.claw{
+ position:fixed;z-index:31;pointer-events:none;font-size:38px;opacity:0;
+ filter:drop-shadow(0 0 10px currentColor)
+}
+.claw.show{animation:clawSlash .5s ease-out}
+@keyframes clawSlash{
+ 0%{opacity:0;transform:translate(-80px,30px) rotate(-25deg) scale(.6)}
+ 25%{opacity:1}
+ 100%{opacity:0;transform:translate(80px,-30px) rotate(-25deg) scale(1.25)}
+}
+
+.modal .big{animation:victoryAnimal .8s cubic-bezier(.2,1.5,.4,1)}
+@keyframes victoryAnimal{0%{transform:scale(.2) rotate(-15deg)}55%{transform:scale(1.35) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+
+.resources{display:flex;justify-content:center;gap:8px;margin:10px 0}.res{padding:7px 11px;border-radius:11px;background:#07120de8;border:1px solid #fff2;font-weight:900;font-size:12px}.res span{color:#ffd34e}
+.power{background:linear-gradient(135deg,#6e4fc7,#32236d)!important}
+.gameTabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:10px auto 0;width:min(94vw,450px)}.tab{border:1px solid #fff2;background:#07120de8;color:#ccc;border-radius:10px;padding:9px 2px;font-weight:900;font-size:10px}.tab.active{border-color:#ffd34e;color:#ffd34e}
+.panel{display:none;width:min(94vw,450px);margin:8px auto 0;padding:13px;border-radius:17px;background:#07120df5;border:1px solid #fff2;box-shadow:0 12px 28px #0007}.panel.activePanel{display:block}.panel h3{margin:0 0 9px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}.item{padding:9px;text-align:center;border:1px solid #fff2;border-radius:12px;background:#ffffff08}.item .big{font-size:30px}.item small{display:block;color:#aeb8b0;font-size:10px;margin-top:3px}.item button,.wide{margin-top:7px;width:100%;border:0;border-radius:8px;padding:8px;background:#d9b43f;color:#151008;font-weight:1000}.item button:disabled{opacity:.45}.arenaChoice.selected{border:2px solid #ffd34e}.match{padding:9px;border:1px solid #fff2;border-radius:10px;background:#ffffff08;display:flex;justify-content:space-between}.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,25px);opacity:0;transition:.2s;background:#101b13;border:1px solid #ffd34e88;border-radius:12px;padding:9px 14px;z-index:80;font-weight:900}.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.shopTabs{display:flex;gap:6px;margin-bottom:9px}.shopTabs button{flex:1;border:1px solid #fff2;background:#ffffff08;color:#aaa;border-radius:9px;padding:8px;font-weight:900}.shopTabs button.active{color:#ffd34e;border-color:#ffd34e}
+.shopCard{position:relative;padding:11px;border-radius:14px;border:1px solid #fff2;background:linear-gradient(145deg,#ffffff0b,#00000018);text-align:center;overflow:hidden}.shopCard.locked{filter:saturate(.65)}.shopCard.equipped{border-color:#ffd34e;box-shadow:0 0 20px #ffd34e22}.shopCard .rarity{font-size:9px;letter-spacing:1px;color:#d0b66a;font-weight:900}.shopCard .preview{font-size:48px;line-height:1.1;margin:5px}.shopCard .desc{font-size:10px;color:#aeb8b0;min-height:28px}.shopCard .price{font-weight:900;margin-top:4px}.shopCard button{width:100%;margin-top:7px;border:0;border-radius:9px;padding:8px;background:#d9b43f;font-weight:1000}.shopCard button.equip{background:#263c2a;color:#dff2df}.shopCard button:disabled{opacity:.5}
+
+body[data-skin="goldLion"] .lionMark{filter:drop-shadow(0 0 22px #ffd34f) drop-shadow(0 0 5px #fff2)}
+body[data-skin="shadowTiger"] .tigerMark{filter:drop-shadow(0 0 24px #ff3d18) drop-shadow(0 0 5px #000)}
+body[data-effect="kingAura"] .cell.win{box-shadow:0 0 45px #ffd34f,inset 0 0 28px #ffd34f}
+body[data-effect="inferno"] .cell.win{box-shadow:0 0 45px #ff4d18,inset 0 0 30px #ff4d18}
+body[data-effect="claw"] .cell.attack:after{content:"✦";position:absolute;font-size:30px;color:#ffb22e;animation:clawFx .45s ease-out}
+@keyframes clawFx{from{transform:translate(-30px,25px) rotate(-35deg);opacity:1}to{transform:translate(30px,-20px) rotate(20deg);opacity:0}}
+</style></head>
+<body>
+<div class="app">
+<header class="top">
+<button class="icon" id="sound">🔊</button>
+<div class="brand"><small>JUNGLE BATTLE</small><h1>🦁 VS 🐯</h1></div>
+<button class="icon" id="help">?</button>
+</header>
+
+<div class="resources">
+  <div class="res">🪙 <span id="coins">250</span></div>
+  <div class="res">💎 <span id="crystals">25</span></div>
+  <div class="res">⚡ <span id="energy">5</span>/5</div>
+</div>
+
+<section class="score">
+<div class="card lion"><div class="animal">🦁</div><div class="name">LION</div><div class="points" id="lionScore">0</div></div>
+<div class="card tiger"><div class="animal">🐯</div><div class="name">TIGER</div><div class="points" id="tigerScore">0</div></div>
+</section>
+
+<div class="turn tiger" id="turn">🐯 Tiger's Turn</div>
+<div class="arena" id="arena"><div class="board" id="board"></div></div>
+
+<div class="controls">
+<button class="btn new" id="newBtn">⚔️ New Battle</button>
+<button class="btn mode" id="modeBtn">👥 2 Players</button>
+<button class="btn power" id="powerTabBtn">⚡ Powers</button>
+</div>
+
+<div class="gameTabs">
+<button class="tab active" data-tab="battle">⚔️ Battle</button>
+<button class="tab" data-tab="shop">🛒 Shop</button>
+<button class="tab" data-tab="arenaTab">🏟️ Arena</button>
+<button class="tab" data-tab="cup">🏆 Cup</button>
+</div>
+
+<section class="panel activePanel" id="battlePanel">
+<h3>⚡ Special Powers</h3>
+<div class="grid2">
+<div class="item"><div class="big">🦁</div><b>Lion Roar</b><small>Block one empty cell</small><button id="lionPower">Use · 2⚡</button></div>
+<div class="item"><div class="big">🐯</div><b>Tiger Claw</b><small>Remove one Lion mark</small><button id="tigerPower">Use · 2⚡</button></div>
+</div>
+</section>
+
+
+<section class="panel" id="shopPanel">
+<h3>🛒 Jungle Shop</h3>
+<div class="shopTabs">
+<button class="shopFilter active" data-filter="all">All</button>
+<button class="shopFilter" data-filter="skin">Skins</button>
+<button class="shopFilter" data-filter="effect">Effects</button>
+</div>
+<div class="grid2" id="shopGrid">
+<div class="shopCard" data-type="skin" data-id="goldLion"><div class="rarity">EPIC</div><div class="preview">🦁</div><b>Golden Lion</b><div class="desc">Golden battle skin + roar aura</div><div class="price">🪙 250</div><button data-shop="goldLion">Buy</button></div>
+<div class="shopCard" data-type="skin" data-id="shadowTiger"><div class="rarity">EPIC</div><div class="preview">🐯</div><b>Shadow Tiger</b><div class="desc">Dark tiger skin + claw aura</div><div class="price">💎 20</div><button data-shop="shadowTiger">Buy</button></div>
+<div class="shopCard" data-type="effect" data-id="kingAura"><div class="rarity">LEGENDARY</div><div class="preview">👑</div><b>King Aura</b><div class="desc">Victory aura around your winner</div><div class="price">🪙 500</div><button data-shop="kingAura">Buy</button></div>
+<div class="shopCard" data-type="effect" data-id="inferno"><div class="rarity">LEGENDARY</div><div class="preview">🔥</div><b>Inferno Effect</b><div class="desc">Flame effect on winning cells</div><div class="price">💎 15</div><button data-shop="inferno">Buy</button></div>
+<div class="shopCard" data-type="effect" data-id="claw"><div class="rarity">RARE</div><div class="preview">🐾</div><b>Claw Strike</b><div class="desc">Extra claw animation on every move</div><div class="price">🪙 150</div><button data-shop="claw">Buy</button></div>
+<div class="shopCard" data-type="effect" data-id="roar"><div class="rarity">RARE</div><div class="preview">📣</div><b>Beast Roar</b><div class="desc">Stronger victory roar effect</div><div class="price">💎 10</div><button data-shop="roar">Buy</button></div>
+</div>
+</section>
+
+
+<section class="panel" id="arenaTabPanel">
+<h3>🏟️ Choose Arena</h3>
+<div class="grid2">
+<div class="item arenaChoice selected" data-arena="jungle"><div class="big">🌿</div><b>Jungle</b><button>Select</button></div>
+<div class="item arenaChoice" data-arena="volcano"><div class="big">🌋</div><b>Volcano</b><button>Select</button></div>
+<div class="item arenaChoice" data-arena="snow"><div class="big">❄️</div><b>Snow</b><button>Select</button></div>
+<div class="item arenaChoice" data-arena="night"><div class="big">🌙</div><b>Night</b><button>Select</button></div>
+</div>
+</section>
+
+<section class="panel" id="cupPanel">
+<h3>🏆 Jungle Cup</h3>
+<p id="cupStatus">Win 3 battles to become the Jungle Champion.</p>
+<div class="match">Round 1 <b id="cupWins">0 / 3 Wins</b></div>
+<button class="wide" id="startCup">Start Tournament</button>
+</section>
+
+<div class="hint">Win battles for 🪙 coins. Unlock skins, arenas and powers.</div>
+</div>
+
+<div class="overlay" id="result">
+<div class="modal"><div class="big" id="resultIcon">🏆</div><h2 id="resultTitle">Tiger Wins!</h2><p id="resultText"></p><button id="again">Rematch</button></div>
+</div>
+<div class="overlay" id="helpBox">
+<div class="modal"><div class="big">🦁🐯</div><h2>How to Play</h2><p>Make three in a row. Use Powers during your turn, earn coins after winning, buy items in Shop and change your Arena.</p><button id="closeHelp">Let's Play</button></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+'use strict';
+
+const $=id=>document.getElementById(id);
+let board=Array(9).fill('');
+let current='T', gameOver=false, vsAI=false, soundOn=true;
+let scores={L:0,T:0};
+let coins=250, crystals=25, energy=5, cupWins=0;
+let owned={goldLion:false,shadowTiger:false,kingAura:false,inferno:false};
+let audioCtx=null;
+
+const winLines=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+function showToast(text){
+  const t=$('toast');t.textContent=text;t.classList.add('show');
+  clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+
+const shopItems={
+ goldLion:{currency:'coins',price:250},
+ shadowTiger:{currency:'crystals',price:20},
+ kingAura:{currency:'coins',price:500},
+ inferno:{currency:'crystals',price:15},
+ claw:{currency:'coins',price:150},
+ roar:{currency:'crystals',price:10}
+};
+let ownedItems=JSON.parse(localStorage.getItem('jungleOwned')||'{}');
+let equippedSkin=localStorage.getItem('jungleSkin')||'default';
+let equippedEffect=localStorage.getItem('jungleEffect')||'none';
+
+function saveShop(){
+ localStorage.setItem('jungleOwned',JSON.stringify(ownedItems));
+ localStorage.setItem('jungleSkin',equippedSkin);
+ localStorage.setItem('jungleEffect',equippedEffect);
+}
+function shopButtonState(){
+ document.querySelectorAll('[data-shop]').forEach(btn=>{
+   const id=btn.dataset.shop, card=btn.closest('.shopCard');
+   card.classList.toggle('equipped',equippedSkin===id||equippedEffect===id);
+   if(ownedItems[id]){
+     const isSkin=['goldLion','shadowTiger'].includes(id);
+     const equipped=isSkin?equippedSkin===id:equippedEffect===id;
+     btn.textContent=equipped?'✓ Equipped':'Equip';
+     btn.classList.toggle('equip',!equipped);
+     btn.disabled=false;
+   }else{
+     btn.textContent='Buy';
+     btn.classList.remove('equip');
+     btn.disabled=false;
+   }
+ });
+}
+function shopAction(id){
+ const item=shopItems[id];
+ if(!item)return;
+ if(!ownedItems[id]){
+   if(item.currency==='coins' && coins<item.price)return showToast('Not enough 🪙 coins!');
+   if(item.currency==='crystals' && crystals<item.price)return showToast('Not enough 💎 crystals!');
+   if(item.currency==='coins')coins-=item.price;else crystals-=item.price;
+   ownedItems[id]=true;
+   showToast('🛒 '+id+' unlocked!');
+ }
+ const isSkin=['goldLion','shadowTiger'].includes(id);
+ if(isSkin)equippedSkin=equippedSkin===id?'default':id;
+ else equippedEffect=equippedEffect===id?'none':id;
+ saveShop();applyShopVisuals();updateUI();shopButtonState();
+}
+function applyShopVisuals(){
+ document.body.dataset.skin=equippedSkin;
+ document.body.dataset.effect=equippedEffect;
+}
+
+function updateUI(){
+  $('coins').textContent=coins;
+  $('crystals').textContent=crystals;
+  $('energy').textContent=energy;
+  $('lionScore').textContent=scores.L;
+  $('tigerScore').textContent=scores.T;
+  $('cupWins').textContent=`${cupWins} / 3 Wins`;
+}
+
+function render(){
+  const boardEl=$('board');
+  boardEl.innerHTML='';
+  board.forEach((value,index)=>{
+    const cell=document.createElement('button');
+    cell.type='button';cell.className='cell';
+    cell.onclick=()=>makeHumanMove(index);
+    if(value==='X'){cell.style.opacity='.35';cell.textContent='🔒';}
+    else if(value){
+      const mark=document.createElement('span');
+      mark.className='mark '+(value==='L'?'lionMark':'tigerMark');
+      mark.textContent=value==='L'?'🦁':'🐯';
+      cell.appendChild(mark);
+    }
+    boardEl.appendChild(cell);
+  });
+  if(!gameOver){
+    $('turn').className='turn '+(current==='L'?'lion':'tiger');
+    $('turn').textContent=current==='L'?"🦁 Lion's Turn":"🐯 Tiger's Turn";
+  }
+  updateUI();
+}
+
+function emptyCells(state=board){
+  return state.map((v,i)=>v===''?i:null).filter(i=>i!==null);
+}
+
+function check(state=board){
+  for(const line of winLines){
+    const [a,b,c]=line;
+    if(state[a] && state[a]!=='X' && state[a]===state[b] && state[a]===state[c]) return {winner:state[a],line};
+  }
+  if(state.every(v=>v)) return {winner:'D',line:[]};
+  return null;
+}
+
+function makeHumanMove(i){
+  if(gameOver||board[i]||board[i]==='X'||(vsAI&&current==='L')) return;
+  place(i,current);
+  if(!gameOver&&vsAI&&current==='L') setTimeout(()=>{if(!gameOver)place(bestMove(),'L')},300);
+}
+
+function place(i,player){
+  if(i==null||board[i]||gameOver)return;
+  board[i]=player;clickSound(player);render();
+  const cell=$('board').children[i];cell.classList.add('attack');
+  setTimeout(()=>cell.classList.remove('attack'),450);
+  const result=check();
+  if(result){finish(result);return}
+  current=current==='T'?'L':'T';render();
+}
+
+function finish(result){
+  gameOver=true;
+  if(result.winner==='D'){showResult('🤝','Draw Battle!','No coins this round.');render();return}
+  scores[result.winner]++;cupWins++;
+  coins+=100;
+  result.line.forEach(i=>$('board').children[i]?.classList.add('win'));
+  const name=result.winner==='L'?'Lion':'Tiger';
+  showResult(result.winner==='L'?'🦁':'🐯',name+' Wins!','+100 🪙 Battle Reward!');
+  roar(result.winner);render();
+  if(cupWins>=3){setTimeout(()=>showResult('🏆','Jungle Champion!','You completed the Jungle Cup.'),700)}
+}
+
+function showResult(icon,title,text){
+  $('resultIcon').textContent=icon;$('resultTitle').textContent=title;$('resultText').textContent=text;
+  setTimeout(()=>$('result').style.display='flex',220);
+}
+
+function resetRound(){
+  board=Array(9).fill('');current='T';gameOver=false;energy=5;
+  $('result').style.display='none';render();
+}
+
+function minimax(maximizing){
+  const result=check();
+  if(result)return result.winner==='L'?10:result.winner==='T'?-10:0;
+  const cells=emptyCells();
+  if(maximizing){
+    let best=-Infinity;
+    for(const i of cells){board[i]='L';best=Math.max(best,minimax(false));board[i]=''}
+    return best;
+  }else{
+    let best=Infinity;
+    for(const i of cells){board[i]='T';best=Math.min(best,minimax(true));board[i]=''}
+    return best;
+  }
+}
+
+function bestMove(){
+  const cells=emptyCells();let best=-Infinity,index=cells[0];
+  for(const i of cells){board[i]='L';const v=minimax(false);board[i]='';if(v>best){best=v;index=i}}
+  return index;
+}
+
+function usePower(type){
+  if(gameOver)return showToast('Battle is over!');
+  if(energy<2)return showToast('Not enough ⚡ energy!');
+  if(type==='lion'&&current!=='L')return showToast("Wait for Lion's turn.");
+  if(type==='tiger'&&current!=='T')return showToast("Wait for Tiger's turn.");
+
+  if(type==='lion'){
+    const cells=emptyCells();if(!cells.length)return showToast('No empty cell.');
+    const i=cells[Math.floor(Math.random()*cells.length)];
+    board[i]='X';energy-=2;showToast('🦁 Roar! Cell blocked!');
+  }else{
+    const cells=board.map((v,i)=>v==='L'?i:null).filter(i=>i!==null);
+    if(!cells.length)return showToast('No Lion mark to claw!');
+    const i=cells[Math.floor(Math.random()*cells.length)];
+    board[i]='';energy-=2;showToast('🐯 Claw! Lion mark removed!');
+  }
+  render();
+}
+
+function buy(btn){
+  const key=btn.dataset.buy;
+  const price=Number(btn.dataset.price);
+  const currency=btn.dataset.currency;
+  if(owned[key])return;
+  if(currency==='coins'&&coins<price)return showToast('Not enough 🪙 coins!');
+  if(currency==='crystals'&&crystals<price)return showToast('Not enough 💎 crystals!');
+  if(currency==='coins')coins-=price;else crystals-=price;
+  owned[key]=true;btn.textContent='✓ Owned';btn.disabled=true;
+  showToast('✅ Item unlocked!');
+  updateUI();
+}
+
+function selectArena(name){
+  const backgrounds={
+    jungle:'linear-gradient(145deg,#172e1b,#07100a 50%,#2b1608)',
+    volcano:'linear-gradient(145deg,#3a1209,#100604 50%,#4b1705)',
+    snow:'linear-gradient(145deg,#17354a,#07131d 50%,#25465a)',
+    night:'linear-gradient(145deg,#11152e,#050710 50%,#24132f)'
+  };
+  $('arena').style.background=backgrounds[name];
+  document.querySelectorAll('.arenaChoice').forEach(x=>x.classList.toggle('selected',x.dataset.arena===name));
+  showToast('🏟️ '+name.charAt(0).toUpperCase()+name.slice(1)+' arena selected');
+}
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('activePanel'));
+  const id={battle:'battlePanel',shop:'shopPanel',arenaTab:'arenaTabPanel',cup:'cupPanel'}[name];
+  $(id).classList.add('activePanel');
+}
+
+function getAudio(){
+  if(!soundOn)return null;
+  try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx}catch(e){return null}
+}
+function clickSound(p){
+  const a=getAudio();if(!a)return;
+  const o=a.createOscillator(),g=a.createGain();o.type='triangle';o.frequency.value=p==='L'?520:360;
+  g.gain.setValueAtTime(.035,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.12);
+  o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.12);
+}
+function roar(p){
+  const a=getAudio();if(!a)return;
+  const o=a.createOscillator(),g=a.createGain();o.type='sawtooth';
+  o.frequency.setValueAtTime(p==='L'?110:145,a.currentTime);o.frequency.exponentialRampToValueAtTime(42,a.currentTime+.65);
+  g.gain.setValueAtTime(.001,a.currentTime);g.gain.exponentialRampToValueAtTime(.1,a.currentTime+.08);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.7);
+  o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.7);
+}
+
+$('newBtn').onclick=resetRound;
+$('again').onclick=resetRound;
+$('modeBtn').onclick=()=>{vsAI=!vsAI;$('modeBtn').textContent=vsAI?'🤖 VS AI':'👥 2 Players';resetRound()};
+$('powerTabBtn').onclick=()=>switchTab('battle');
+$('sound').onclick=e=>{soundOn=!soundOn;e.currentTarget.textContent=soundOn?'🔊':'🔇'};
+$('help').onclick=()=>$('helpBox').style.display='flex';
+$('closeHelp').onclick=()=>$('helpBox').style.display='none';
+$('lionPower').onclick=()=>usePower('lion');
+$('tigerPower').onclick=()=>usePower('tiger');
+$('startCup').onclick=()=>{cupWins=0;showToast('🏆 Tournament started! Win 3 battles.');resetRound()};
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));
+document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buy(b));
+document.querySelectorAll('.arenaChoice').forEach(b=>b.onclick=()=>selectArena(b.dataset.arena));
+
+
+document.querySelectorAll('[data-shop]').forEach(btn=>btn.onclick=()=>shopAction(btn.dataset.shop));
+document.querySelectorAll('.shopFilter').forEach(btn=>btn.onclick=()=>{
+ document.querySelectorAll('.shopFilter').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
+ const f=btn.dataset.filter;
+ document.querySelectorAll('.shopCard').forEach(card=>card.style.display=(f==='all'||card.dataset.type===f)?'block':'none');
+});
+applyShopVisuals();shopButtonState();
+
+render();
+</script></body></html>
