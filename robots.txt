@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://imtiaz2002.github.io/ImtiazAli-Portfolio/sitemap.xml
