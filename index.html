@@ -1,601 +1,462 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Imtiaz Ali - Developer, Programmer and Technology Enthusiast">
-  <meta name="author" content="Imtiaz Ali">
-  <title>Imtiaz Ali | Developer Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Imtiaz Ali - Developer, Programmer and Technology Enthusiast">
+<meta name="author" content="Imtiaz Ali">
+<title>Imtiaz Ali | Developer Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:Inter,sans-serif;background:#07070d;color:#f7f7fb;line-height:1.6;overflow-x:hidden}
+body.light{background:#f5f7fb;color:#111827}a{text-decoration:none;color:inherit}
+body:before,body:after{content:"";position:fixed;width:420px;height:420px;border-radius:50%;filter:blur(90px);opacity:.16;z-index:-1}
+body:before{background:#7c3aed;top:-180px;left:-150px}body:after{background:#06b6d4;right:-170px;bottom:-160px}
+nav{position:fixed;top:0;width:100%;z-index:99;background:#07070dcc;backdrop-filter:blur(15px);border-bottom:1px solid #ffffff12}
+.light nav{background:#ffffffdd}.nav{max-width:1150px;margin:auto;padding:16px 22px;display:flex;justify-content:space-between;align-items:center}
+.logo{font:700 25px "Space Grotesk"}.logo b{color:#8b5cf6}.links{display:flex;gap:25px;list-style:none;color:#aaa;font-size:13px}.links a:hover{color:#a78bfa}
+button{cursor:pointer}.theme{width:38px;height:38px;border:1px solid #ffffff18;border-radius:10px;background:#ffffff08;color:inherit}
+.hero{min-height:100vh;max-width:1150px;margin:auto;padding:145px 22px 80px;display:grid;grid-template-columns:1.1fr .9fr;gap:55px;align-items:center}
+.badge{display:inline-block;border:1px solid #8b5cf633;background:#8b5cf610;color:#c4b5fd;padding:6px 12px;border-radius:99px;font-size:11px;margin-bottom:18px}
+h1{font:700 clamp(52px,8vw,92px)/.95 "Space Grotesk";letter-spacing:-4px}.gradient{background:linear-gradient(90deg,#a78bfa,#22d3ee);-webkit-background-clip:text;color:transparent}
+.hero p{color:#999;max-width:650px;margin:22px 0;font-size:17px}.typing{color:#67e8f9;font-weight:700}.btns{display:flex;gap:12px;flex-wrap:wrap}.btn{padding:12px 18px;border-radius:11px;border:1px solid #ffffff18;font-weight:700;font-size:13px;display:inline-block;transition:.25s}.btn:hover{transform:translateY(-3px)}
+.primary{background:linear-gradient(90deg,#7c3aed,#2563eb);box-shadow:0 0 30px #7c3aed35}
+.terminal{background:#0d0d15;border:1px solid #ffffff12;border-radius:18px;overflow:hidden;box-shadow:0 25px 80px #0008;animation:float 5s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-10px) rotate(-1deg)}}.termbar{padding:12px 15px;border-bottom:1px solid #ffffff0d}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#555;margin-right:6px}
+.term{padding:25px;font:13px/2 monospace;min-height:300px}.green{color:#86efac}.cyan{color:#67e8f9}.purple{color:#c084fc}.orange{color:#fdba74}
+section{max-width:1150px;margin:auto;padding:90px 22px}.eyebrow{color:#8b5cf6;font-size:11px;font-weight:800;letter-spacing:3px}.title{font:700 42px "Space Grotesk";margin:8px 0 12px}.desc{color:#888;max-width:700px;margin-bottom:35px}
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}.card,.skill,.project{background:#ffffff06;border:1px solid #ffffff0d;border-radius:18px;padding:27px}.card p,.project p{color:#92929e}
+.info{list-style:none}.info li{padding:12px 0;border-bottom:1px solid #ffffff0d;display:flex;justify-content:space-between;color:#888}.info strong{color:inherit}
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.skill{transition:.25s}.skill:hover{transform:translateY(-5px);border-color:#8b5cf655}.ico{font-size:27px}.skill h3{margin:7px 0}.skill small{color:#888}.level{display:inline-block;margin-top:10px;padding:3px 8px;border-radius:20px;font-size:9px;background:#8b5cf61a;color:#c4b5fd}.learning{background:#06b6d41a;color:#67e8f9}.explore{background:#f59e0b1a;color:#fbbf24}
+.projects{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.project{transition:.3s}.project:hover{transform:translateY(-6px)}.num{color:#8b5cf6;font-size:10px;font-weight:800}.project h3{font-size:21px;margin:8px 0}.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:15px}.tag{font-size:10px;padding:4px 9px;border-radius:20px;background:#8b5cf612;color:#bdb3ff}
+.timeline{border-left:2px solid #312e81;padding-left:28px}.item{position:relative;margin-bottom:30px}.item:before{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:#8b5cf6;left:-34px;top:8px;box-shadow:0 0 15px #8b5cf6}.item span{font-size:11px;color:#8b5cf6}.item p{color:#888}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.stat{text-align:center;padding:22px;border:1px solid #ffffff0d;background:#ffffff05;border-radius:15px}.stat b{display:block;font:700 30px "Space Grotesk";color:#c4b5fd}.stat small{color:#888}
+.contact{text-align:center;padding:60px 20px;border:1px solid #ffffff0d;border-radius:25px;background:radial-gradient(circle,#7c3aed18,transparent 65%)}.contact h2{font:700 40px "Space Grotesk";margin:10px 0}.contact p{color:#888;margin-bottom:22px}
+footer{text-align:center;padding:30px;color:#666;border-top:1px solid #ffffff0d;font-size:12px}.reveal{opacity:1;transform:none;transition:.7s}.reveal.show{opacity:1;transform:none}
+#top{position:fixed;right:18px;bottom:18px;width:42px;height:42px;border:0;border-radius:50%;background:#7c3aed;color:white;display:none;z-index:90}
+@media(max-width:850px){.links{display:none}.hero{grid-template-columns:1fr;text-align:center;padding-top:125px}.hero p{margin-left:auto;margin-right:auto}.btns{justify-content:center}.grid2{grid-template-columns:1fr}.skills{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){section{padding:70px 18px}.skills,.projects,.stats{grid-template-columns:1fr}.title{font-size:34px}h1{font-size:55px;letter-spacing:-2px}}
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+.project-buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
+.code-btn,.demo-btn{padding:9px 13px;border-radius:9px;font-size:11px;font-weight:700;border:1px solid #ffffff18;transition:.25s;cursor:pointer}
+.code-btn{background:#ffffff09;color:#fff}
+.demo-btn{background:linear-gradient(90deg,#7c3aed,#2563eb);color:#fff}
+.code-btn:hover,.demo-btn:hover{transform:translateY(-3px)}
+.light .code-btn{color:#111827;border-color:#00000018;background:#00000006}
 
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{
-      font-family:Inter,sans-serif;
-      background:#07070d;color:#f7f7fb;
-      line-height:1.6;overflow-x:hidden
-    }
-    body.light{background:#f5f7fb;color:#111827}
-    a{text-decoration:none;color:inherit}
-    button{font:inherit;cursor:pointer}
+.code-modal{position:fixed;inset:0;background:#000b;backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:18px;z-index:2000}
+.code-modal.open{display:flex}
+.code-window{width:min(900px,100%);max-height:88vh;background:#0c0c14;border:1px solid #ffffff18;border-radius:18px;overflow:hidden;box-shadow:0 30px 100px #000}
+.code-head{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-bottom:1px solid #ffffff12}
+.code-title{font-weight:700;font-size:14px}.code-actions{display:flex;gap:8px}
+.code-action{border:1px solid #ffffff18;background:#ffffff09;color:#fff;border-radius:8px;padding:7px 10px;font-size:11px;cursor:pointer}
+.code-body{overflow:auto;max-height:calc(88vh - 58px);padding:20px}
+.code-body pre{margin:0;white-space:pre-wrap;word-break:break-word;color:#d4d4d8;font:12px/1.75 Consolas,Monaco,monospace}
 
-    body::before,body::after{
-      content:"";position:fixed;width:420px;height:420px;border-radius:50%;
-      filter:blur(90px);opacity:.14;z-index:-1;pointer-events:none
-    }
-    body::before{background:#7c3aed;top:-180px;left:-150px}
-    body::after{background:#06b6d4;right:-170px;bottom:-160px}
+.source-details{margin-top:18px;border:1px solid #8b5cf633;border-radius:12px;background:#05050a;overflow:hidden}
+.source-details summary{cursor:pointer;list-style:none;padding:11px 13px;color:#c4b5fd;font-size:12px;font-weight:700}
+.source-details summary::-webkit-details-marker{display:none}
+.source-details summary:before{content:"▸";margin-right:8px}
+.source-details[open] summary:before{content:"▾"}
+.source-toolbar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-top:1px solid #ffffff0d;border-bottom:1px solid #ffffff0d;color:#888;font-size:10px}
+.source-toolbar button{border:1px solid #ffffff18;background:#ffffff0a;color:#fff;border-radius:7px;padding:6px 9px;font-size:10px}
+.source-code{margin:0;padding:15px;max-height:330px;overflow:auto;white-space:pre-wrap;word-break:break-word;color:#d4d4d8;font:11px/1.7 Consolas,Monaco,monospace}
+.light .source-details{background:#111827;border-color:#00000018}
 
-    nav{
-      position:fixed;top:0;left:0;width:100%;z-index:100;
-      background:#07070dcc;backdrop-filter:blur(15px);
-      border-bottom:1px solid #ffffff12
-    }
-    .light nav{background:#ffffffdd}
-    .nav{
-      max-width:1150px;margin:auto;padding:15px 22px;
-      display:flex;justify-content:space-between;align-items:center
-    }
-    .logo{font:700 25px "Space Grotesk"}
-    .logo b{color:#8b5cf6}
-    .links{display:flex;gap:22px;list-style:none;color:#aaa;font-size:13px}
-    .links a:hover{color:#a78bfa}
-    .nav-actions{display:flex;align-items:center;gap:8px}
-    .theme,.menu-btn{
-      width:38px;height:38px;border:1px solid #ffffff18;border-radius:10px;
-      background:#ffffff08;color:inherit
-    }
-    .menu-btn{display:none;font-size:19px}
-
-    .mobile-menu{
-      display:none;position:fixed;top:70px;left:12px;right:12px;
-      background:#0d0d15f5;border:1px solid #ffffff12;border-radius:16px;
-      padding:12px;z-index:99;box-shadow:0 20px 60px #0008
-    }
-    .mobile-menu.open{display:block}
-    .mobile-menu a{display:block;padding:11px 14px;color:#bbb;border-radius:10px}
-    .mobile-menu a:hover{background:#ffffff0a;color:#fff}
-
-    .hero{
-      min-height:100vh;max-width:1150px;margin:auto;padding:145px 22px 80px;
-      display:grid;grid-template-columns:1.1fr .9fr;gap:55px;align-items:center
-    }
-    .badge{
-      display:inline-block;border:1px solid #8b5cf633;background:#8b5cf610;
-      color:#c4b5fd;padding:6px 12px;border-radius:99px;font-size:11px;margin-bottom:18px
-    }
-    h1{
-      font:700 clamp(52px,8vw,92px)/.95 "Space Grotesk";
-      letter-spacing:-4px
-    }
-    .gradient{
-      background:linear-gradient(90deg,#a78bfa,#22d3ee);
-      -webkit-background-clip:text;color:transparent
-    }
-    .hero p{color:#999;max-width:650px;margin:22px 0;font-size:17px}
-    .typing{color:#67e8f9;font-weight:700}
-    .btns{display:flex;gap:12px;flex-wrap:wrap}
-    .btn{
-      padding:12px 18px;border-radius:11px;border:1px solid #ffffff18;
-      font-weight:700;font-size:13px;display:inline-block;transition:.25s
-    }
-    .btn:hover{transform:translateY(-3px)}
-    .primary{
-      background:linear-gradient(90deg,#7c3aed,#2563eb);
-      box-shadow:0 0 30px #7c3aed35
-    }
-    .profile-chip{
-      display:inline-flex;align-items:center;gap:8px;margin-top:18px;
-      padding:8px 12px;border:1px solid #ffffff12;border-radius:999px;
-      background:#ffffff06;color:#aaa;font-size:11px
-    }
-    .profile-dot{
-      width:8px;height:8px;border-radius:50%;background:#34d399;
-      box-shadow:0 0 12px #34d399
-    }
-
-    .terminal{
-      background:#0d0d15;border:1px solid #ffffff12;border-radius:18px;
-      overflow:hidden;box-shadow:0 25px 80px #0008;
-      animation:float 5s ease-in-out infinite
-    }
-    @keyframes float{50%{transform:translateY(-10px) rotate(-1deg)}}
-    .termbar{padding:12px 15px;border-bottom:1px solid #ffffff0d}
-    .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#555;margin-right:6px}
-    .term{padding:25px;font:13px/2 monospace;min-height:300px}
-    .green{color:#86efac}.cyan{color:#67e8f9}.purple{color:#c084fc}.orange{color:#fdba74}
-
-    section{max-width:1150px;margin:auto;padding:90px 22px}
-    .eyebrow{color:#8b5cf6;font-size:11px;font-weight:800;letter-spacing:3px}
-    .title{font:700 42px "Space Grotesk";margin:8px 0 12px}
-    .desc{color:#888;max-width:700px;margin-bottom:35px}
-
-    .grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
-    .card,.skill,.project,.service{
-      background:#ffffff06;border:1px solid #ffffff0d;border-radius:18px;padding:27px
-    }
-    .card p,.project p,.service p{color:#92929e}
-    .info{list-style:none}
-    .info li{
-      padding:12px 0;border-bottom:1px solid #ffffff0d;
-      display:flex;justify-content:space-between;color:#888
-    }
-
-    .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-    .skill{transition:.25s}
-    .skill:hover{transform:translateY(-5px);border-color:#8b5cf655}
-    .ico{font-size:27px}.skill h3{margin:7px 0}.skill small{color:#888}
-    .level{
-      display:inline-block;margin-top:10px;padding:3px 8px;border-radius:20px;
-      font-size:9px;background:#8b5cf61a;color:#c4b5fd
-    }
-    .learning{background:#06b6d41a;color:#67e8f9}
-    .explore{background:#f59e0b1a;color:#fbbf24}
-    .skill-bar{
-      height:5px;background:#ffffff12;border-radius:20px;overflow:hidden;margin-top:8px
-    }
-    .skill-bar span{
-      display:block;height:100%;background:linear-gradient(90deg,#8b5cf6,#22d3ee);
-      border-radius:20px
-    }
-
-    .projects{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-    .project{transition:.3s}
-    .project:hover{transform:translateY(-6px)}
-    .num{color:#8b5cf6;font-size:10px;font-weight:800}
-    .project h3{font-size:21px;margin:8px 0}
-    .tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:15px}
-    .tag{
-      font-size:10px;padding:4px 9px;border-radius:20px;
-      background:#8b5cf612;color:#bdb3ff
-    }
-
-    .timeline{border-left:2px solid #312e81;padding-left:28px}
-    .item{position:relative;margin-bottom:30px}
-    .item::before{
-      content:"";position:absolute;width:10px;height:10px;border-radius:50%;
-      background:#8b5cf6;left:-34px;top:8px;box-shadow:0 0 15px #8b5cf6
-    }
-    .item span{font-size:11px;color:#8b5cf6}.item p{color:#888}
-
-    .services{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-    .service{transition:.25s}
-    .service:hover{transform:translateY(-5px);border-color:#8b5cf655}
-    .service-icon{font-size:27px}.service h3{margin:7px 0;font-size:17px}
-    .service p{font-size:12px}
-
-    .contact{
-      text-align:center;padding:60px 20px;border:1px solid #ffffff0d;
-      border-radius:25px;background:radial-gradient(circle,#7c3aed18,transparent 65%)
-    }
-    .contact h2{font:700 40px "Space Grotesk";margin:10px 0}
-    .contact p{color:#888;margin-bottom:22px}
-    .contact-links{
-      display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px
-    }
-    .contact-links a{
-      padding:10px 14px;border:1px solid #ffffff12;border-radius:9px;
-      font-size:11px;color:#bbb;transition:.2s
-    }
-    .contact-links a:hover{transform:translateY(-2px);border-color:#8b5cf655;color:#fff}
-
-    footer{
-      text-align:center;padding:30px;color:#666;
-      border-top:1px solid #ffffff0d;font-size:12px
-    }
-
-    #top{
-      position:fixed;right:18px;bottom:18px;width:42px;height:42px;border:0;
-      border-radius:50%;background:#7c3aed;color:white;display:none;z-index:90
-    }
-
-    .code-modal{
-      position:fixed;inset:0;background:#000b;backdrop-filter:blur(10px);
-      display:none;align-items:center;justify-content:center;padding:18px;z-index:2000
-    }
-    .code-modal.open{display:flex}
-    .code-window{
-      width:min(900px,100%);max-height:88vh;background:#0c0c14;
-      border:1px solid #ffffff18;border-radius:18px;overflow:hidden
-    }
-    .code-head{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:13px 16px;border-bottom:1px solid #ffffff12
-    }
-    .code-title{font-weight:700;font-size:14px}
-    .code-actions{display:flex;gap:8px}
-    .code-action{
-      border:1px solid #ffffff18;background:#ffffff09;color:#fff;
-      border-radius:8px;padding:7px 10px;font-size:11px
-    }
-    .code-body{overflow:auto;max-height:calc(88vh - 58px);padding:20px}
-    .code-body pre{
-      margin:0;white-space:pre-wrap;word-break:break-word;color:#d4d4d8;
-      font:12px/1.75 Consolas,Monaco,monospace
-    }
-    .view-code{
-      margin-top:16px;padding:9px 13px;border-radius:9px;font-size:11px;
-      font-weight:700;border:1px solid #ffffff18;background:#ffffff08;color:#fff
-    }
-    .view-code:hover{transform:translateY(-2px)}
-
-    @media(max-width:850px){
-      .links{display:none}.menu-btn{display:block}
-      .hero{grid-template-columns:1fr;text-align:center;padding-top:125px}
-      .hero p{margin-left:auto;margin-right:auto}
-      .btns{justify-content:center}
-      .grid2{grid-template-columns:1fr}
-      .skills{grid-template-columns:repeat(2,1fr)}
-      .services{grid-template-columns:repeat(2,1fr)}
-    }
-    @media(max-width:560px){
-      section{padding:70px 18px}.skills,.projects,.services{grid-template-columns:1fr}
-      .title{font-size:34px}h1{font-size:55px;letter-spacing:-2px}
-      .hero{padding-left:18px;padding-right:18px}
-    }
-  </style>
+/* Creative portfolio showcase */
+.creative-section{max-width:1150px;margin:auto;padding:95px 22px}
+.creative-section .creative-heading{text-align:center}
+.creative-heading h2{font:700 clamp(34px,5vw,55px) "Space Grotesk";margin:8px 0 14px}
+.creative-heading h2 span{background:linear-gradient(90deg,#8b5cf6,#22d3ee);-webkit-background-clip:text;color:transparent}
+.creative-heading p{color:#888;max-width:650px;margin:0 auto 32px}
+.portfolio-filters{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:28px 0 45px}
+.portfolio-filter{border:0;padding:12px 25px;border-radius:12px;background:#ffffff0a;border:1px solid #ffffff10;color:#ddd;font-weight:700;cursor:pointer;transition:.25s}
+.portfolio-filter:hover,.portfolio-filter.active{background:linear-gradient(90deg,#4338ca,#6366f1);color:#fff;transform:translateY(-2px)}
+.portfolio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px}
+.portfolio-card{background:#ffffff07;border:1px solid #ffffff10;border-radius:22px;overflow:hidden;transition:.3s;box-shadow:0 18px 50px #0002}
+.portfolio-card:hover{transform:translateY(-7px);border-color:#8b5cf655}
+.portfolio-card.hide{display:none}
+.project-preview{height:250px;padding:18px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.preview-browser{width:92%;height:88%;border-radius:12px;background:#11131d;border:1px solid #ffffff18;box-shadow:0 15px 35px #0006;overflow:hidden}
+.preview-top{height:25px;background:#1b1d28;display:flex;align-items:center;gap:5px;padding-left:10px}
+.preview-top i{width:7px;height:7px;border-radius:50%;background:#666}
+.preview-screen{height:calc(100% - 25px);padding:16px;position:relative}
+.preview-screen .big{font:700 20px "Space Grotesk";margin-top:20px}
+.preview-screen .mini{font-size:8px;color:#9ca3af;margin-top:6px}
+.preview-screen .bar{height:8px;border-radius:5px;background:#8b5cf6;margin-top:14px;width:48%}
+.preview-screen .cards{display:flex;gap:8px;margin-top:18px}
+.preview-screen .cards span{height:55px;flex:1;border-radius:8px;background:#ffffff0d;border:1px solid #ffffff0b}
+.preview-screen .phone{width:75px;height:125px;border:3px solid #ddd;border-radius:14px;margin:auto;background:#29243f}
+.preview-screen .phone:after{content:"";display:block;width:45px;height:45px;border-radius:50%;background:#22d3ee;margin:30px auto}
+.preview-screen .dashboard{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:15px}
+.preview-screen .dashboard span{height:45px;background:#ffffff0b;border-radius:6px}
+.preview-screen .music{background:linear-gradient(135deg,#312e81,#06b6d4);height:100%;padding:20px;border-radius:8px}
+.preview-screen .music .album{width:75px;height:75px;background:#f59e0b;border-radius:10px;margin:auto}
+.preview-screen .music .line{height:6px;background:#fff8;border-radius:5px;margin-top:12px}
+.project-meta{padding:22px 24px 25px;background:#ffffff03}
+.project-category{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;padding:6px 10px;border-radius:20px;background:#8b5cf61a;color:#c4b5fd;margin-bottom:10px}
+.project-meta h3{font-size:22px;margin:2px 0 8px}
+.project-meta p{color:#92929e;font-size:14px;min-height:45px}
+.project-actions{display:flex;gap:9px;margin-top:17px}
+.project-actions a,.project-actions button{padding:9px 13px;border-radius:9px;font-size:11px;font-weight:700;border:1px solid #ffffff18;background:#ffffff08;color:#fff;cursor:pointer}
+.project-actions .view{background:linear-gradient(90deg,#7c3aed,#2563eb);border:0}
+.light .portfolio-filter{background:#fff;color:#374151;border-color:#00000010}
+.light .portfolio-filter.active{color:#fff}
+.light .portfolio-card{background:#fff;border-color:#0000000d}
+.light .project-meta{background:#fff}
+@media(max-width:700px){.portfolio-grid{grid-template-columns:1fr}.project-preview{height:225px}.portfolio-filters{gap:8px}.portfolio-filter{padding:10px 17px}}
+</style>
+<style>.reveal{opacity:1!important;transform:none!important}</style>
 </head>
-
 <body>
-
-<nav>
-  <div class="nav">
-    <div class="logo">Imtiaz<b>.</b></div>
-
-    <ul class="links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#journey">Journey</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-
-    <div class="nav-actions">
-      <button class="theme" id="theme" aria-label="Toggle theme">☾</button>
-      <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
-    </div>
-  </div>
-</nav>
-
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#about">About</a>
-  <a href="#skills">Skills</a>
-  <a href="#projects">Projects</a>
-  <a href="#journey">Journey</a>
-  <a href="#services">Services</a>
-  <a href="#contact">Contact</a>
-</div>
+<nav><div class="nav"><div class="logo">Imtiaz<b>.</b></div><ul class="links">
+<li><a href="#about">About</a></li><li><a href="#skills">Skills</a></li><li><a href="#projects">Projects</a></li><li><a href="#journey">Journey</a></li><li><a href="#contact">Contact</a></li></ul><button class="theme" id="theme">☾</button></div></nav>
 
 <header class="hero">
-  <div>
-    <span class="badge">● DEVELOPER • PROGRAMMER • TECH ENTHUSIAST</span>
-    <h1>Hi, I'm <span class="gradient">Imtiaz Ali.</span></h1>
-
-    <p>
-      I'm a <span class="typing" id="typing"></span> passionate about programming,
-      web development, computer technology, automation and creative digital projects.
-    </p>
-
-    <div class="btns">
-      <a class="btn primary" href="#projects">Explore Projects →</a>
-      <a class="btn" href="#contact">Contact Me</a>
-    </div>
-
-    <div class="profile-chip">
-      <span class="profile-dot"></span>
-      Available for learning, building & collaboration
-    </div>
-  </div>
-
-  <div class="terminal">
-    <div class="termbar">
-      <i class="dot"></i><i class="dot"></i><i class="dot"></i>
-    </div>
-    <div class="term">
-      <div class="green">$ whoami</div>
-      <div class="cyan">Imtiaz Ali</div>
-
-      <div class="green">$ skills</div>
-      <div class="purple">HTML CSS JavaScript Python</div>
-      <div class="purple">Java PHP C/C++ MySQL</div>
-      <div class="purple">Git GitHub React Node.js</div>
-
-      <div class="green">$ status</div>
-      <div class="orange">Learning • Building • Improving</div>
-
-      <div class="green">$ motto</div>
-      <div class="cyan">Eat • Sleep • Code • Repeat</div>
-    </div>
-  </div>
+<div><span class="badge">● DEVELOPER • PROGRAMMER • TECH ENTHUSIAST</span>
+<h1>Hi, I'm <span class="gradient">Imtiaz Ali.</span></h1>
+<p>I’m a <span class="typing" id="typing"></span> passionate about programming, web development, computer technology and creative digital projects.</p>
+<div class="btns"><a class="btn primary" href="#projects">Explore Projects →</a><a class="btn" href="#contact">Contact Me</a></div></div>
+<div class="terminal"><div class="termbar"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div><div class="term" id="terminal">
+<div class="green">$ whoami</div>
+<div class="cyan">Imtiaz Ali</div>
+<div class="green">$ skills</div>
+<div class="purple">HTML CSS JavaScript Python</div>
+<div class="purple">Java MySQL Cyber Security</div>
+<div class="green">$ status</div>
+<div class="orange">Learning • Building • Improving</div>
+<div class="green">$ motto</div>
+<div class="cyan">Eat • Sleep • Code • Repeat</div>
+</div></div>
 </header>
 
-<section id="about">
-  <div class="eyebrow">ABOUT ME</div>
-  <h2 class="title">Curious mind. Builder mindset.</h2>
-  <p class="desc">I enjoy understanding technology, learning programming and turning ideas into practical projects.</p>
+<section id="about" class="reveal"><div class="eyebrow">ABOUT ME</div><h2 class="title">Curious mind. Builder mindset.</h2><p class="desc">I enjoy understanding technology, learning programming and turning ideas into practical projects.</p>
+<div class="grid2"><div class="card"><p>My interests include software development, web technologies, automation, computer vision, databases and modern AI. I learn by building, experimenting and improving.</p><br><p>This portfolio is a snapshot of my skills, projects and technology journey.</p></div>
+<div class="card"><ul class="info"><li>Name <strong>Imtiaz Ali</strong></li><li>Focus <strong>Programming & Web</strong></li><li>Interests <strong>AI • Security • Tech</strong></li><li>Motto <strong>Learn • Build • Repeat</strong></li></ul></div></div></section>
 
-  <div class="grid2">
-    <div class="card">
-      <p>
-        My interests include software development, web technologies, automation,
-        computer vision, databases, cyber security and modern AI.
-      </p>
-      <br>
-      <p>
-        I learn by building, experimenting and improving. This portfolio is a
-        snapshot of my skills, projects and technology journey.
-      </p>
-    </div>
+<section id="skills" class="reveal"><div class="eyebrow">TECH STACK</div><h2 class="title">Skills & expertise.</h2><p class="desc">A mix of core skills, technologies being learned and areas being explored.</p>
+<div class="skills">
+<div class="skill"><div class="ico">🌐</div><h3>HTML & CSS</h3><small>Responsive web structure & design</small><br><span class="level">EXPERTISE</span></div>
+<div class="skill"><div class="ico">⚡</div><h3>JavaScript</h3><small>Interactive web experiences</small><br><span class="level">EXPERTISE</span></div>
+<div class="skill"><div class="ico">🐍</div><h3>Python</h3><small>Programming & automation</small><br><span class="level">EXPERTISE</span></div>
+<div class="skill"><div class="ico">☕</div><h3>Java</h3><small>Object-oriented programming</small><br><span class="level">EXPERTISE</span></div>
+<div class="skill"><div class="ico">🗄️</div><h3>MySQL</h3><small>Relational databases</small><br><span class="level">EXPERTISE</span></div>
+<div class="skill"><div class="ico">🔐</div><h3>Cyber Security</h3><small>Security concepts & awareness</small><br><span class="level">EXPERTISE</span></div>
+<div class="skill"><div class="ico">🐙</div><h3>Git & GitHub</h3><small>Version control & deployment</small><br><span class="level learning">LEARNING</span></div>
+<div class="skill"><div class="ico">⚛️</div><h3>React & Node.js</h3><small>Modern web development</small><br><span class="level learning">LEARNING</span></div>
+<div class="skill"><div class="ico">📱</div><h3>Flutter & Firebase</h3><small>Mobile development ecosystem</small><br><span class="level learning">LEARNING</span></div>
+<div class="skill"><div class="ico">🤖</div><h3>AI & Machine Learning</h3><small>Intelligent systems</small><br><span class="level explore">EXPLORING</span></div>
+<div class="skill"><div class="ico">👁️</div><h3>Computer Vision</h3><small>OpenCV & MediaPipe</small><br><span class="level explore">EXPLORING</span></div>
+<div class="skill"><div class="ico">🧠</div><h3>Agentic AI</h3><small>AI agents & automation</small><br><span class="level explore">EXPLORING</span></div>
+</div></section>
 
-    <div class="card">
-      <ul class="info">
-        <li>Name <strong>Imtiaz Ali</strong></li>
-        <li>Focus <strong>Programming & Web</strong></li>
-        <li>Interests <strong>AI • Security • Tech</strong></li>
-        <li>Motto <strong>Learn • Build • Repeat</strong></li>
-      </ul>
-    </div>
+<section id="projects" class="reveal"><div class="eyebrow">PROJECTS</div><h2 class="title">Things I've built.</h2><p class="desc">Creative and practical experiments with programming and technology. Tap <b>View Code</b> to inspect the source preview.</p>
+<div class="projects">
+<div class="project"><div class="num">01 / COMPUTER VISION</div><h3>Air Canvas</h3><p>Virtual drawing using hand tracking and computer vision.</p><div class="tags"><span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">MediaPipe</span></div><details class="source-details">
+<summary>💻 View Code — Air Canvas</summary>
+<div class="source-toolbar"><span>Source Preview</span><button type="button" onclick="copySource(this)">📋 Copy Code</button></div>
+<pre class="source-code"># Air Canvas - Python
+import cv2
+import mediapipe as mp
+from collections import deque
+
+WIDTH, HEIGHT = 1280, 720
+cap = cv2.VideoCapture(0)
+
+hands = mp.solutions.hands.Hands(
+    max_num_hands=1,
+    min_detection_confidence=0.7,
+    min_tracking_confidence=0.7
+)
+drawer = mp.solutions.drawing_utils
+points = deque(maxlen=512)
+
+while True:
+    ok, frame = cap.read()
+    if not ok:
+        break
+
+    frame = cv2.flip(frame, 1)
+    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    result = hands.process(rgb)
+
+    if result.multi_hand_landmarks:
+        hand = result.multi_hand_landmarks[0]
+        drawer.draw_landmarks(
+            frame, hand, mp.solutions.hands.HAND_CONNECTIONS
+        )
+
+        x = int(hand.landmark[8].x * WIDTH)
+        y = int(hand.landmark[8].y * HEIGHT)
+        points.append((x, y))
+
+    for i in range(1, len(points)):
+        cv2.line(frame, points[i-1], points[i], (255, 0, 255), 5)
+
+    cv2.imshow(&quot;Air Canvas&quot;, frame)
+
+    if cv2.waitKey(1) &amp; 0xFF == 27:
+        break
+
+cap.release()
+cv2.destroyAllWindows()</pre>
+</details></div>
+
+<div class="project"><div class="num">02 / WEB</div><h3>Birthday Surprise</h3><p>Cinematic birthday webpage with QR access, animation and responsive design.</p><div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div><details class="source-details">
+<summary>💻 View Code — Birthday Surprise</summary>
+<div class="source-toolbar"><span>Source Preview</span><button type="button" onclick="copySource(this)">📋 Copy Code</button></div>
+<pre class="source-code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;Birthday Surprise&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;A Little Surprise For You ✨&lt;/h1&gt;
+  &lt;p&gt;Something special is waiting...&lt;/p&gt;
+
+  &lt;button onclick=&quot;openSurprise()&quot;&gt;
+    Open Surprise
+  &lt;/button&gt;
+
+  &lt;script&gt;
+    function openSurprise() {
+      alert(&quot;Your special birthday message 💜&quot;);
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</details></div>
+
+<div class="project"><div class="num">03 / AUTOMATION</div><h3>Voice Assistant</h3><p>Python assistant concept for voice-driven computer tasks.</p><div class="tags"><span class="tag">Python</span><span class="tag">Automation</span><span class="tag">Voice</span></div><details class="source-details">
+<summary>💻 View Code — Voice Assistant</summary>
+<div class="source-toolbar"><span>Source Preview</span><button type="button" onclick="copySource(this)">📋 Copy Code</button></div>
+<pre class="source-code"># Simple Voice Assistant - Python
+import webbrowser
+import datetime
+
+def assistant(command):
+    command = command.lower().strip()
+
+    if &quot;open youtube&quot; in command:
+        webbrowser.open(&quot;https://www.youtube.com&quot;)
+        return &quot;Opening YouTube...&quot;
+
+    if &quot;open google&quot; in command:
+        webbrowser.open(&quot;https://www.google.com&quot;)
+        return &quot;Opening Google...&quot;
+
+    if &quot;time&quot; in command:
+        return datetime.datetime.now().strftime(
+            &quot;Current time: %I:%M %p&quot;
+        )
+
+    return &quot;Command not recognised yet.&quot;
+
+while True:
+    command = input(&quot;You: &quot;)
+
+    if command.lower() in {&quot;exit&quot;, &quot;quit&quot;}:
+        print(&quot;Assistant: Goodbye!&quot;)
+        break
+
+    print(&quot;Assistant:&quot;, assistant(command))</pre>
+</details></div>
+
+<div class="project"><div class="num">04 / WEB</div><h3>Developer Portfolio</h3><p>A personal responsive portfolio designed as a home on the web.</p><div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div><details class="source-details">
+<summary>💻 View Code — Developer Portfolio</summary>
+<div class="source-toolbar"><span>Source Preview</span><button type="button" onclick="copySource(this)">📋 Copy Code</button></div>
+<pre class="source-code">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot;
+        content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Imtiaz Ali | Developer&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;h1&gt;Hi, I&#x27;m Imtiaz Ali.&lt;/h1&gt;
+  &lt;p&gt;Developer • Programmer • Tech Enthusiast&lt;/p&gt;
+
+  &lt;section id=&quot;projects&quot;&gt;
+    &lt;h2&gt;Projects&lt;/h2&gt;
+    &lt;p&gt;Air Canvas&lt;/p&gt;
+    &lt;p&gt;Birthday Surprise&lt;/p&gt;
+    &lt;p&gt;Voice Assistant&lt;/p&gt;
+  &lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</details></div>
+</div></section>
+
+
+<section id="creative" class="creative-section reveal">
+  <div class="creative-heading">
+    <div class="eyebrow">MY WORK</div>
+    <h2>My Creative <span>Portfolio</span> Section</h2>
+    <p>A collection of websites, applications, interfaces and technology projects built while learning and experimenting.</p>
   </div>
-</section>
 
-<section id="skills">
-  <div class="eyebrow">TECH STACK</div>
-  <h2 class="title">Languages, skills & technologies.</h2>
-  <p class="desc">Core skills, technologies being learned and areas being explored.</p>
-
-  <div class="skills">
-
-    <div class="skill">
-      <div class="ico">🌐</div><h3>HTML & CSS</h3>
-      <small>Responsive web structure & design</small>
-      <span class="level">CORE</span><div class="skill-bar"><span style="width:90%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">⚡</div><h3>JavaScript</h3>
-      <small>Interactive web experiences</small>
-      <span class="level">CORE</span><div class="skill-bar"><span style="width:82%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">🐍</div><h3>Python</h3>
-      <small>Programming & automation</small>
-      <span class="level">CORE</span><div class="skill-bar"><span style="width:80%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">☕</div><h3>Java</h3>
-      <small>Object-oriented programming</small>
-      <span class="level">CORE</span><div class="skill-bar"><span style="width:70%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">🐘</div><h3>PHP</h3>
-      <small>Server-side web development</small>
-      <span class="level learning">LEARNING</span><div class="skill-bar"><span style="width:60%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">©️</div><h3>C / C++</h3>
-      <small>Programming fundamentals & logic</small>
-      <span class="level learning">LEARNING</span><div class="skill-bar"><span style="width:60%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">🗄️</div><h3>SQL / MySQL</h3>
-      <small>Queries & relational databases</small>
-      <span class="level">CORE</span><div class="skill-bar"><span style="width:72%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">🐙</div><h3>Git & GitHub</h3>
-      <small>Version control & deployment</small>
-      <span class="level learning">LEARNING</span><div class="skill-bar"><span style="width:65%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">🧩</div><h3>Bootstrap</h3>
-      <small>Responsive UI development</small>
-      <span class="level learning">LEARNING</span><div class="skill-bar"><span style="width:55%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">🟢</div><h3>Node.js</h3>
-      <small>JavaScript runtime & backend concepts</small>
-      <span class="level learning">LEARNING</span><div class="skill-bar"><span style="width:50%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">⚛️</div><h3>React</h3>
-      <small>Component-based web development</small>
-      <span class="level learning">LEARNING</span><div class="skill-bar"><span style="width:45%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">📱</div><h3>Flutter & Firebase</h3>
-      <small>Mobile development ecosystem</small>
-      <span class="level explore">EXPLORING</span><div class="skill-bar"><span style="width:40%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">👁️</div><h3>Computer Vision</h3>
-      <small>OpenCV & MediaPipe</small>
-      <span class="level explore">EXPLORING</span><div class="skill-bar"><span style="width:45%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">🤖</div><h3>AI / ML / Generative AI</h3>
-      <small>Intelligent systems & AI concepts</small>
-      <span class="level explore">EXPLORING</span><div class="skill-bar"><span style="width:40%"></span></div>
-    </div>
-
-    <div class="skill">
-      <div class="ico">🔐</div><h3>Cyber Security</h3>
-      <small>Security concepts & awareness</small>
-      <span class="level">CORE</span><div class="skill-bar"><span style="width:65%"></span></div>
-    </div>
-
+  <div class="portfolio-filters">
+    <button class="portfolio-filter active" data-filter="all">All</button>
+    <button class="portfolio-filter" data-filter="react">React JS</button>
+    <button class="portfolio-filter" data-filter="web">Web App</button>
+    <button class="portfolio-filter" data-filter="mobile">Mobile App</button>
+    <button class="portfolio-filter" data-filter="uiux">UI/UX</button>
+    <button class="portfolio-filter" data-filter="python">Python</button>
   </div>
-</section>
 
-<section id="projects">
-  <div class="eyebrow">PROJECTS</div>
-  <h2 class="title">Things I've built.</h2>
-  <p class="desc">A few practical projects and experiments. Click View Code to inspect the source.</p>
+  <div class="portfolio-grid">
 
-  <div class="projects">
-
-    <article class="project">
-      <div class="num">01 / COMPUTER VISION</div>
-      <h3>Air Canvas</h3>
-      <p>Virtual drawing using hand tracking and computer vision.</p>
-      <div class="tags">
-        <span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">MediaPipe</span>
+    <article class="portfolio-card" data-category="web uiux">
+      <div class="project-preview">
+        <div class="preview-browser">
+          <div class="preview-top"><i></i><i></i><i></i></div>
+          <div class="preview-screen">
+            <div class="mini">IMTIAZ PORTFOLIO</div>
+            <div class="big">Build. Create.<br><span class="gradient">Explore.</span></div>
+            <div class="bar"></div>
+            <div class="cards"><span></span><span></span><span></span></div>
+          </div>
+        </div>
       </div>
-      <button class="view-code" data-code="air">💻 View Code</button>
+      <div class="project-meta">
+        <span class="project-category">WEB APP</span>
+        <h3>Developer Portfolio</h3>
+        <p>A responsive personal portfolio with animations, skills, projects and a modern developer interface.</p>
+        <div class="project-actions">
+          <button class="view" data-code="portfolio">💻 View Code</button>
+          <a href="#contact">🚀 Details</a>
+        </div>
+      </div>
     </article>
 
-    <article class="project">
-      <div class="num">02 / AUTOMATION</div>
-      <h3>Voice Assistant</h3>
-      <p>Python assistant concept for voice-driven computer tasks.</p>
-      <div class="tags">
-        <span class="tag">Python</span><span class="tag">Automation</span><span class="tag">Voice</span>
+    <article class="portfolio-card" data-category="web uiux">
+      <div class="project-preview">
+        <div class="preview-browser">
+          <div class="preview-top"><i></i><i></i><i></i></div>
+          <div class="preview-screen">
+            <div class="mini">BIRTHDAY SURPRISE</div>
+            <div class="big">A Little<br><span class="gradient">Surprise ✨</span></div>
+            <div class="bar"></div>
+            <div class="cards"><span></span><span></span></div>
+          </div>
+        </div>
       </div>
-      <button class="view-code" data-code="assistant">💻 View Code</button>
+      <div class="project-meta">
+        <span class="project-category">WEB APP</span>
+        <h3>Birthday Surprise</h3>
+        <p>A cinematic surprise webpage with QR access, animations and a responsive mobile-first design.</p>
+        <div class="project-actions">
+          <button class="view" data-code="birthday">💻 View Code</button>
+          <a href="#projects">✨ Preview</a>
+        </div>
+      </div>
     </article>
 
-    <article class="project">
-      <div class="num">03 / WEB</div>
-      <h3>Developer Portfolio</h3>
-      <p>A responsive personal portfolio built with HTML, CSS and JavaScript.</p>
-      <div class="tags">
-        <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span>
+    <article class="portfolio-card" data-category="python">
+      <div class="project-preview">
+        <div class="preview-browser">
+          <div class="preview-top"><i></i><i></i><i></i></div>
+          <div class="preview-screen">
+            <div class="mini">$ AIR_CANVAS</div>
+            <div class="big">Draw in<br><span class="gradient">the Air.</span></div>
+            <div class="dashboard"><span></span><span></span><span></span></div>
+          </div>
+        </div>
       </div>
-      <button class="view-code" data-code="portfolio">💻 View Code</button>
+      <div class="project-meta">
+        <span class="project-category">PYTHON</span>
+        <h3>Air Canvas</h3>
+        <p>Computer-vision drawing concept using hand tracking, OpenCV and MediaPipe.</p>
+        <div class="project-actions">
+          <button class="view" data-code="air">💻 View Code</button>
+          <a href="#projects">👁️ Details</a>
+        </div>
+      </div>
     </article>
 
-    <article class="project">
-      <div class="num">04 / BACKEND</div>
-      <h3>PHP Contact Form</h3>
-      <p>A basic PHP form concept for receiving and processing contact data.</p>
-      <div class="tags">
-        <span class="tag">PHP</span><span class="tag">HTML</span><span class="tag">Backend</span>
+    <article class="portfolio-card" data-category="python">
+      <div class="project-preview">
+        <div class="preview-browser">
+          <div class="preview-top"><i></i><i></i><i></i></div>
+          <div class="preview-screen">
+            <div class="mini">VOICE ASSISTANT</div>
+            <div class="big">Hello,<br><span class="gradient">How can I help?</span></div>
+            <div class="bar"></div>
+            <div class="cards"><span></span><span></span></div>
+          </div>
+        </div>
       </div>
-      <button class="view-code" data-code="php">💻 View Code</button>
+      <div class="project-meta">
+        <span class="project-category">PYTHON</span>
+        <h3>Voice Assistant</h3>
+        <p>A Python automation concept for voice-driven commands and opening useful services.</p>
+        <div class="project-actions">
+          <button class="view" data-code="assistant">💻 View Code</button>
+          <a href="#projects">🤖 Details</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="portfolio-card" data-category="react uiux">
+      <div class="project-preview">
+        <div class="preview-browser">
+          <div class="preview-top"><i></i><i></i><i></i></div>
+          <div class="preview-screen">
+            <div class="mini">REACT JS</div>
+            <div class="big">Modern<br><span class="gradient">Dashboard</span></div>
+            <div class="dashboard"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="project-meta">
+        <span class="project-category">REACT JS</span>
+        <h3>React Dashboard</h3>
+        <p>A modern dashboard concept with reusable components and responsive UI patterns.</p>
+        <div class="project-actions">
+          <a class="view" href="#contact">🚀 Coming Soon</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="portfolio-card" data-category="mobile uiux">
+      <div class="project-preview">
+        <div class="preview-browser" style="background:transparent;border:0;box-shadow:none">
+          <div class="preview-screen">
+            <div class="phone"></div>
+          </div>
+        </div>
+      </div>
+      <div class="project-meta">
+        <span class="project-category">MOBILE APP</span>
+        <h3>Mobile App Concept</h3>
+        <p>A clean mobile interface concept designed for future Flutter and Firebase development.</p>
+        <div class="project-actions">
+          <a class="view" href="#contact">📱 Coming Soon</a>
+        </div>
+      </div>
     </article>
 
   </div>
 </section>
 
-<section id="journey">
-  <div class="eyebrow">MY JOURNEY</div>
-  <h2 class="title">Learning by building.</h2>
-  <p class="desc">A simple timeline of my technology learning journey.</p>
+<section id="journey" class="reveal"><div class="eyebrow">JOURNEY</div><h2 class="title">Learn. Build. Improve.</h2><div class="timeline">
+<div class="item"><h3>Computer & Programming</h3><span>FOUNDATION</span><p>Practical knowledge of computer systems, software and programming.</p></div>
+<div class="item"><h3>Web Development</h3><span>HTML • CSS • JAVASCRIPT</span><p>Responsive websites and interactive experiences.</p></div>
+<div class="item"><h3>Python & Java</h3><span>PROGRAMMING</span><p>Programming concepts, projects and problem solving.</p></div>
+<div class="item"><h3>AI & Modern Development</h3><span>EXPLORING</span><p>AI, computer vision, automation, mobile development and modern web stacks.</p></div>
+</div></section>
 
-  <div class="timeline">
-    <div class="item">
-      <span>FOUNDATIONS</span>
-      <h3>Computer Fundamentals</h3>
-      <p>Operating systems, hardware, software, networking and computer fundamentals.</p>
-    </div>
+<section class="reveal"><div class="stats"><div class="stat"><b>10+</b><small>Technologies</small></div><div class="stat"><b>4+</b><small>Projects</small></div><div class="stat"><b>∞</b><small>Ideas</small></div><div class="stat"><b>24/7</b><small>Curiosity</small></div></div></section>
 
-    <div class="item">
-      <span>PROGRAMMING</span>
-      <h3>Programming & Databases</h3>
-      <p>Python, Java, C/C++, SQL and MySQL with practical problem solving.</p>
-    </div>
+<section id="contact" class="reveal"><div class="contact"><div class="eyebrow">CONTACT</div><h2>Let's build something.</h2><p>Have an idea, project or technology to discuss?</p><div class="btns" style="justify-content:center"><a class="btn primary" href="mailto:your-email@example.com">Email Me →</a><a class="btn" href="https://github.com/imtiaz2002" target="_blank">GitHub ↗</a></div></div></section>
 
-    <div class="item">
-      <span>WEB DEVELOPMENT</span>
-      <h3>Building for the Web</h3>
-      <p>HTML, CSS, JavaScript, PHP and responsive web development.</p>
-    </div>
 
-    <div class="item">
-      <span>EXPLORING</span>
-      <h3>AI, Security & Modern Tech</h3>
-      <p>Exploring AI, computer vision, cyber security, React, Node.js and Flutter.</p>
-    </div>
-  </div>
-</section>
-
-<section id="services">
-  <div class="eyebrow">SERVICES</div>
-  <h2 class="title">What I can work on.</h2>
-  <p class="desc">Areas where I am building practical experience.</p>
-
-  <div class="services">
-    <div class="service">
-      <div class="service-icon">🌐</div>
-      <h3>Web Development</h3>
-      <p>Responsive websites using HTML, CSS and JavaScript.</p>
-    </div>
-
-    <div class="service">
-      <div class="service-icon">🐍</div>
-      <h3>Python Projects</h3>
-      <p>Programming, automation and computer-vision experiments.</p>
-    </div>
-
-    <div class="service">
-      <div class="service-icon">🗄️</div>
-      <h3>Database Work</h3>
-      <p>SQL and MySQL database concepts and queries.</p>
-    </div>
-
-    <div class="service">
-      <div class="service-icon">🔐</div>
-      <h3>Cyber Security</h3>
-      <p>Security concepts, awareness and safe computing practices.</p>
-    </div>
-
-    <div class="service">
-      <div class="service-icon">🤖</div>
-      <h3>AI Exploration</h3>
-      <p>Learning AI, ML, Generative AI and intelligent systems.</p>
-    </div>
-
-    <div class="service">
-      <div class="service-icon">📱</div>
-      <h3>Mobile Exploration</h3>
-      <p>Learning Flutter and Firebase for mobile applications.</p>
-    </div>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="contact">
-    <div class="eyebrow">CONTACT</div>
-    <h2>Let's build something.</h2>
-    <p>Have an idea, project or collaboration in mind? Get in touch.</p>
-
-    <div class="btns" style="justify-content:center">
-      <a class="btn primary" href="mailto:imtiazali31122002@gmail.com">Email Me</a>
-      <a class="btn" href="https://wa.me/917908830316" target="_blank" rel="noopener">WhatsApp</a>
-    </div>
-
-    <div class="contact-links">
-      <a href="https://www.facebook.com/share/186zpajhDS/" target="_blank" rel="noopener">Facebook</a>
-      <a href="https://www.instagram.com/itz_imtiaz_7777/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://github.com/imtiaz2002" target="_blank" rel="noopener">GitHub</a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  © 2026 <b>Imtiaz Ali</b> · Built with HTML, CSS & JavaScript 💻
-</footer>
-
-<button id="top" aria-label="Back to top">↑</button>
-
-<!-- Code viewer -->
-<div class="code-modal" id="codeModal" aria-hidden="true">
+<div class="code-modal" id="codeModal">
   <div class="code-window">
     <div class="code-head">
       <div class="code-title" id="codeTitle">Project Code</div>
@@ -604,95 +465,33 @@
         <button class="code-action" id="closeCode">✕ Close</button>
       </div>
     </div>
-    <div class="code-body">
-      <pre id="codeText"></pre>
-    </div>
+    <div class="code-body"><pre id="codeText"></pre></div>
   </div>
 </div>
 
+<footer>© 2026 <b>Imtiaz Ali</b> · Built with HTML, CSS & JavaScript 💻</footer>
+<button id="top">↑</button>
+
 <script>
-  const words = [
-    "Developer",
-    "Programmer",
-    "Web Creator",
-    "Python Enthusiast",
-    "Technology Explorer"
-  ];
+const words=["Developer","Programmer","Web Creator","Python Enthusiast","Technology Explorer"];
+let wi=0,ci=0,del=false,el=document.getElementById("typing");
+function type(){let w=words[wi];el.textContent=w.slice(0,ci);if(!del&&ci<w.length){ci++;setTimeout(type,85)}else if(!del){del=true;setTimeout(type,900)}else if(ci){ci--;setTimeout(type,40)}else{del=false;wi=(wi+1)%words.length;setTimeout(type,200)}} type();
 
-  let wi = 0;
-  let ci = 0;
-  let deleting = false;
-  const typing = document.getElementById("typing");
+document.getElementById("theme").onclick=()=>{document.body.classList.toggle("light");document.getElementById("theme").textContent=document.body.classList.contains("light")?"☀":"☾"};
+const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("show")}),{threshold:.12});document.querySelectorAll(".reveal").forEach(x=>ob.observe(x));
+const top=document.getElementById("top");addEventListener("scroll",()=>top.style.display=scrollY>500?"block":"none");top.onclick=()=>scrollTo({top:0,behavior:"smooth"});
 
-  function typeWriter() {
-    const word = words[wi];
-    typing.textContent = word.slice(0, ci);
-
-    if (!deleting && ci < word.length) {
-      ci++;
-      setTimeout(typeWriter, 85);
-    } else if (!deleting) {
-      deleting = true;
-      setTimeout(typeWriter, 900);
-    } else if (ci > 0) {
-      ci--;
-      setTimeout(typeWriter, 40);
-    } else {
-      deleting = false;
-      wi = (wi + 1) % words.length;
-      setTimeout(typeWriter, 200);
-    }
-  }
-
-  typeWriter();
-
-  const menuBtn = document.getElementById("menuBtn");
-  const mobileMenu = document.getElementById("mobileMenu");
-
-  menuBtn.addEventListener("click", () => {
-    mobileMenu.classList.toggle("open");
-    menuBtn.textContent = mobileMenu.classList.contains("open") ? "✕" : "☰";
-  });
-
-  mobileMenu.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      mobileMenu.classList.remove("open");
-      menuBtn.textContent = "☰";
-    });
-  });
-
-  document.getElementById("theme").addEventListener("click", () => {
-    document.body.classList.toggle("light");
-    document.getElementById("theme").textContent =
-      document.body.classList.contains("light") ? "☀" : "☾";
-  });
-
-  const topButton = document.getElementById("top");
-
-  window.addEventListener("scroll", () => {
-    topButton.style.display = window.scrollY > 500 ? "block" : "none";
-  });
-
-  topButton.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  /*
-    IMPORTANT:
-    The code examples below do NOT contain a literal </script> inside
-    their template strings. That was one of the problems in the old file.
-  */
-  const projectCodes = {
-    air: {
-      title: "Air Canvas — Python",
-      code: `# Air Canvas - Python
+const projectCodes={
+air:{
+title:"Air Canvas — Python",
+code:`# Air Canvas
+# Hand tracking + virtual drawing concept
 
 import cv2
 import mediapipe as mp
 from collections import deque
 
 WIDTH, HEIGHT = 1280, 720
-
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
@@ -703,13 +502,12 @@ hands = mp_hands.Hands(
     min_detection_confidence=0.7,
     min_tracking_confidence=0.7
 )
-
 drawer = mp.solutions.drawing_utils
+
 points = deque(maxlen=512)
 
 while True:
     ok, frame = cap.read()
-
     if not ok:
         break
 
@@ -719,25 +517,19 @@ while True:
 
     if result.multi_hand_landmarks:
         hand = result.multi_hand_landmarks[0]
-
         drawer.draw_landmarks(
-            frame,
-            hand,
-            mp_hands.HAND_CONNECTIONS
+            frame, hand, mp_hands.HAND_CONNECTIONS
         )
 
+        # Index-finger tip
         x = int(hand.landmark[8].x * WIDTH)
         y = int(hand.landmark[8].y * HEIGHT)
-
         points.append((x, y))
 
     for i in range(1, len(points)):
         cv2.line(
-            frame,
-            points[i - 1],
-            points[i],
-            (255, 0, 255),
-            5
+            frame, points[i-1], points[i],
+            (255, 0, 255), 5
         )
 
     cv2.imshow("Air Canvas", frame)
@@ -747,11 +539,37 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()`
-    },
+},
+birthday:{
+title:"Birthday Surprise — HTML",
+code:`<!DOCTYPE html>
+<html>
+<head>
+  <title>Birthday Surprise</title>
+</head>
+<body>
 
-    assistant: {
-      title: "Voice Assistant — Python",
-      code: `# Simple Voice Assistant
+  <section class="surprise">
+    <h1>A Little Surprise For You ✨</h1>
+    <p>Something special is waiting...</p>
+    <button onclick="openSurprise()">
+      Open Surprise
+    </button>
+  </section>
+
+  <script>
+    function openSurprise() {
+      alert("Your special birthday message 💜");
+    }
+  </script>
+
+</body>
+</html>`
+},
+assistant:{
+title:"Voice Assistant — Python",
+code:`# Simple Voice Assistant
+# Example command-based assistant
 
 import webbrowser
 import datetime
@@ -766,6 +584,10 @@ def assistant(command):
     if "open google" in command:
         webbrowser.open("https://www.google.com")
         return "Opening Google..."
+
+    if "open chrome" in command:
+        webbrowser.open("https://www.google.com/chrome/")
+        return "Opening Chrome..."
 
     if "time" in command:
         return datetime.datetime.now().strftime(
@@ -782,11 +604,10 @@ while True:
         break
 
     print("Assistant:", assistant(command))`
-    },
-
-    portfolio: {
-      title: "Developer Portfolio — HTML",
-      code: `<!DOCTYPE html>
+},
+portfolio:{
+title:"Portfolio — HTML",
+code:`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -794,115 +615,80 @@ while True:
         content="width=device-width, initial-scale=1.0">
   <title>Imtiaz Ali | Developer</title>
 </head>
-<body>
 
+<body>
   <h1>Hi, I'm Imtiaz Ali.</h1>
   <p>Developer • Programmer • Tech Enthusiast</p>
 
   <section id="projects">
     <h2>Projects</h2>
     <p>Air Canvas</p>
+    <p>Birthday Surprise</p>
     <p>Voice Assistant</p>
-    <p>PHP Contact Form</p>
   </section>
-
 </body>
 </html>`
-    },
+}
+};
 
-    php: {
-      title: "PHP Contact Form",
-      code: `<?php
+const codeModal=document.getElementById("codeModal");
+const codeTitle=document.getElementById("codeTitle");
+const codeText=document.getElementById("codeText");
+const closeCode=document.getElementById("closeCode");
+const copyCode=document.getElementById("copyCode");
 
-$name = $_POST["name"] ?? "";
-$email = $_POST["email"] ?? "";
-$message = $_POST["message"] ?? "";
+document.querySelectorAll("[data-code]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const item=projectCodes[btn.dataset.code];
+    codeTitle.textContent=item.title;
+    codeText.textContent=item.code;
+    codeModal.classList.add("open");
+    document.body.style.overflow="hidden";
+  });
+});
+function closeViewer(){
+  codeModal.classList.remove("open");
+  document.body.style.overflow="";
+}
+closeCode.onclick=closeViewer;
+codeModal.addEventListener("click",e=>{
+  if(e.target===codeModal) closeViewer();
+});
+copyCode.onclick=async()=>{
+  try{
+    await navigator.clipboard.writeText(codeText.textContent);
+    copyCode.textContent="✓ Copied";
+    setTimeout(()=>copyCode.textContent="Copy Code",1200);
+  }catch(e){
+    copyCode.textContent="Select & Copy";
+    setTimeout(()=>copyCode.textContent="Copy Code",1200);
+  }
+};
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    echo "Thank you, " . htmlspecialchars($name);
-    echo "<br>";
-    echo "Your message has been received.";
-
+function copySource(button){
+  const code = button.closest(".source-details").querySelector(".source-code").innerText;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(code).then(()=>{
+      const old=button.textContent;
+      button.textContent="✓ Copied";
+      setTimeout(()=>button.textContent=old,1200);
+    });
+  }
 }
 
-?>
-
-<form method="POST">
-  <input type="text" name="name"
-         placeholder="Your Name" required>
-
-  <input type="email" name="email"
-         placeholder="Your Email" required>
-
-  <textarea name="message"
-            placeholder="Your Message"
-            required></textarea>
-
-  <button type="submit">Send</button>
-</form>`
-    }
-  };
-
-  const codeModal = document.getElementById("codeModal");
-  const codeTitle = document.getElementById("codeTitle");
-  const codeText = document.getElementById("codeText");
-  const closeCode = document.getElementById("closeCode");
-  const copyCode = document.getElementById("copyCode");
-
-  document.querySelectorAll("[data-code]").forEach(button => {
-    button.addEventListener("click", () => {
-      const item = projectCodes[button.dataset.code];
-
-      if (!item) return;
-
-      codeTitle.textContent = item.title;
-      codeText.textContent = item.code;
-
-      codeModal.classList.add("open");
-      codeModal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
+document.querySelectorAll(".portfolio-filter").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".portfolio-filter").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const filter=btn.dataset.filter;
+    document.querySelectorAll(".portfolio-card").forEach(card=>{
+      const cats=card.dataset.category.split(" ");
+      card.classList.toggle("hide", filter!=="all" && !cats.includes(filter));
     });
   });
+});
 
-  function closeViewer() {
-    codeModal.classList.remove("open");
-    codeModal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-  }
-
-  closeCode.addEventListener("click", closeViewer);
-
-  codeModal.addEventListener("click", event => {
-    if (event.target === codeModal) {
-      closeViewer();
-    }
-  });
-
-  document.addEventListener("keydown", event => {
-    if (event.key === "Escape") {
-      closeViewer();
-    }
-  });
-
-  copyCode.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(codeText.textContent);
-      copyCode.textContent = "✓ Copied";
-
-      setTimeout(() => {
-        copyCode.textContent = "Copy Code";
-      }, 1200);
-
-    } catch (error) {
-      copyCode.textContent = "Select & Copy";
-
-      setTimeout(() => {
-        copyCode.textContent = "Copy Code";
-      }, 1200);
-    }
-  });
 </script>
-
 </body>
 </html>
