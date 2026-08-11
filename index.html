@@ -717,29 +717,40 @@ body.light .social-float a{background:rgba(255,255,255,.82)}
           <div class="project-bottom"><button class="project-btn view-code" data-code="lava">View Code</button></div>
         </article>
 
+        <!-- PROJECT 10 -->
         <article class="project reveal" data-category="game creative" data-project="falling">
-          <div class="project-number">PROJECT 10</div><div class="project-icon">❄️🔥</div>
+          <div class="project-number">PROJECT 10</div>
+          <div class="project-icon">❄️🔥</div>
           <h3>Catch the Falling Elements</h3>
           <p>Arcade game concept where the player catches falling elements while managing score, combo and lives.</p>
-          <div class="tags"><span class="tag">JavaScript</span><span class="tag">Canvas</span><span class="tag">Effects</span></div>
-          <div class="project-bottom"><button class="project-btn view-code" data-code="falling">View Code</button></div>
+          <div class="tags">
+            <span class="tag">JavaScript</span>
+            <span class="tag">Canvas</span>
+            <span class="tag">Effects</span>
+          </div>
+          <div class="project-bottom">
+            <button class="project-btn view-code" data-code="falling">View Code</button>
+          </div>
+        </article>
+
+        <!-- PROJECT 11 -->
         <article class="project reveal" data-category="game creative" data-project="lion-tiger">
           <div class="project-number">PROJECT 11</div>
-
           <div class="project-image">
-              <img src="assets/lion-vs-tiger.png"
-                   alt="Lion vs Tiger — Jungle Battle">
+            <img src="assets/lion-vs-tiger.png" alt="Lion vs Tiger — Jungle Battle">
           </div>
           <h3>Lion vs Tiger — Jungle Battle</h3>
           <p>An aggressive jungle battle game featuring Lion vs Tiger, VS AI, special powers, shop, skins, effects and Jungle Cup.</p>
-          <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Game</span></div>
-          </article>
+          <div class="tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Game</span>
+          </div>
           <div class="project-bottom">
             <a href="games/lion-vs-tiger/" class="project-btn">🦁 Play Game</a>
             <button class="project-btn view-code" data-code="lion-tiger">💻 View Code</button>
           </div>
-        </article>
-
         </article>
 
       </div>
@@ -1214,6 +1225,37 @@ function gameLoop() {
 }
 
 gameLoop();`
+      },
+
+      "lion-tiger": {
+        title: "Lion vs Tiger — Jungle Battle",
+        code: `// Lion vs Tiger — Jungle Battle
+const game = {
+  player: "Lion",
+  enemy: "Tiger",
+  score: 0,
+  health: 100,
+  specialReady: true
+};
+
+function attack() {
+  game.score += 10;
+  console.log("Lion attacks Tiger!");
+}
+
+function useSpecial() {
+  if (game.specialReady) {
+    game.specialReady = false;
+    game.score += 50;
+    console.log("Special attack activated!");
+  }
+}
+
+function resetBattle() {
+  game.score = 0;
+  game.health = 100;
+  game.specialReady = true;
+}`
       }
     };
 
