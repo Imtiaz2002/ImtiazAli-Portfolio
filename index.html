@@ -485,6 +485,19 @@
   line-height:1;
 }
 
+
+/* Premium project filters - fixed */
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 24px}
+.filter{appearance:none;border:1px solid var(--line);background:var(--panel);color:inherit;padding:10px 17px;border-radius:999px;font:700 12px/1 Inter,system-ui,sans-serif;letter-spacing:.04em;cursor:pointer;transition:transform .2s,background .2s,border-color .2s,box-shadow .2s}
+.filter:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28);box-shadow:0 8px 22px rgba(0,0,0,.14)}
+.filter.active{background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border-color:transparent;box-shadow:0 8px 24px rgba(99,102,241,.28)}
+.project-search{width:100%;box-sizing:border-box;padding:13px 16px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:inherit;outline:none}
+.project-search:focus{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.12)}
+.project-grid .project.is-hidden{display:none!important}
+.no-results{display:none;text-align:center;padding:30px;opacity:.7}
+.no-results.show{display:block}
+@media(max-width:600px){.filter-row{gap:8px}.filter{flex:1;min-width:calc(50% - 8px);padding:11px 10px}.search-wrap{margin-bottom:14px}}
+
 </style>
 </head>
 
@@ -1579,26 +1592,35 @@ function resetBattle() {
         showToast("Opening your email app...");
       });
     }
-
     // Global portfolio visit counter — shared across devices/browsers.
-    // CounterAPI stores the count online, so it is not tied to localStorage.
+    // CounterAPI V1 returns the current value as data.count.
     const visitCount = document.getElementById("visitCount");
-    const counterUrl = "https://api.counterapi.dev/v1/imtiazali-portfolio-2026/visits/up";
+    const counterUrl = "https://api.counterapi.dev/v1/imtiaz-portfolio-2026/visits/up";
 
-    fetch(counterUrl, { cache: "no-store" })
-      .then(response => {
-        if (!response.ok) throw new Error("Counter request failed");
-        return response.json();
-      })
-      .then(data => {
-        const total = data?.data?.up ?? data?.data ?? data?.value;
-        if (visitCount && Number.isFinite(Number(total))) {
-          visitCount.textContent = Number(total).toLocaleString();
+    async function updatePortfolioVisits() {
+      if (!visitCount) return;
+      try {
+        const response = await fetch(counterUrl, {
+          method: "GET",
+          cache: "no-store",
+          headers: { "Accept": "application/json" }
+        });
+        if (!response.ok) throw new Error("Counter request failed: " + response.status);
+
+        const data = await response.json();
+        const total = Number(data?.count);
+
+        if (Number.isFinite(total)) {
+          visitCount.textContent = total.toLocaleString();
+        } else {
+          console.warn("Unexpected CounterAPI response:", data);
         }
-      })
-      .catch(() => {
-        // Keep the counter unchanged if the external service is unavailable.
-      });
+      } catch (error) {
+        console.warn("Portfolio visit counter unavailable:", error);
+      }
+    }
+
+    updatePortfolioVisits();
 
     // Testimonial slider
     const quoteCards = [...document.querySelectorAll(".quote-card")];
@@ -1637,6 +1659,37 @@ function resetBattle() {
       error404.classList.remove("open");
     });
 
-  </script>
+  
+/* Project search + filters */
+(() => {
+  const grid=document.getElementById('projectGrid');
+  const cards=grid ? [...grid.querySelectorAll('.project')] : [];
+  const search=document.getElementById('projectSearch');
+  const buttons=[...document.querySelectorAll('.filter-row .filter')];
+  const empty=document.getElementById('noResults');
+  let active='all';
+  function apply(){
+    const q=(search?.value||'').trim().toLowerCase();
+    let visible=0;
+    cards.forEach(card=>{
+      const cats=(card.dataset.category||'').toLowerCase().split(/\s+/);
+      const text=(card.textContent||'').toLowerCase();
+      const okFilter=active==='all'||cats.includes(active);
+      const okSearch=!q||text.includes(q);
+      const show=okFilter&&okSearch;
+      card.classList.toggle('is-hidden',!show);
+      if(show) visible++;
+    });
+    if(empty) empty.classList.toggle('show',visible===0);
+  }
+  buttons.forEach(btn=>btn.addEventListener('click',()=>{
+    active=btn.dataset.filter||'all';
+    buttons.forEach(b=>b.classList.toggle('active',b===btn));
+    apply();
+  }));
+  search?.addEventListener('input',apply);
+  apply();
+})();
+</script>
 </body>
 </html>
