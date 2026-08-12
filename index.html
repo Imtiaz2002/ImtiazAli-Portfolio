@@ -346,7 +346,7 @@
     #top{
       position:fixed;right:18px;bottom:18px;width:43px;height:43px;border-radius:50%;
       border:1px solid var(--line);background:rgba(124,58,237,.9);color:#fff;
-      cursor:pointer;display:none;z-index:900;box-shadow:0 10px 30px rgba(124,58,237,.3)
+      cursor:pointer;display:none;z-index:1300;box-shadow:0 10px 30px rgba(124,58,237,.3)
     }
 
     .reveal{opacity:0;transform:translateY(25px);transition:.7s ease}
@@ -559,10 +559,8 @@
 @media(max-width:620px){.rating-grid{grid-template-columns:1fr}.skill-row{grid-template-columns:95px 1fr 38px}.install-prompt{left:12px;right:12px;bottom:82px}}
 @media(pointer:fine){body.custom-cursor{cursor:none}.cursor-dot,.cursor-ring{display:block}}
 
-.lang-toggle{font-family:inherit}
 
 /* ===== Theme selector ===== */
-.theme-toggle{position:fixed;right:18px;top:62px;z-index:7000;border:1px solid var(--line);background:var(--panel);color:inherit;border-radius:999px;padding:8px 12px;cursor:pointer;font-weight:800}
 .theme-menu{position:fixed;right:18px;top:106px;z-index:7001;display:none;gap:6px;padding:8px;border:1px solid var(--line);background:var(--panel);border-radius:14px;box-shadow:0 15px 45px rgba(0,0,0,.3)}
 .theme-menu.open{display:flex}
 .theme-menu button{border:1px solid var(--line);background:transparent;color:inherit;border-radius:9px;padding:7px 9px;cursor:pointer;font-size:11px}
@@ -571,57 +569,457 @@ html[data-theme="light"] body{background:#f6f7fb;color:#151522}
 html[data-theme="light"]{--panel:#ffffff;--line:rgba(20,20,40,.12);--muted:#606275}
 html[data-theme="purple"] body{background:#100819}
 html[data-theme="cyber"] body{background:#050b12}
-@media(max-width:620px){.theme-toggle{right:12px;top:58px}.theme-menu{right:12px;top:100px;flex-wrap:wrap;max-width:180px}}
+@media(max-width:620px){.theme-menu{right:12px;top:100px;flex-wrap:wrap;max-width:180px}}
 
 
-/* ===== Clean top controls ===== */
+
+
+/* ===== Floating language + theme controls ===== */
 .top-controls{
-  position:fixed;top:18px;right:18px;z-index:10001;
-  display:flex;align-items:center;gap:8px;
+  position:fixed;
+  right:18px;
+  bottom:74px;
+  top:auto !important;
+  left:auto !important;
+  z-index:1200;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:max-content;
+  max-width:calc(100vw - 36px);
+  isolation:isolate;
 }
-.top-controls .lang-toggle,
-.top-controls .theme-toggle{
+.top-controls > .lang-toggle,
+.top-controls > .theme-toggle{
   position:static !important;
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  width:auto !important;
+  height:40px;
+  min-width:84px;
+  box-sizing:border-box;
   margin:0 !important;
-  white-space:nowrap;
+  padding:8px 12px;
   border:1px solid var(--line);
+  border-radius:999px;
   background:var(--panel);
   color:inherit;
-  border-radius:999px;
-  padding:8px 12px;
+  white-space:nowrap;
   cursor:pointer;
+  font:inherit;
+  font-size:12px;
   font-weight:800;
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
   backdrop-filter:blur(14px);
 }
-.top-controls .theme-menu{
+.top-controls > .theme-toggle{min-width:120px}
+.top-controls > .theme-menu{
   position:absolute;
-  top:calc(100% + 8px);
   right:0;
+  bottom:calc(100% + 10px);
+  top:auto !important;
+  z-index:1201;
   display:none;
-  flex-wrap:wrap;
-  width:180px;
+  width:175px;
+  box-sizing:border-box;
+  padding:9px;
+  flex-direction:column;
   gap:6px;
-  padding:8px;
   border:1px solid var(--line);
-  background:var(--panel);
   border-radius:14px;
-  box-shadow:0 15px 45px rgba(0,0,0,.3);
+  background:var(--panel);
+  box-shadow:0 15px 45px rgba(0,0,0,.4);
 }
-.top-controls .theme-menu.open{display:flex}
-.top-controls .theme-menu button{
-  flex:1 1 75px;
+.top-controls > .theme-menu.open{display:flex !important}
+.top-controls > .theme-menu button{
+  position:static !important;
+  display:flex;
+  width:100% !important;
+  min-height:36px;
+  box-sizing:border-box;
+  align-items:center;
+  justify-content:center;
+  margin:0 !important;
+  padding:7px 9px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:transparent;
+  color:inherit;
+  cursor:pointer;
+  font:inherit;
+  font-size:11px;
+}
+@media(max-width:620px){
+  .top-controls{
+    right:10px;
+    bottom:68px;
+    max-width:calc(100vw - 20px);
+    gap:6px;
+  }
+  .top-controls > .lang-toggle,
+  .top-controls > .theme-toggle{
+    height:38px;
+    min-width:76px;
+    padding:7px 10px;
+    font-size:11px;
+  }
+  .top-controls > .theme-toggle{min-width:108px}
+  .top-controls > .theme-menu{
+    width:165px;
+    bottom:calc(100% + 8px);
+  }
+}
+
+/* ===== Mini Portfolio Robot V3 ===== */
+.mini-robot-wrap{
+  position:fixed;
+  right:18px;
+  left:auto !important;
+  top:50%;
+  bottom:auto !important;
+  transform:translateY(-50%);
+  z-index:1250;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  pointer-events:none;
+}
+.mini-robot{pointer-events:auto;position:relative;width:82px;height:105px;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 16px 25px rgba(0,0,0,.38));animation:robotFloat 3.2s ease-in-out infinite}
+.robot-antenna{position:absolute;left:39px;top:0;width:4px;height:15px;border-radius:4px;background:#8b5cf6}
+.robot-antenna:before{content:"";position:absolute;left:-4px;top:-7px;width:12px;height:12px;border-radius:50%;background:#22d3ee;box-shadow:0 0 15px #22d3ee;animation:antennaPulse 1.8s infinite}
+.robot-head{position:absolute;left:8px;top:16px;width:66px;height:48px;border-radius:19px 19px 16px 16px;background:linear-gradient(145deg,#fff,#dce5f2 55%,#aab6c9);border:2px solid rgba(139,92,246,.9);box-shadow:inset 0 -6px 0 rgba(55,65,81,.12),0 0 25px rgba(34,211,238,.2);transition:transform .25s}
+.robot-head:before,.robot-head:after{content:"";position:absolute;top:14px;width:8px;height:18px;border-radius:7px;background:#94a3b8;border:1px solid rgba(139,92,246,.55)}
+.robot-head:before{left:-9px}.robot-head:after{right:-9px}
+.robot-eye{position:absolute;top:16px;width:10px;height:10px;border-radius:50%;background:#22d3ee;box-shadow:0 0 13px #22d3ee;animation:robotBlink 4s infinite;transition:transform .15s}
+.robot-eye.left{left:15px}.robot-eye.right{right:15px}
+.robot-mouth{position:absolute;left:25px;bottom:8px;width:15px;height:6px;border-bottom:2px solid #64748b;border-radius:0 0 14px 14px}
+.robot-body{position:absolute;left:19px;top:64px;width:44px;height:33px;border-radius:12px 12px 14px 14px;background:linear-gradient(145deg,#a78bfa,#6366f1 60%,#4338ca);border:2px solid rgba(255,255,255,.22);box-shadow:inset 0 -5px 0 rgba(0,0,0,.12),0 0 20px rgba(139,92,246,.28)}
+.robot-heart{position:absolute;left:15px;top:7px;color:#fff;font-size:11px;text-shadow:0 0 8px rgba(255,255,255,.8);animation:heartPulse 1.5s infinite}
+.robot-arm{position:absolute;top:69px;width:17px;height:8px;border-radius:9px;background:linear-gradient(90deg,#cbd5e1,#94a3b8);box-shadow:0 3px 5px rgba(0,0,0,.15);transition:transform .3s}
+.robot-arm.left{left:1px;transform:rotate(25deg);transform-origin:right center}.robot-arm.right{right:1px;transform:rotate(-25deg);transform-origin:left center}
+.mini-robot-wrap.waving .robot-arm.right{animation:robotWave .55s ease-in-out 4}
+.mini-robot-wrap.waving .robot-head{transform:rotate(3deg)}
+.robot-bubble{max-width:245px;margin-bottom:10px;padding:10px 13px;border:1px solid var(--line);border-radius:14px 14px 14px 5px;background:var(--panel);color:inherit;font-size:11px;line-height:1.5;box-shadow:0 14px 35px rgba(0,0,0,.28);backdrop-filter:blur(14px);opacity:0;transform:translateY(7px) scale(.96);transition:.25s;pointer-events:none}
+.mini-robot-wrap:hover .robot-bubble,.mini-robot-wrap.active .robot-bubble{opacity:1;transform:none}
+
+/* ===== Standard Robot Assistant Panel ===== */
+.robot-panel{
+  display:none;
+  width:300px;
+  max-width:min(300px,calc(100vw - 28px));
+  margin:0 0 12px 0;
+  padding:0;
+  overflow:hidden;
+  box-sizing:border-box;
+  border:1px solid rgba(148,163,184,.28);
+  border-radius:18px;
+  background:var(--panel);
+  color:inherit;
+  box-shadow:0 20px 55px rgba(0,0,0,.34);
+  backdrop-filter:blur(18px);
+  pointer-events:auto;
+}
+.mini-robot-wrap.panel-open .robot-panel{display:block}
+
+.robot-panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:14px 15px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(139,92,246,.12),rgba(139,92,246,0));
+  font-size:13px;
+  font-weight:900;
+}
+.robot-panel-head span{display:flex;align-items:center;gap:7px}
+.robot-panel-head button{
+  flex:0 0 auto;
+  width:28px;height:28px;
+  display:grid;place-items:center;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:transparent;
+  color:inherit;
+  cursor:pointer;
+  font-size:18px;
+  line-height:1;
+}
+.robot-panel-head button:hover{background:rgba(255,255,255,.06)}
+
+.robot-status{
+  padding:9px 15px 0;
+  margin:0;
+  font-size:9px;
+  opacity:.72;
+}
+.robot-status .live-dot{display:inline-block;vertical-align:middle}
+
+.robot-connection{
+  padding:0 15px 8px;
+  margin:0;
+  text-align:left;
+  font-size:9px;
+  opacity:.65;
+}
+.robot-connection.success{color:#22c55e;opacity:1}
+.robot-connection.listening{color:#22d3ee;opacity:1}
+.robot-connection.error{color:#ef4444;opacity:1}
+
+.robot-mood{
+  display:inline-flex;
+  align-items:center;
+  min-height:24px;
+  margin:0 15px 10px;
+  padding:4px 8px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  font-size:9px;
+  background:rgba(139,92,246,.06);
+}
+
+.robot-stats{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+  padding:0 15px 11px;
+}
+.robot-stat{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  padding:8px 9px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:rgba(255,255,255,.018);
+  font-size:9px;
+}
+.robot-stat b{font-size:11px}
+
+.robot-message{
+  margin:0 15px 8px;
+  padding:10px 11px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:rgba(139,92,246,.07);
+  font-size:10px;
+  line-height:1.5;
+}
+.robot-typing,
+.robot-listening{
+  margin:0 15px 8px;
+  border-radius:10px;
+  font-size:9px;
+}
+.robot-typing{
+  display:none;
+  align-items:center;
+  gap:4px;
+  padding:7px 9px;
+  border:1px solid var(--line);
+  background:rgba(34,211,238,.05);
+}
+.robot-typing.show{display:flex}
+.robot-typing i{width:5px;height:5px;border-radius:50%;background:#22d3ee;animation:typingDot 1s infinite}
+.robot-typing i:nth-child(2){animation-delay:.15s}
+.robot-typing i:nth-child(3){animation-delay:.3s}
+.robot-listening{
+  display:none;
+  padding:8px 9px;
+  border:1px solid rgba(34,211,238,.3);
+  background:rgba(34,211,238,.05);
+}
+.robot-listening.show{display:block}
+
+.robot-recommend{
+  margin:0 15px 9px;
+  padding:8px 9px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:rgba(139,92,246,.06);
+  font-size:9px;
+  line-height:1.45;
+}
+.robot-recommend.show{display:block}
+
+.robot-ai-status{
+  margin:0 15px 9px;
+  padding:0;
+  text-align:left;
+  font-size:9px;
+  opacity:.62;
+}
+.robot-ai-status.thinking{color:#22d3ee;opacity:1;animation:aiPulse 1s infinite}
+
+.robot-actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+  padding:0 15px 15px;
+}
+.robot-actions button{
+  min-height:36px;
   border:1px solid var(--line);
   background:transparent;
   color:inherit;
-  border-radius:9px;
+  border-radius:10px;
   padding:8px 7px;
+  font-size:10px;
   cursor:pointer;
-  font-size:11px;
 }
-.top-controls .theme-menu button:hover{background:rgba(255,255,255,.08)}
+.robot-actions button:hover{
+  background:rgba(139,92,246,.1);
+  border-color:rgba(139,92,246,.35);
+}
+
+.robot-lang{
+  display:flex;
+  gap:6px;
+  padding:0 15px 10px;
+}
+.robot-lang button{
+  flex:1;
+  min-height:28px;
+  border:1px solid var(--line);
+  background:transparent;
+  color:inherit;
+  border-radius:8px;
+  padding:5px 7px;
+  font-size:9px;
+  cursor:pointer;
+}
+.robot-lang button.active{
+  background:rgba(139,92,246,.14);
+  border-color:rgba(139,92,246,.4);
+}
+
+.robot-mic-hint{
+  grid-column:1/-1;
+  text-align:center;
+  padding-top:1px;
+  font-size:8px;
+  opacity:.55;
+}
+
 @media(max-width:620px){
-  .top-controls{top:12px;right:12px;gap:6px}
-  .top-controls .lang-toggle,.top-controls .theme-toggle{padding:7px 10px;font-size:12px}
+  .robot-panel{
+    width:285px;
+    max-width:calc(100vw - 20px);
+    margin-bottom:9px;
+    border-radius:16px;
+  }
+}
+
+@media(max-width:620px){
+  .mini-robot-wrap{left:8px;top:auto;bottom:145px;transform:none}
+  .mini-robot{transform:scale(.82);transform-origin:left bottom}
+  .robot-bubble{max-width:185px;font-size:10px}.robot-panel{width:200px}
+}
+
+/* ===== Interactive portfolio upgrades ===== */
+#scrollProgress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,#22d3ee,#8b5cf6,#ec4899);z-index:100000;pointer-events:none}
+#bgParticles{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.35}
+.game-tools{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:0 0 18px}
+.game-search-wrap{display:flex;align-items:center;gap:8px;min-width:220px;flex:1;max-width:360px;padding:9px 12px;border:1px solid var(--line);background:var(--panel);border-radius:12px}
+.game-search-wrap input{width:100%;border:0;outline:0;background:transparent;color:inherit;font:inherit}
+.game-filters{display:flex;gap:6px;flex-wrap:wrap}
+.game-filter{border:1px solid var(--line);background:var(--panel);color:inherit;border-radius:999px;padding:8px 11px;cursor:pointer;font-size:11px}
+.game-filter.active,.game-filter:hover{background:rgba(139,92,246,.18)}
+.game-empty{padding:24px;text-align:center;border:1px dashed var(--line);border-radius:14px;grid-column:1/-1}
+.project-modal{position:fixed;inset:0;z-index:50000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.65);backdrop-filter:blur(8px)}
+.project-modal.open{display:flex}
+.project-modal-card{position:relative;width:min(680px,100%);max-height:90vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:0 25px 80px rgba(0,0,0,.45)}
+.project-modal-card>img{width:100%;max-height:280px;object-fit:cover;display:block}
+.modal-body{padding:20px}.modal-kicker{font-size:10px;letter-spacing:.14em;opacity:.7}.modal-body h3{margin:5px 0 8px}.modal-body p{line-height:1.65}.modal-close{position:absolute;right:12px;top:12px;width:36px;height:36px;border:1px solid var(--line);border-radius:50%;background:rgba(0,0,0,.45);color:#fff;font-size:24px;cursor:pointer;z-index:2}
+.modal-tags{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.modal-tags span{padding:5px 8px;border:1px solid var(--line);border-radius:999px;font-size:10px}.modal-actions{display:flex;gap:8px;flex-wrap:wrap}
+.recent-game-card{position:fixed;left:18px;bottom:18px;z-index:1240;display:none;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel);box-shadow:0 10px 30px rgba(0,0,0,.22);font-size:11px;backdrop-filter:blur(12px)}
+.recent-game-card.show{display:flex}
+.mobile-bottom-nav{display:none}
+@media(max-width:620px){
+  .game-tools{align-items:stretch}.game-search-wrap{max-width:none}
+  .recent-game-card{left:50%;transform:translateX(-50%);bottom:76px;white-space:nowrap}
+  .mobile-bottom-nav{position:fixed;left:10px;right:10px;bottom:10px;z-index:1100;display:flex;justify-content:space-around;padding:8px;border:1px solid var(--line);border-radius:16px;background:var(--panel);backdrop-filter:blur(16px);box-shadow:0 12px 35px rgba(0,0,0,.3)}
+  .mobile-bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;color:inherit;text-decoration:none;font-size:16px}.mobile-bottom-nav span{font-size:9px}
+}
+
+
+/* ===== Robot V5 extras: typing + secret mode + live status ===== */
+.robot-typing{display:none;align-items:center;gap:4px;padding:8px 10px;margin-bottom:8px;border:1px solid var(--line);border-radius:9px;background:rgba(34,211,238,.06);font-size:10px}
+.robot-typing.show{display:flex}
+.robot-typing i{width:5px;height:5px;border-radius:50%;background:#22d3ee;animation:typingDot 1s infinite}
+.robot-typing i:nth-child(2){animation-delay:.15s}.robot-typing i:nth-child(3){animation-delay:.3s}
+.robot-secret{display:none;margin-top:8px;padding:8px;border-radius:9px;text-align:center;font-size:10px;background:linear-gradient(90deg,rgba(34,211,238,.12),rgba(139,92,246,.16));border:1px solid rgba(139,92,246,.35)}
+.robot-secret.show{display:block;animation:secretPop .4s ease}
+.robot-status .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e;margin-right:4px}
+.robot-recommend{display:none;margin:7px 0;padding:8px;border:1px solid var(--line);border-radius:9px;background:rgba(139,92,246,.08);font-size:10px;line-height:1.4}
+.robot-recommend.show{display:block}
+@keyframes typingDot{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-3px);opacity:1}}
+@keyframes secretPop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+
+
+/* ===== Robot blink + voice reliability fix ===== */
+.robot-eye{
+  animation:robotBlink 4.2s infinite !important;
+  transform-origin:center;
+}
+.robot-eye.left{animation-delay:.35s !important}
+.robot-eye.right{animation-delay:.55s !important}
+@keyframes robotBlink{
+  0%,42%,46%,100%{transform:scaleY(1)}
+  44%,45%{transform:scaleY(.08)}
+}
+.robot-voice-active .robot-antenna:before{
+  animation:voicePulse .45s infinite alternate !important;
+}
+@keyframes voicePulse{
+  from{transform:scale(1);box-shadow:0 0 10px #22d3ee}
+  to{transform:scale(1.35);box-shadow:0 0 24px #22d3ee}
+}
+
+.robot-eye{transform:translate(var(--look-x,0),var(--look-y,0));}
+
+/* ===== Robot V8 female voice + mute controls ===== */
+.robot-mute-float{
+  position:absolute;left:74px;top:78px;width:25px;height:25px;border:1px solid var(--line);
+  border-radius:50%;background:var(--panel);color:inherit;font-size:12px;cursor:pointer;
+  box-shadow:0 6px 14px rgba(0,0,0,.2);pointer-events:auto;z-index:10;
+}
+.robot-mute-float:hover{transform:scale(1.08)}
+.robot-mute-float.muted{opacity:.72}
+.robot-actions button[data-robot-action="mute"]{border-color:rgba(239,68,68,.35)}
+
+
+/* ===== Voice conversation UI ===== */
+.robot-listening{display:none;align-items:center;gap:8px;padding:8px 10px;margin-bottom:7px;border:1px solid rgba(34,211,238,.35);border-radius:9px;background:rgba(34,211,238,.07);font-size:10px}
+.robot-listening.show{display:flex}
+.listen-bars{display:flex;align-items:center;gap:2px;height:13px}.listen-bars i{width:3px;height:5px;border-radius:3px;background:#22d3ee;animation:listenBar .65s ease-in-out infinite}.listen-bars i:nth-child(2){animation-delay:.1s}.listen-bars i:nth-child(3){animation-delay:.2s}.listen-bars i:nth-child(4){animation-delay:.3s}
+.mic-active .robot-antenna:before{background:#ef4444;box-shadow:0 0 18px #ef4444;animation:micPulse .7s infinite}
+@keyframes listenBar{50%{height:13px}}@keyframes micPulse{50%{transform:scale(1.35)}}
+
+
+.robot-connection{font-size:9px;text-align:center;opacity:.7;margin-bottom:7px}
+.robot-connection.error{color:#ef4444;opacity:1}.robot-connection.listening{color:#22d3ee;opacity:1}.robot-connection.success{color:#22c55e;opacity:1}
+.robot-listening{display:none;padding:8px;margin-bottom:7px;border:1px solid rgba(34,211,238,.35);border-radius:9px;background:rgba(34,211,238,.07);font-size:10px}.robot-listening.show{display:block}
+.robot-mic-hint{grid-column:1/-1;font-size:8px;opacity:.6;text-align:center}
+.robot-mute-float{position:absolute;left:74px;top:78px;width:25px;height:25px;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:inherit;cursor:pointer;pointer-events:auto;z-index:10}
+/* Robot right-side placement */
+.mini-robot-wrap .robot-bubble{align-self:flex-end}
+.mini-robot-wrap .robot-panel{align-self:flex-end}
+
+.mini-robot-wrap{
+  align-items:flex-end !important;
+}
+.mini-robot-wrap .robot-bubble{
+  align-self:flex-end;
+  max-width:240px;
+  margin-right:0;
+}
+.mini-robot-wrap .robot-panel{
+  align-self:flex-end;
 }
 
 </style>
@@ -635,6 +1033,7 @@ html[data-theme="cyber"] body{background:#050b12}
 <script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 </head>
 
+<div id="scrollProgress" aria-hidden="true"></div><canvas id="bgParticles" aria-hidden="true"></canvas>
 <body>
   <div class="progress" id="progress"></div>
   <div class="cursor-glow" id="cursorGlow"></div>
@@ -1192,8 +1591,90 @@ html[data-theme="cyber"] body{background:#050b12}
       </div>
     </section>
   </main>
+  <!-- Mini Portfolio Robot V7 Cute Mascot -->
+<div class="mini-robot-wrap" id="miniRobot" aria-label="Cute portfolio robot assistant">
+  <div class="robot-panel" id="robotPanel">
+    <div class="robot-panel-head">
+      <span>🤖 IMTIAZ BOT</span>
+      <button id="robotClose" aria-label="Close assistant">×</button>
+    </div>
+    <div class="robot-status"><span class="live-dot"></span><span id="robotLiveStatus">Online • Ready to help</span></div><div class="robot-connection" id="robotConnection">🎙️ Mic ready</div>
+    <div class="robot-mood" id="robotMood">😊 Happy</div>
+    <div class="robot-stats">
+      <div class="robot-stat"><b>11</b><span>💻 Projects</span></div>
+      <div class="robot-stat"><b>7</b><span>🎮 Games</span></div>
+      <div class="robot-stat"><b id="robotVisitors">—</b><span>👁️ Visits</span></div>
+      <div class="robot-stat"><b>⚡</b><span>Online</span></div>
+    </div>
+    <div class="robot-message" id="robotPanelMessage">Hi! I'm your portfolio assistant. What would you like to explore?</div>
+    <div class="robot-typing" id="robotTyping"><span>Typing</span><i></i><i></i><i></i></div>
+    <div class="robot-listening" id="robotListening">🎙️ Listening... <span class="listen-bars"><i></i><i></i><i></i><i></i></span></div>
+    <div class="robot-recommend" id="robotRecommend"></div><div class="robot-ai-status" id="robotAIStatus">🧠 AI chat ready</div>
+    <div class="robot-secret" id="robotSecret">🎉 SECRET MODE! You found my hidden Easter egg! 🤖✨</div>
+    <div class="robot-actions">
+      <button data-robot-action="projects">💻 Projects</button>
+      <button data-robot-action="games">🎮 Games</button>
+      <button data-robot-action="skills">🛠️ Skills</button>
+      <button data-robot-action="contact">📞 Contact</button>
+      <button data-robot-action="featured">🔥 Featured</button>
+      <button data-robot-action="voice">🔊 Talk</button>
+<button id="robotMic" data-robot-action="mic">🎙️ Talk to Me</button>
+<button id="robotMute" data-robot-action="mute">🔇 Mute</button>
+    </div>
+  </div>
 
-  <footer>
+  <div class="robot-bubble" id="robotBubble">Hi! 👋 Welcome to my portfolio!</div><button class="robot-mute-float" id="robotMuteFloat" aria-label="Mute robot voice" title="Mute robot voice">🔊</button>
+  <div class="robot-sparkles" id="robotSparkles" aria-hidden="true"></div>
+
+  <button class="mini-robot" id="robotButton" aria-label="Open portfolio assistant">
+    <span class="robot-shadow"></span>
+    <span class="robot-antenna"></span>
+    <span class="robot-ear left"></span><span class="robot-ear right"></span>
+    <span class="robot-head">
+      <span class="robot-eye left"></span><span class="robot-eye right"></span>
+      <span class="robot-cheek left"></span><span class="robot-cheek right"></span>
+      <span class="robot-mouth"></span>
+    </span>
+    <span class="robot-body">
+      <span class="robot-screen"><span class="robot-screen-dot"></span></span>
+      <span class="robot-heart">♥</span>
+    </span>
+    <span class="robot-arm left"></span><span class="robot-arm right"></span>
+    <span class="robot-foot left"></span><span class="robot-foot right"></span>
+  </button>
+</div>
+
+
+
+
+
+
+  <!-- Project details modal -->
+<div class="project-modal" id="projectModal" aria-hidden="true">
+  <div class="project-modal-card">
+    <button class="modal-close" id="modalClose" aria-label="Close">×</button>
+    <img id="modalImage" src="" alt="">
+    <div class="modal-body">
+      <div class="modal-kicker">PROJECT DETAILS</div>
+      <h3 id="modalTitle"></h3>
+      <p id="modalText"></p>
+      <div id="modalTags" class="modal-tags"></div>
+      <div class="modal-actions"><a id="modalLive" class="project-btn" href="#" target="_blank" rel="noopener">🚀 Live Demo</a><a id="modalCode" class="project-btn" href="#" target="_blank" rel="noopener">💻 View Code</a></div>
+    </div>
+  </div>
+</div>
+
+<div class="recent-game-card" id="recentGameCard" aria-live="polite">
+  <span>🕹️</span><span>Recently played: <b id="recentGameName">None yet</b></span>
+</div>
+
+<nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+  <a href="#home">⌂<span>Home</span></a>
+  <a href="#projects">💻<span>Projects</span></a>
+  <a href="#gameTools">🎮<span>Games</span></a>
+  <a href="#contact">✉<span>Contact</span></a>
+</nav>
+<footer>
     <span>© 2026 Imtiaz Ali. Built with HTML, CSS & JavaScript.</span>
     <span>Learn • Build • Debug • Repeat • © 2026</span>
   </footer>
@@ -1938,102 +2419,115 @@ function resetBattle() {
 <script>
 /* ===== Global game play counters + Most Played Featured Game ===== */
 document.addEventListener("DOMContentLoaded", async () => {
-  if (typeof Counter === "undefined") {
-    console.warn("CounterAPI client did not load.");
-    return;
-  }
-
   const namespace = "imtiaz-games-2026";
-  const counter = new Counter({ version:"v1", namespace, timeout:8000 });
+  const API = slug => `https://api.counterapi.dev/v1/${namespace}/game-${encodeURIComponent(slug)}`;
 
-  if (window.counterBaselineReady) {
-    try { await window.counterBaselineReady; } catch (e) {}
-  }
+  const cards = [...document.querySelectorAll("#projectGrid .project")].filter(card =>
+    !!card.querySelector('a[href*="games/"]')
+  );
 
-  const cards = [...document.querySelectorAll("#projectGrid .project")].filter(card => {
-    const category = card.dataset.category || "";
-    return /(^|\s)game(\s|$)/i.test(category) ||
-           !!card.querySelector('a[href*="games/"]');
-  });
-  const games = cards.map((card, index) => {
-    const title = card.querySelector("h3")?.textContent?.trim() || `Game ${index+1}`;
-    const linkEl = card.querySelector('a[href*="games/"]');
-    const imgEl = card.querySelector(".project-image img");
-    if (!linkEl) return null;
-    const slug = (title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || `game-${index+1}`);
+  const games = cards.map((card,index)=>{
+    const title=card.querySelector("h3")?.textContent?.trim() || `Game ${index+1}`;
+    const linkEl=card.querySelector('a[href*="games/"]');
+    const imgEl=card.querySelector(".project-image img");
+    const slug=title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || `game-${index+1}`;
     return {
-      title,
-      slug,
-      link: linkEl.getAttribute("href"),
-      image: imgEl?.getAttribute("src") || "",
-      description: card.querySelector("p")?.textContent?.trim() || "Play this browser game."
+      title, slug,
+      link:linkEl?.getAttribute("href") || "#",
+      image:imgEl?.getAttribute("src") || "",
+      description:card.querySelector("p")?.textContent?.trim() || "Play this browser game."
     };
-  }).filter(Boolean);
+  }).filter(g=>g.link!=="#");
 
-  // If the data-category is missing on a game, use the known game links as fallback.
-  if (!games.length) {
-    document.querySelectorAll('#projectGrid a[href*="games/"]').forEach((linkEl,index)=>{
-      const card=linkEl.closest(".project");
-      if(!card) return;
-      const title=card.querySelector("h3")?.textContent?.trim()||`Game ${index+1}`;
-      const imgEl=card.querySelector(".project-image img");
-      const slug=title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||`game-${index+1}`;
-      games.push({title,slug,link:linkEl.getAttribute("href"),image:imgEl?.getAttribute("src")||"",description:card.querySelector("p")?.textContent?.trim()||"Play this browser game."});
-    });
+  // Known starting play counts, used only as a safe local fallback.
+  const fallback={};
+  games.forEach(g=>{
+    const n=g.title.toLowerCase();
+    fallback[g.slug]=n.includes("zombie")?27:n.includes("lava")?24:n.includes("stick")?21:n.includes("falling")?18:n.includes("frost")?15:n.includes("magma")?12:n.includes("lion")?9:0;
+  });
+
+  async function getPlays(game){
+    try{
+      const res=await fetch(API(game.slug),{cache:"no-store"});
+      const data=await res.json();
+      const value=Number(data?.data?.count ?? data?.count ?? data?.value);
+      return Number.isFinite(value) ? value : fallback[game.slug]||0;
+    }catch{
+      return fallback[game.slug]||0;
+    }
   }
 
-  // Count a game only when its Play Game link is clicked.
-  games.forEach(game => {
-    document.querySelectorAll(`#projectGrid a[href="${CSS.escape(game.link)}"]`).forEach(linkEl => {
-      if (linkEl.dataset.playCounterBound) return;
+  async function up(game){
+    try{
+      const res=await fetch(API(game.slug)+"/up",{cache:"no-store"});
+      const data=await res.json();
+      return Number(data?.data?.count ?? data?.count ?? data?.value);
+    }catch(e){
+      console.warn("Game play counter unavailable:",game.title);
+      return null;
+    }
+  }
+
+  // Bind every Play Game link. Do not block navigation if the API is unavailable.
+  games.forEach(game=>{
+    document.querySelectorAll(`#projectGrid a[href="${CSS.escape(game.link)}"]`).forEach(linkEl=>{
+      if(linkEl.dataset.playCounterBound)return;
       linkEl.dataset.playCounterBound="1";
-      linkEl.addEventListener("click", async (event) => {
+      linkEl.addEventListener("click",async event=>{
         event.preventDefault();
         const target=linkEl.href;
-        try {
-          await counter.up(`game-${game.slug}`);
-        } catch (e) {
-          console.warn("Game play counter failed:", game.title, e);
-        }
+        await up(game);
         window.location.href=target;
       });
     });
   });
 
-  // Read every game counter and choose the highest count.
-  const results = await Promise.all(games.map(async game => {
-    try {
-      const result=await counter.get(`game-${game.slug}`);
-      const value=Number(result?.value ?? result?.data?.count ?? result?.count ?? result?.data ?? 0);
-      return {...game, plays:Number.isFinite(value)?value:0};
-    } catch {
-      return {...game, plays:0};
-    }
-  }));
-
-  results.sort((a,b)=>b.plays-a.plays);
-  const featured=results[0];
-  if (!featured) return;
-
+  // Always populate the featured card immediately from the actual game card image,
+  // then update its play count and selection from the online counters.
   const name=document.getElementById("featuredGameName");
   const text=document.getElementById("featuredGameText");
   const plays=document.getElementById("featuredGamePlays");
   const link=document.getElementById("featuredGameLink");
   const image=document.getElementById("featuredGameImage");
 
-  if(name) name.textContent=featured.title;
-  if(text) text.textContent=featured.description;
-  if(plays) plays.textContent=`${featured.plays.toLocaleString()} plays`;
-  if(link) link.href=featured.link;
-  if(image){image.src=featured.image;image.alt=featured.title}
+  if(!games.length){
+    if(name)name.textContent="No games found";
+    if(text)text.textContent="Add a game to the Games section.";
+    return;
+  }
 
-  // Featured button also counts a play.
+  // Fallback feature is the highest known starting count, so the thumbnail is never blank.
+  let featured=games.slice().sort((a,b)=>(fallback[b.slug]||0)-(fallback[a.slug]||0))[0];
+  if(image){
+    image.src=featured.image;
+    image.alt=featured.title;
+  }
+  if(name)name.textContent=featured.title;
+  if(text)text.textContent=featured.description;
+  if(plays)plays.textContent=`${fallback[featured.slug]||0} plays`;
+  if(link)link.href=featured.link;
+
+  // Fetch live counts and automatically switch to the actual most-played game.
+  const results=await Promise.all(games.map(async g=>({...g,plays:await getPlays(g)})));
+  results.sort((a,b)=>b.plays-a.plays);
+  featured=results[0]||featured;
+
+  if(name)name.textContent=featured.title;
+  if(text)text.textContent=featured.description;
+  if(plays)plays.textContent=`${featured.plays.toLocaleString()} plays`;
+  if(link)link.href=featured.link;
+  if(image){
+    image.src=featured.image;
+    image.alt=featured.title;
+    image.onerror=()=>{ image.style.display="none"; };
+  }
+
   if(link && !link.dataset.playCounterBound){
     link.dataset.playCounterBound="1";
     link.addEventListener("click",async e=>{
       e.preventDefault();
       const target=link.href;
-      try{await counter.up(`game-${featured.slug}`)}catch{}
+      await up(featured);
       window.location.href=target;
     });
   }
@@ -2154,10 +2648,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <script>
 /* ===== Top controls: Language + Theme ===== */
 document.addEventListener("DOMContentLoaded",()=>{
-  const oldLang=document.querySelector(".lang-toggle");
-  const oldTheme=document.querySelector(".theme-toggle");
-  const oldMenu=document.querySelector(".theme-menu");
-
+  document.querySelectorAll(".top-controls, body > .lang-toggle, body > .theme-toggle, body > .theme-menu").forEach(el=>el.remove());
   const controls=document.createElement("div");
   controls.className="top-controls";
   controls.innerHTML=`
@@ -2171,16 +2662,11 @@ document.addEventListener("DOMContentLoaded",()=>{
     </div>`;
   document.body.appendChild(controls);
 
-  oldLang?.remove();
-  oldTheme?.remove();
-  oldMenu?.remove();
-
   const langBtn=controls.querySelector(".lang-toggle");
   const themeBtn=controls.querySelector(".theme-toggle");
   const menu=controls.querySelector(".theme-menu");
 
-  const saved=localStorage.getItem("imtiaz-theme")||"dark";
-  document.documentElement.dataset.theme=saved;
+  document.documentElement.dataset.theme=localStorage.getItem("imtiaz-theme")||"dark";
 
   let bangla=false;
   const translations=new Map([
@@ -2191,20 +2677,25 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   function translate(){
     document.querySelectorAll("a,button,.section-label,.section-title,.section-desc,span").forEach(el=>{
-      if(el.closest(".top-controls")) return;
-      if(el.children.length) return;
+      if(el.closest(".top-controls") || el.children.length) return;
       const original=el.dataset.en||el.textContent.trim();
       el.dataset.en=original;
       if(translations.has(original)) el.textContent=bangla?translations.get(original):original;
     });
     langBtn.textContent=bangla?"English":"বাংলা";
   }
-  langBtn.addEventListener("click",()=>{bangla=!bangla;translate()});
+
+  langBtn.addEventListener("click",()=>{
+    bangla=!bangla;
+    menu.classList.remove("open");
+    translate();
+  });
 
   themeBtn.addEventListener("click",e=>{
     e.stopPropagation();
     menu.classList.toggle("open");
   });
+
   menu.querySelectorAll("button").forEach(btn=>{
     btn.addEventListener("click",()=>{
       document.documentElement.dataset.theme=btn.dataset.theme;
@@ -2212,10 +2703,281 @@ document.addEventListener("DOMContentLoaded",()=>{
       menu.classList.remove("open");
     });
   });
+
   document.addEventListener("click",e=>{
     if(!controls.contains(e.target)) menu.classList.remove("open");
   });
 });
 </script>
+
+
+
+<script>
+/* ===== Portfolio V4 interactions ===== */
+document.addEventListener("DOMContentLoaded",()=>{
+  // Scroll progress
+  const bar=document.getElementById("scrollProgress");
+  const updateProgress=()=>{
+    const h=document.documentElement.scrollHeight-window.innerHeight;
+    bar.style.width=(h>0?(window.scrollY/h)*100:0)+"%";
+  };
+  addEventListener("scroll",updateProgress,{passive:true}); updateProgress();
+
+  // Particles
+  const canvas=document.getElementById("bgParticles"), ctx=canvas?.getContext("2d");
+  if(canvas&&ctx){
+    const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const points=Array.from({length:reduced?18:42},()=>({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.00025,vy:(Math.random()-.5)*.00025,r:Math.random()*1.7+.5}));
+    const resize=()=>{canvas.width=innerWidth*devicePixelRatio;canvas.height=innerHeight*devicePixelRatio;ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0)};
+    const draw=()=>{
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      ctx.fillStyle="rgba(139,92,246,.65)";
+      points.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>1)p.vx*=-1;if(p.y<0||p.y>1)p.vy*=-1;ctx.beginPath();ctx.arc(p.x*innerWidth,p.y*innerHeight,p.r,0,Math.PI*2);ctx.fill()});
+      if(!reduced) requestAnimationFrame(draw);
+    };
+    addEventListener("resize",resize);resize();draw();
+  }
+
+  // Game search/filter. Categories are inferred from title/description.
+  const grid=document.getElementById("projectGrid"), search=document.getElementById("gameSearch");
+  const filterBtns=[...document.querySelectorAll(".game-filter")];
+  if(grid&&search){
+    const cards=[...grid.querySelectorAll(".project")].filter(c=>c.querySelector('a[href*="games/"]'));
+    let filter="all";
+    const apply=()=>{
+      const q=search.value.trim().toLowerCase();
+      let visible=0;
+      cards.forEach(card=>{
+        const text=card.textContent.toLowerCase();
+        const category= text.includes("zombie")||text.includes("rush")||text.includes("battle")||text.includes("lion")||text.includes("tiger") ? "action" :
+          text.includes("flappy")||text.includes("stick")||text.includes("lava") ? "arcade" : "casual";
+        const ok=(filter==="all"||category===filter)&&(!q||text.includes(q));
+        card.style.display=ok?"":"none"; if(ok)visible++;
+      });
+      let empty=grid.querySelector(".game-empty");
+      if(!visible){if(!empty){empty=document.createElement("div");empty.className="game-empty";empty.textContent="No games found 🔎";grid.appendChild(empty)}}
+      else empty?.remove();
+    };
+    search.addEventListener("input",apply);
+    filterBtns.forEach(b=>b.addEventListener("click",()=>{filterBtns.forEach(x=>x.classList.remove("active"));b.classList.add("active");filter=b.dataset.filter;apply()}));
+  }
+
+  // Project details modal. Uses the clicked project's own thumbnail/title/description.
+  const modal=document.getElementById("projectModal"), mi=document.getElementById("modalImage"), mt=document.getElementById("modalTitle"), mp=document.getElementById("modalText"), tags=document.getElementById("modalTags"), live=document.getElementById("modalLive"), code=document.getElementById("modalCode");
+  const close=()=>{modal?.classList.remove("open");modal?.setAttribute("aria-hidden","true")};
+  document.getElementById("modalClose")?.addEventListener("click",close);
+  modal?.addEventListener("click",e=>{if(e.target===modal)close()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+  document.querySelectorAll("#projectGrid .project").forEach(card=>{
+    const title=card.querySelector("h3")?.textContent?.trim()||"Project";
+    const desc=card.querySelector("p")?.textContent?.trim()||"";
+    const img=card.querySelector("img")?.src||"";
+    const links=[...card.querySelectorAll("a")];
+    const gameLink=links.find(a=>a.href.includes("/games/"));
+    const codeLink=links.find(a=>/github/i.test(a.textContent||""))||links.find(a=>a.href.includes("github"));
+    const tagTexts=[...card.querySelectorAll(".tag,.tech,.project-tag")].map(x=>x.textContent.trim()).filter(Boolean);
+    const openModal=()=>{
+      if(mi){mi.src=img;mi.alt=title} if(mt)mt.textContent=title;if(mp)mp.textContent=desc;
+      if(tags)tags.innerHTML=(tagTexts.length?tagTexts:["HTML","CSS","JavaScript"]).map(t=>`<span>${t}</span>`).join("");
+      if(live){live.href=gameLink?.href||"#";live.style.display=gameLink?"inline-flex":"none"}
+      if(code){code.href=codeLink?.href||"#";code.style.display=codeLink?"inline-flex":"none"}
+      modal?.classList.add("open");modal?.setAttribute("aria-hidden","false");
+    };
+    // Clicking the card (except its own buttons/links) opens details.
+    card.addEventListener("click",e=>{if(!e.target.closest("a,button"))openModal()});
+  });
+
+  // Recently played
+  const recentName=document.getElementById("recentGameName"), recentCard=document.getElementById("recentGameCard");
+  document.querySelectorAll('#projectGrid a[href*="games/"]').forEach(a=>{
+    a.addEventListener("click",()=>{
+      const card=a.closest(".project"), name=card?.querySelector("h3")?.textContent?.trim()||"Game";
+      localStorage.setItem("recentGame",name);if(recentName)recentName.textContent=name;if(recentCard)recentCard.classList.add("show");
+    });
+  });
+  const recent=localStorage.getItem("recentGame");
+  if(recent&&recentName&&recentCard){recentName.textContent=recent;recentCard.classList.add("show")}
+
+  // Robot voice: browser-native speech, only after user interaction to respect autoplay policies.
+  const robotButton=document.getElementById("robotButton");
+  robotButton?.addEventListener("dblclick",()=>{
+    if("speechSynthesis" in window){
+      speechSynthesis.cancel();
+      const u=new SpeechSynthesisUtterance("Welcome to my portfolio. Let's explore my projects and games!");
+      u.rate=.95;u.pitch=1.15;u.lang="en-US";speechSynthesis.speak(u);
+    }
+  });
+});
+</script>
+
+
+
+
+
+
+
+<script>
+/* ===== Robot V12: single clean controller ===== */
+document.addEventListener("DOMContentLoaded",()=>{
+  const $=id=>document.getElementById(id);
+  const wrap=$("miniRobot"),btn=$("robotButton"),bubble=$("robotBubble"),panel=$("robotPanel");
+  const panelMsg=$("robotPanelMessage"),typing=$("robotTyping"),listening=$("robotListening");
+  const secret=$("robotSecret"),recommend=$("robotRecommend"),mood=$("robotMood");
+  const muteBtn=$("robotMute"),muteFloat=$("robotMuteFloat"),micBtn=$("robotMic");
+  const aiStatus=$("robotAIStatus"),connection=$("robotConnection");
+  if(!wrap||!btn)return;
+
+  const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  let recognition=null,listeningNow=false,aiBusy=false;
+  let voiceMuted=localStorage.getItem("robotVoiceMuted")==="1";
+  let language=localStorage.getItem("robotVoiceLanguage")||"bn-IN";
+  let femaleVoice=null,typeTimer=null,msgIndex=0,clickCount=0;
+
+  const quick=[
+    [/কেমন আছ|kemon acho|how are you/i,"আমি ভালো আছি! 😊 তোমার সঙ্গে কথা বলতে পেরে ভালো লাগছে।","happy"],
+    [/কি করছ|কি করো|what are you doing/i,"আমি তোমার portfolio পাহারা দিচ্ছি! 🤖✨ আর তোমার সঙ্গে কথা বলছি।","happy"],
+    [/তোমার নাম|tomar nam|your name/i,"আমাকে Imtiaz Bot বলতে পারো। আমি তোমার portfolio assistant। 🤖","happy"],
+    [/তুমি কে|tumi ke|who are you/i,"আমি তোমার portfolio-এর ছোট্ট robot assistant। Projects, games আর সাধারণ কথাবার্তায় help করতে পারি।","happy"],
+    [/good morning|শুভ সকাল|সুপ্রভাত/i,"Good morning! ☀️ আজ portfolio ঘুরে দেখেছো?","happy"],
+    [/good night|শুভ রাত্রি|শুভরাত্রি/i,"Good night! 🌙 আমি এখন sleepy mode-এ যাচ্ছি।","sleepy"],
+    [/ধন্যবাদ|thank you|thanks/i,"You're welcome! ❤️","happy"],
+    [/বিদায়|বিদায়|bye|goodbye/i,"Bye! 👋 আবার এসো!","happy"],
+    [/joke|জোক|মজা/i,"Programmer-এর favourite place কোথায়? The cloud! ☁️😄","excited"],
+    [/ভালোবাসি|ভালবাসি|love you/i,"Aww! 🤖❤️ তোমার সঙ্গে কথা বলতে আমার ভালো লাগে!","happy"]
+  ];
+  function status(text,kind=""){if(connection){connection.textContent=text;connection.className="robot-connection "+kind}}
+  function moodSet(k){wrap.classList.remove("happy","excited","thinking","sleepy","coding","secret");wrap.classList.add(k);const m={happy:"😊 Happy",excited:"🤩 Excited",thinking:"🤔 Thinking",sleepy:"😴 Sleepy",coding:"💻 Coding",secret:"😎 Secret"};if(mood)mood.textContent=m[k]||m.happy}
+  function loadVoice(){if(!("speechSynthesis"in window))return;const vs=speechSynthesis.getVoices();femaleVoice=vs.find(v=>/female|woman|zira|samantha|hazel|susan|aria|jenny|libby|sara|sonia/i.test(v.name+" "+v.voiceURI))||vs.find(v=>/google|microsoft|natural/i.test(v.name+" "+v.voiceURI)&&/^en/i.test(v.lang))||vs.find(v=>new RegExp(language.split("-")[0],"i").test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||vs[0]}
+  if("speechSynthesis"in window){loadVoice();speechSynthesis.onvoiceschanged=loadVoice}
+  function speak(text){if(voiceMuted||!("speechSynthesis"in window)||!text)return;speechSynthesis.cancel();loadVoice();const u=new SpeechSynthesisUtterance(text);u.lang=language;u.rate=.91;u.pitch=1.2;u.volume=1;if(femaleVoice)u.voice=femaleVoice;wrap.classList.add("waving","robot-voice-active");u.onend=()=>wrap.classList.remove("waving","robot-voice-active");u.onerror=()=>wrap.classList.remove("waving","robot-voice-active");speechSynthesis.speak(u)}
+  function say(text,voice=true){clearTimeout(typeTimer);typing?.classList.add("show");typeTimer=setTimeout(()=>{typing?.classList.remove("show");if(bubble){bubble.textContent=text;wrap.classList.add("active");setTimeout(()=>wrap.classList.remove("active"),4200)}if(panelMsg)panelMsg.textContent=text},260);if(voice)speak(text)}
+  function toggleMute(){voiceMuted=!voiceMuted;localStorage.setItem("robotVoiceMuted",voiceMuted?"1":"0");if(muteBtn)muteBtn.textContent=voiceMuted?"🔊 Unmute":"🔇 Mute";if(muteFloat)muteFloat.textContent=voiceMuted?"🔇":"🔊";if(voiceMuted&&"speechSynthesis"in window)speechSynthesis.cancel();else if(!voiceMuted)speak("Voice is on. Let's talk!")}
+
+  async function askAI(message){
+    if(aiBusy)return;aiBusy=true;aiStatus?.classList.add("thinking");if(aiStatus)aiStatus.textContent="🧠 Thinking...";status("🧠 AI is thinking...","listening");
+    try{const history=JSON.parse(localStorage.getItem("robotAIHistory")||"[]").slice(-6);const r=await fetch("ai-chat.php",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message,history})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.reply)throw new Error(d.error||"AI unavailable");const reply=String(d.reply).trim();history.push({role:"user",content:message},{role:"assistant",content:reply});localStorage.setItem("robotAIHistory",JSON.stringify(history.slice(-8)));aiStatus?.classList.remove("thinking");if(aiStatus)aiStatus.textContent="🧠 AI chat ready";status("✓ AI reply ready","success");moodSet(/game|play|zombie|rush/i.test(reply)?"excited":"happy");say(reply,true)}catch(e){aiStatus?.classList.remove("thinking");if(aiStatus)aiStatus.textContent="🧠 Offline mode";status("⚠ AI server not connected","error");say("আমি এখন offline mode-এ আছি। AI chat-এর জন্য ai-chat.php server setup করতে হবে। 😊",true)}finally{aiBusy=false}
+  }
+  function go(selector,text,m){const t=document.querySelector(selector);moodSet(m||"happy");say(text,true);if(t)setTimeout(()=>t.scrollIntoView({behavior:"smooth",block:"start"}),450);wrap.classList.remove("panel-open")}
+  function answer(text){const q=(text||"").trim();if(!q)return;if(/project|projects|প্রজেক্ট/i.test(q)){go("#projects","অবশ্যই! 💻 তোমার projects দেখাচ্ছি।","coding");return}if(/game|games|গেম/i.test(q)){go("#gameTools","চলো game খেলি! 🎮 Games section খুলে দিচ্ছি।","excited");return}if(/skill|skills|স্কিল|দক্ষতা/i.test(q)){go("#skills","এগুলো তোমার skills। 🛠️","thinking");return}if(/contact|যোগাযোগ|কন্টাক্ট/i.test(q)){go("#contact","Contact section-এ নিয়ে যাচ্ছি। 📞","happy");return}if(/featured|most played|সবচেয়ে বেশি|ফিচারড/i.test(q)){go("#featuredGameName","Featured game দেখাচ্ছি! 🔥","excited");return}if(/mute|voice off|ভয়েস বন্ধ|নিঃশব্দ/i.test(q)){if(!voiceMuted)toggleMute();return}if(/unmute|voice on|ভয়েস চালু|শব্দ চালু/i.test(q)){if(voiceMuted)toggleMute();else say("Voice already on! 🔊",true);return}for(const [rx,reply,m] of quick)if(rx.test(q)){moodSet(m);say(reply,true);return}if(/hello|hi|hey|হ্যালো|হাই|নমস্কার/i.test(q)){say("হ্যালো! 👋 আমাকে যেকোনো কিছু জিজ্ঞেস করো।",true);return}askAI(q)}
+
+  async function startListening(){
+    if(!Recognition){
+      status("⚠ Voice recognition unavailable — use Chrome/Edge","error");
+      say("Voice recognition এই browser-এ available নেই। Chrome বা Edge ব্যবহার করো।",false);
+      return;
+    }
+    if(!window.isSecureContext && location.hostname!=="localhost"){
+      status("⚠ Mic needs HTTPS or localhost","error");
+      say("Microphone-এর জন্য HTTPS বা localhost ব্যবহার করতে হবে।",false);
+      return;
+    }
+    if(listeningNow){recognition?.stop();return;}
+
+    if(navigator.mediaDevices?.getUserMedia){
+      try{
+        const stream=await navigator.mediaDevices.getUserMedia({
+          audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}
+        });
+        stream.getTracks().forEach(t=>t.stop());
+      }catch(err){
+        status("⚠ Microphone permission/problem","error");
+        if(err?.name==="NotAllowedError")
+          say("Microphone permission Allow করো, তারপর আবার Talk to Me চাপো। 🎙️",false);
+        else if(err?.name==="NotFoundError")
+          say("Microphone পাওয়া যাচ্ছে না। একটি microphone connect/select করো।",false);
+        else
+          say("Microphone চালু করতে সমস্যা হয়েছে। Chrome settings-এ mic check করো।",false);
+        return;
+      }
+    }
+
+    recognition=new Recognition();
+    recognition.lang=language;
+    recognition.continuous=false;
+    recognition.interimResults=true;
+    recognition.maxAlternatives=3;
+
+    listeningNow=true;
+    wrap.classList.add("mic-active");
+    listening?.classList.add("show");
+    moodSet("thinking");
+    status(language==="bn-IN"?"🎙️ Speak now — বাংলা":"🎙️ Speak now — English","listening");
+    if(panelMsg)panelMsg.textContent="🎙️ আমি শুনছি... বলো!";
+
+    let heardFinal=false;
+
+    recognition.onstart=()=>{
+      status(language==="bn-IN"?"🎙️ Speak now — বাংলা":"🎙️ Speak now — English","listening");
+    };
+
+    recognition.onresult=e=>{
+      let interim="";
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        const text=e.results[i][0].transcript;
+        if(e.results[i].isFinal){
+          heardFinal=true;
+          status("✓ Heard you","success");
+          if(panelMsg)panelMsg.textContent=`You: ${text}`;
+          answer(text);
+        }else{
+          interim+=text;
+        }
+      }
+      if(interim&&panelMsg)panelMsg.textContent=`You: ${interim}`;
+    };
+
+    recognition.onerror=e=>{
+      status("⚠ "+(e.error||"Microphone error"),"error");
+      if(e.error==="not-allowed"||e.error==="service-not-allowed"){
+        say("Microphone permission Allow করো, তারপর আবার Talk to Me চাপো। 🎙️",false);
+      }else if(e.error==="no-speech"){
+        say("আমি শুনতে পাইনি। একটু কাছে এসে পরিষ্কার করে আবার বলো। 😊",false);
+      }else if(e.error==="audio-capture"){
+        say("Microphone পাওয়া যাচ্ছে না। Windows/Chrome-এ input microphone ঠিক করে আবার চেষ্টা করো।",false);
+      }else{
+        say("Voice recognition-এ সমস্যা হয়েছে। আবার চেষ্টা করো।",false);
+      }
+    };
+
+    recognition.onend=()=>{
+      listeningNow=false;
+      wrap.classList.remove("mic-active");
+      listening?.classList.remove("show");
+      if(!connection?.classList.contains("error"))status("🎙️ Mic ready","success");
+    };
+
+    try{
+      recognition.start();
+    }catch(err){
+      listeningNow=false;
+      wrap.classList.remove("mic-active");
+      listening?.classList.remove("show");
+      status("⚠ Could not start microphone","error");
+    }
+  }
+
+  btn.addEventListener("click",()=>{wrap.classList.toggle("panel-open");const msgs=["Hi! Welcome to my portfolio!","আমি তোমার সঙ্গে কথা বলতে পারি। 🎙️","আমাকে কিছু জিজ্ঞেস করো! 🤖","Let's explore together! ✨"];say(msgs[msgIndex++%msgs.length],true);clickCount++;if(clickCount>=5){clickCount=0;moodSet("secret");secret?.classList.add("show");say("Secret mode unlocked! 😎✨",true);setTimeout(()=>secret?.classList.remove("show"),6000)}});
+  $("robotClose")?.addEventListener("click",()=>{wrap.classList.remove("panel-open");if("speechSynthesis"in window)speechSynthesis.cancel()});
+  muteBtn?.addEventListener("click",e=>{e.stopImmediatePropagation();toggleMute()});
+  muteFloat?.addEventListener("click",e=>{e.stopImmediatePropagation();toggleMute()});
+
+  // Single click dispatcher: Talk to Me is handled HERE only, preventing double starts.
+  wrap.querySelectorAll("[data-robot-action]").forEach(b=>b.addEventListener("click",e=>{
+    e.stopImmediatePropagation();
+    const a=b.dataset.robotAction;
+    if(a==="mic"){startListening();return}
+    if(a==="mute"){toggleMute();return}
+    if(a==="voice"){say("Welcome to my portfolio! Let's explore my projects and games.",true);return}
+    const map={projects:["#projects","Here are my projects.","coding"],games:["#gameTools","Let's play! Here are my games.","excited"],skills:["#skills","These are my skills and technologies.","thinking"],contact:["#contact","Let's go to the contact section.","happy"],featured:["#featuredGameName","Here's the featured game!","excited"]};
+    if(map[a])go(...map[a]);
+  }));
+
+  document.addEventListener("mousemove",e=>wrap.querySelectorAll(".robot-eye").forEach(eye=>{const r=eye.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,a=Math.atan2(dy,dx);eye.style.setProperty("--look-x",`${Math.cos(a)*2.5}px`);eye.style.setProperty("--look-y",`${Math.sin(a)*2.5}px`)}));
+  function rec(){if(!recommend)return;const n=$("featuredGameName")?.textContent?.trim();recommend.textContent=(n&&n!=="—"&&!/loading/i.test(n))?`🔥 Recommended: ${n}`:"🎮 Explore my games!";recommend.classList.add("show")}rec();setTimeout(rec,2200);
+  const v=$("visitCount"),rv=$("robotVisitors");if(v&&rv){const sync=()=>rv.textContent=v.textContent||"—";sync();new MutationObserver(sync).observe(v,{childList:true,subtree:true,characterData:true})}
+  const live=$("robotLiveStatus");let sec=0;setInterval(()=>{sec++;if(live)live.textContent=`Online • Active ${sec}s`},1000);status("🎙️ Mic ready","success");
+});
+</script>
+
 </body>
 </html>
