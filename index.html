@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -673,18 +673,10 @@ html[data-theme="cyber"] body{background:#050b12}
 }
 
 /* ===== Mini Portfolio Robot V3 ===== */
-.mini-robot-wrap{
-  position:fixed;
-  right:18px;
-  left:auto !important;
-  top:50%;
-  bottom:auto !important;
-  transform:translateY(-50%);
-  z-index:1250;
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  pointer-events:none;
+ .mini-robot-wrap{
+  position:fixed;right:18px;left:auto !important;top:50%;bottom:auto !important;
+  transform:translateY(-50%);z-index:1250;display:flex;flex-direction:column;
+  align-items:flex-end;pointer-events:none
 }
 .mini-robot{pointer-events:auto;position:relative;width:82px;height:105px;border:0;background:transparent;cursor:pointer;filter:drop-shadow(0 16px 25px rgba(0,0,0,.38));animation:robotFloat 3.2s ease-in-out infinite}
 .robot-antenna{position:absolute;left:39px;top:0;width:4px;height:15px;border-radius:4px;background:#8b5cf6}
@@ -1022,18 +1014,23 @@ html[data-theme="cyber"] body{background:#050b12}
   align-self:flex-end;
 }
 
+
+/* ===== Robot Talk-to-Me reliability patch ===== */
+.robot-listening{display:none;padding:9px 10px;margin:0 15px 8px;border:1px solid rgba(34,211,238,.35);border-radius:10px;background:rgba(34,211,238,.07);font-size:10px}
+.robot-listening.show{display:block}
+.robot-mic-fallback{display:grid;grid-template-columns:1fr auto;gap:6px;margin:0 15px 10px}
+.robot-mic-fallback input{min-width:0;border:1px solid var(--line);border-radius:9px;background:transparent;color:inherit;padding:8px 9px;font-size:10px;outline:none}
+.robot-mic-fallback button{border:1px solid var(--line);border-radius:9px;background:transparent;color:inherit;padding:8px 10px;font-size:10px;cursor:pointer}
+.robot-mic-fallback button:hover{background:rgba(139,92,246,.1)}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#080812">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
 <script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
-
-  <link rel="icon" type="image/png" sizes="1024x1024" href="assets/icon.png">
-  <link rel="shortcut icon" type="image/png" href="assets/icon.png">
-  <link rel="apple-touch-icon" sizes="1024x1024" href="assets/icon.png">
 </head>
 
 <div id="scrollProgress" aria-hidden="true"></div><canvas id="bgParticles" aria-hidden="true"></canvas>
@@ -1612,6 +1609,10 @@ html[data-theme="cyber"] body{background:#050b12}
     <div class="robot-message" id="robotPanelMessage">Hi! I'm your portfolio assistant. What would you like to explore?</div>
     <div class="robot-typing" id="robotTyping"><span>Typing</span><i></i><i></i><i></i></div>
     <div class="robot-listening" id="robotListening">🎙️ Listening... <span class="listen-bars"><i></i><i></i><i></i><i></i></span></div>
+    <div class="robot-mic-fallback" id="robotMicFallback">
+      <input id="robotTypedInput" type="text" placeholder="Type if microphone misses you..." autocomplete="off">
+      <button id="robotTypedSend" type="button">Send</button>
+    </div>
     <div class="robot-recommend" id="robotRecommend"></div><div class="robot-ai-status" id="robotAIStatus">🧠 AI chat ready</div>
     <div class="robot-secret" id="robotSecret">🎉 SECRET MODE! You found my hidden Easter egg! 🤖✨</div>
     <div class="robot-actions">
@@ -2819,8 +2820,11 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 
+
+
+
 <script>
-/* ===== Robot V12: single clean controller ===== */
+/* ===== Robot Talk-to-Me controller: no-speech retry + language fallback ===== */
 document.addEventListener("DOMContentLoaded",()=>{
   const $=id=>document.getElementById(id);
   const wrap=$("miniRobot"),btn=$("robotButton"),bubble=$("robotBubble"),panel=$("robotPanel");
@@ -2828,157 +2832,240 @@ document.addEventListener("DOMContentLoaded",()=>{
   const secret=$("robotSecret"),recommend=$("robotRecommend"),mood=$("robotMood");
   const muteBtn=$("robotMute"),muteFloat=$("robotMuteFloat"),micBtn=$("robotMic");
   const aiStatus=$("robotAIStatus"),connection=$("robotConnection");
+  const typed=$("robotTypedInput"),typedSend=$("robotTypedSend");
   if(!wrap||!btn)return;
 
   const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
-  let recognition=null,listeningNow=false,aiBusy=false;
+  let recognition=null,listeningNow=false,aiBusy=false,retryCount=0,msgIndex=0,clickCount=0;
   let voiceMuted=localStorage.getItem("robotVoiceMuted")==="1";
   let language=localStorage.getItem("robotVoiceLanguage")||"bn-IN";
-  let femaleVoice=null,typeTimer=null,msgIndex=0,clickCount=0;
+  let femaleVoice=null,typeTimer=null;
 
   const quick=[
     [/কেমন আছ|kemon acho|how are you/i,"আমি ভালো আছি! 😊 তোমার সঙ্গে কথা বলতে পেরে ভালো লাগছে।","happy"],
-    [/কি করছ|কি করো|what are you doing/i,"আমি তোমার portfolio পাহারা দিচ্ছি! 🤖✨ আর তোমার সঙ্গে কথা বলছি।","happy"],
-    [/তোমার নাম|tomar nam|your name/i,"আমাকে Imtiaz Bot বলতে পারো। আমি তোমার portfolio assistant। 🤖","happy"],
-    [/তুমি কে|tumi ke|who are you/i,"আমি তোমার portfolio-এর ছোট্ট robot assistant। Projects, games আর সাধারণ কথাবার্তায় help করতে পারি।","happy"],
-    [/good morning|শুভ সকাল|সুপ্রভাত/i,"Good morning! ☀️ আজ portfolio ঘুরে দেখেছো?","happy"],
-    [/good night|শুভ রাত্রি|শুভরাত্রি/i,"Good night! 🌙 আমি এখন sleepy mode-এ যাচ্ছি।","sleepy"],
+    [/কি করছ|কি করো|what are you doing/i,"আমি তোমার portfolio পাহারা দিচ্ছি! 🤖✨","happy"],
+    [/তোমার নাম|tomar nam|your name/i,"আমাকে Imtiaz Bot বলতে পারো। 🤖","happy"],
+    [/তুমি কে|tumi ke|who are you/i,"আমি তোমার portfolio-এর ছোট্ট robot assistant।","happy"],
+    [/good morning|শুভ সকাল|সুপ্রভাত/i,"Good morning! ☀️","happy"],
+    [/good night|শুভ রাত্রি|শুভরাত্রি/i,"Good night! 🌙","sleepy"],
     [/ধন্যবাদ|thank you|thanks/i,"You're welcome! ❤️","happy"],
-    [/বিদায়|বিদায়|bye|goodbye/i,"Bye! 👋 আবার এসো!","happy"],
-    [/joke|জোক|মজা/i,"Programmer-এর favourite place কোথায়? The cloud! ☁️😄","excited"],
-    [/ভালোবাসি|ভালবাসি|love you/i,"Aww! 🤖❤️ তোমার সঙ্গে কথা বলতে আমার ভালো লাগে!","happy"]
+    [/বিদায়|বিদায়|bye|goodbye/i,"Bye! 👋 আবার এসো!","happy"]
   ];
-  function status(text,kind=""){if(connection){connection.textContent=text;connection.className="robot-connection "+kind}}
-  function moodSet(k){wrap.classList.remove("happy","excited","thinking","sleepy","coding","secret");wrap.classList.add(k);const m={happy:"😊 Happy",excited:"🤩 Excited",thinking:"🤔 Thinking",sleepy:"😴 Sleepy",coding:"💻 Coding",secret:"😎 Secret"};if(mood)mood.textContent=m[k]||m.happy}
-  function loadVoice(){if(!("speechSynthesis"in window))return;const vs=speechSynthesis.getVoices();femaleVoice=vs.find(v=>/female|woman|zira|samantha|hazel|susan|aria|jenny|libby|sara|sonia/i.test(v.name+" "+v.voiceURI))||vs.find(v=>/google|microsoft|natural/i.test(v.name+" "+v.voiceURI)&&/^en/i.test(v.lang))||vs.find(v=>new RegExp(language.split("-")[0],"i").test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||vs[0]}
-  if("speechSynthesis"in window){loadVoice();speechSynthesis.onvoiceschanged=loadVoice}
-  function speak(text){if(voiceMuted||!("speechSynthesis"in window)||!text)return;speechSynthesis.cancel();loadVoice();const u=new SpeechSynthesisUtterance(text);u.lang=language;u.rate=.91;u.pitch=1.2;u.volume=1;if(femaleVoice)u.voice=femaleVoice;wrap.classList.add("waving","robot-voice-active");u.onend=()=>wrap.classList.remove("waving","robot-voice-active");u.onerror=()=>wrap.classList.remove("waving","robot-voice-active");speechSynthesis.speak(u)}
-  function say(text,voice=true){clearTimeout(typeTimer);typing?.classList.add("show");typeTimer=setTimeout(()=>{typing?.classList.remove("show");if(bubble){bubble.textContent=text;wrap.classList.add("active");setTimeout(()=>wrap.classList.remove("active"),4200)}if(panelMsg)panelMsg.textContent=text},260);if(voice)speak(text)}
-  function toggleMute(){voiceMuted=!voiceMuted;localStorage.setItem("robotVoiceMuted",voiceMuted?"1":"0");if(muteBtn)muteBtn.textContent=voiceMuted?"🔊 Unmute":"🔇 Mute";if(muteFloat)muteFloat.textContent=voiceMuted?"🔇":"🔊";if(voiceMuted&&"speechSynthesis"in window)speechSynthesis.cancel();else if(!voiceMuted)speak("Voice is on. Let's talk!")}
+
+  function status(text,kind=""){
+    if(connection){connection.textContent=text;connection.className="robot-connection "+kind;}
+  }
+  function moodSet(k){
+    wrap.classList.remove("happy","excited","thinking","sleepy","coding","secret");
+    wrap.classList.add(k);
+    const m={happy:"😊 Happy",excited:"🤩 Excited",thinking:"🤔 Thinking",sleepy:"😴 Sleepy",coding:"💻 Coding",secret:"😎 Secret"};
+    if(mood)mood.textContent=m[k]||m.happy;
+  }
+
+  function loadVoice(){
+    if(!("speechSynthesis" in window))return;
+    const vs=speechSynthesis.getVoices();
+    femaleVoice=vs.find(v=>/female|woman|zira|samantha|hazel|susan|aria|jenny|libby|sara|sonia/i.test(v.name+" "+v.voiceURI))
+      ||vs.find(v=>/google|microsoft|natural/i.test(v.name+" "+v.voiceURI)&&/^en/i.test(v.lang))
+      ||vs.find(v=>new RegExp(language.split("-")[0],"i").test(v.lang))
+      ||vs.find(v=>/^en/i.test(v.lang))||vs[0];
+  }
+  if("speechSynthesis" in window){loadVoice();speechSynthesis.onvoiceschanged=loadVoice}
+
+  function speak(text){
+    if(voiceMuted||!("speechSynthesis" in window)||!text)return;
+    speechSynthesis.cancel();loadVoice();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang=language;u.rate=.91;u.pitch=1.2;u.volume=1;if(femaleVoice)u.voice=femaleVoice;
+    wrap.classList.add("waving","robot-voice-active");
+    u.onend=()=>wrap.classList.remove("waving","robot-voice-active");
+    u.onerror=()=>wrap.classList.remove("waving","robot-voice-active");
+    speechSynthesis.speak(u);
+  }
+  function say(text,voice=true){
+    clearTimeout(typeTimer);typing?.classList.add("show");
+    typeTimer=setTimeout(()=>{
+      typing?.classList.remove("show");
+      if(bubble){bubble.textContent=text;wrap.classList.add("active");setTimeout(()=>wrap.classList.remove("active"),4200)}
+      if(panelMsg)panelMsg.textContent=text;
+    },220);
+    if(voice)speak(text);
+  }
+  function toggleMute(){
+    voiceMuted=!voiceMuted;localStorage.setItem("robotVoiceMuted",voiceMuted?"1":"0");
+    if(muteBtn)muteBtn.textContent=voiceMuted?"🔊 Unmute":"🔇 Mute";
+    if(muteFloat)muteFloat.textContent=voiceMuted?"🔇":"🔊";
+    if(voiceMuted&&"speechSynthesis"in window)speechSynthesis.cancel();else if(!voiceMuted)speak("Voice is on. Let's talk!");
+  }
+  if(muteBtn)muteBtn.textContent=voiceMuted?"🔊 Unmute":"🔇 Mute";
+  if(muteFloat)muteFloat.textContent=voiceMuted?"🔇":"🔊";
+
+  function answer(text){
+    const q=(text||"").trim();if(!q)return;
+    if(/project|projects|প্রজেক্ট/i.test(q)){go("#projects","অবশ্যই! 💻 Projects দেখাচ্ছি।","coding");return}
+    if(/game|games|গেম/i.test(q)){go("#gameTools","চলো game খেলি! 🎮","excited");return}
+    if(/skill|skills|স্কিল|দক্ষতা/i.test(q)){go("#skills","এগুলো তোমার skills। 🛠️","thinking");return}
+    if(/contact|যোগাযোগ|কন্টাক্ট/i.test(q)){go("#contact","Contact section-এ নিয়ে যাচ্ছি। 📞","happy");return}
+    if(/featured|most played|সবচেয়ে বেশি|ফিচারড/i.test(q)){go("#featuredGameName","Featured game দেখাচ্ছি! 🔥","excited");return}
+    if(/mute|voice off|ভয়েস বন্ধ|নিঃশব্দ/i.test(q)){if(!voiceMuted)toggleMute();return}
+    if(/unmute|voice on|ভয়েস চালু|শব্দ চালু/i.test(q)){if(voiceMuted)toggleMute();else say("Voice already on! 🔊",true);return}
+    for(const [rx,reply,m] of quick){if(rx.test(q)){moodSet(m);say(reply,true);return}}
+    if(/hello|hi|hey|হ্যালো|হাই|নমস্কার/i.test(q)){say("হ্যালো! 👋 আমাকে কিছু জিজ্ঞেস করো।",true);return}
+    askAI(q);
+  }
+  function go(selector,text,m){
+    const target=document.querySelector(selector);moodSet(m||"happy");say(text,true);
+    if(target)setTimeout(()=>target.scrollIntoView({behavior:"smooth",block:"start"}),450);
+    wrap.classList.remove("panel-open");
+  }
 
   async function askAI(message){
-    if(aiBusy)return;aiBusy=true;aiStatus?.classList.add("thinking");if(aiStatus)aiStatus.textContent="🧠 Thinking...";status("🧠 AI is thinking...","listening");
-    try{const history=JSON.parse(localStorage.getItem("robotAIHistory")||"[]").slice(-6);const r=await fetch("ai-chat.php",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message,history})});const d=await r.json().catch(()=>({}));if(!r.ok||!d.reply)throw new Error(d.error||"AI unavailable");const reply=String(d.reply).trim();history.push({role:"user",content:message},{role:"assistant",content:reply});localStorage.setItem("robotAIHistory",JSON.stringify(history.slice(-8)));aiStatus?.classList.remove("thinking");if(aiStatus)aiStatus.textContent="🧠 AI chat ready";status("✓ AI reply ready","success");moodSet(/game|play|zombie|rush/i.test(reply)?"excited":"happy");say(reply,true)}catch(e){aiStatus?.classList.remove("thinking");if(aiStatus)aiStatus.textContent="🧠 Offline mode";status("⚠ AI server not connected","error");say("আমি এখন offline mode-এ আছি। AI chat-এর জন্য ai-chat.php server setup করতে হবে। 😊",true)}finally{aiBusy=false}
+    if(aiBusy)return;aiBusy=true;aiStatus?.classList.add("thinking");if(aiStatus)aiStatus.textContent="🧠 Thinking...";
+    status("🧠 AI is thinking...","listening");
+    try{
+      const history=JSON.parse(localStorage.getItem("robotAIHistory")||"[]").slice(-6);
+      const r=await fetch("ai-chat.php",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message,history})});
+      const d=await r.json().catch(()=>({}));if(!r.ok||!d.reply)throw new Error(d.error||"AI unavailable");
+      const reply=String(d.reply).trim();history.push({role:"user",content:message},{role:"assistant",content:reply});localStorage.setItem("robotAIHistory",JSON.stringify(history.slice(-8)));
+      aiStatus?.classList.remove("thinking");if(aiStatus)aiStatus.textContent="🧠 AI chat ready";status("✓ AI reply ready","success");moodSet("happy");say(reply,true);
+    }catch(e){aiStatus?.classList.remove("thinking");if(aiStatus)aiStatus.textContent="🧠 Offline mode";status("⚠ AI server not connected","error");say("আমি এখন offline mode-এ আছি। AI server setup করলে আমি আরও freely কথা বলতে পারব। 😊",true)}
+    finally{aiBusy=false}
   }
-  function go(selector,text,m){const t=document.querySelector(selector);moodSet(m||"happy");say(text,true);if(t)setTimeout(()=>t.scrollIntoView({behavior:"smooth",block:"start"}),450);wrap.classList.remove("panel-open")}
-  function answer(text){const q=(text||"").trim();if(!q)return;if(/project|projects|প্রজেক্ট/i.test(q)){go("#projects","অবশ্যই! 💻 তোমার projects দেখাচ্ছি।","coding");return}if(/game|games|গেম/i.test(q)){go("#gameTools","চলো game খেলি! 🎮 Games section খুলে দিচ্ছি।","excited");return}if(/skill|skills|স্কিল|দক্ষতা/i.test(q)){go("#skills","এগুলো তোমার skills। 🛠️","thinking");return}if(/contact|যোগাযোগ|কন্টাক্ট/i.test(q)){go("#contact","Contact section-এ নিয়ে যাচ্ছি। 📞","happy");return}if(/featured|most played|সবচেয়ে বেশি|ফিচারড/i.test(q)){go("#featuredGameName","Featured game দেখাচ্ছি! 🔥","excited");return}if(/mute|voice off|ভয়েস বন্ধ|নিঃশব্দ/i.test(q)){if(!voiceMuted)toggleMute();return}if(/unmute|voice on|ভয়েস চালু|শব্দ চালু/i.test(q)){if(voiceMuted)toggleMute();else say("Voice already on! 🔊",true);return}for(const [rx,reply,m] of quick)if(rx.test(q)){moodSet(m);say(reply,true);return}if(/hello|hi|hey|হ্যালো|হাই|নমস্কার/i.test(q)){say("হ্যালো! 👋 আমাকে যেকোনো কিছু জিজ্ঞেস করো।",true);return}askAI(q)}
+
+  async function micPermission(){
+    if(!navigator.mediaDevices?.getUserMedia)return true;
+    try{
+      const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});
+      stream.getTracks().forEach(t=>t.stop());return true;
+    }catch(e){
+      status("⚠ Microphone permission/problem","error");
+      if(e.name==="NotAllowedError")say("Microphone permission Allow করো। তারপর আবার Talk to Me চাপো। 🎙️",false);
+      else if(e.name==="NotFoundError")say("Microphone পাওয়া যাচ্ছে না। Windows-এ mic select করো।",false);
+      else say("Microphone access-এ সমস্যা হয়েছে।",false);
+      return false;
+    }
+  }
+
+  function createRecognition(lang){
+    const r=new Recognition();
+    r.lang=lang;
+    r.continuous=false;
+    r.interimResults=true;
+    r.maxAlternatives=3;
+    return r;
+  }
 
   async function startListening(){
     if(!Recognition){
-      status("⚠ Voice recognition unavailable — use Chrome/Edge","error");
-      say("Voice recognition এই browser-এ available নেই। Chrome বা Edge ব্যবহার করো।",false);
-      return;
+      status("⚠ Voice recognition unavailable — Chrome/Edge দরকার","error");
+      say("Voice recognition-এর জন্য Chrome বা Edge ব্যবহার করো।",false);return;
     }
-    if(!window.isSecureContext && location.hostname!=="localhost"){
+    if(!window.isSecureContext&&location.hostname!=="localhost"){
       status("⚠ Mic needs HTTPS or localhost","error");
-      say("Microphone-এর জন্য HTTPS বা localhost ব্যবহার করতে হবে।",false);
-      return;
+      say("Microphone-এর জন্য HTTPS বা localhost ব্যবহার করতে হবে।",false);return;
     }
     if(listeningNow){recognition?.stop();return;}
+    if(!(await micPermission()))return;
 
-    if(navigator.mediaDevices?.getUserMedia){
-      try{
-        const stream=await navigator.mediaDevices.getUserMedia({
-          audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}
-        });
-        stream.getTracks().forEach(t=>t.stop());
-      }catch(err){
-        status("⚠ Microphone permission/problem","error");
-        if(err?.name==="NotAllowedError")
-          say("Microphone permission Allow করো, তারপর আবার Talk to Me চাপো। 🎙️",false);
-        else if(err?.name==="NotFoundError")
-          say("Microphone পাওয়া যাচ্ছে না। একটি microphone connect/select করো।",false);
-        else
-          say("Microphone চালু করতে সমস্যা হয়েছে। Chrome settings-এ mic check করো।",false);
-        return;
-      }
-    }
+    retryCount=0;
+    beginRecognition(language);
+  }
 
-    recognition=new Recognition();
-    recognition.lang=language;
-    recognition.continuous=false;
-    recognition.interimResults=true;
-    recognition.maxAlternatives=3;
+  function beginRecognition(lang){
+    recognition=createRecognition(lang);
+    listeningNow=true;wrap.classList.add("mic-active");listening?.classList.add("show");moodSet("thinking");
+    status(lang==="bn-IN"?"🎙️ Speak now — বাংলা":"🎙️ Speak now — English","listening");
+    if(panelMsg)panelMsg.textContent=`🎙️ আমি শুনছি... এখন বলো!`;
 
-    listeningNow=true;
-    wrap.classList.add("mic-active");
-    listening?.classList.add("show");
-    moodSet("thinking");
-    status(language==="bn-IN"?"🎙️ Speak now — বাংলা":"🎙️ Speak now — English","listening");
-    if(panelMsg)panelMsg.textContent="🎙️ আমি শুনছি... বলো!";
-
-    let heardFinal=false;
-
+    let gotFinal=false;
     recognition.onstart=()=>{
-      status(language==="bn-IN"?"🎙️ Speak now — বাংলা":"🎙️ Speak now — English","listening");
+      status(lang==="bn-IN"?"🎙️ Speak now — বাংলা":"🎙️ Speak now — English","listening");
     };
-
     recognition.onresult=e=>{
       let interim="";
       for(let i=e.resultIndex;i<e.results.length;i++){
         const text=e.results[i][0].transcript;
         if(e.results[i].isFinal){
-          heardFinal=true;
-          status("✓ Heard you","success");
+          gotFinal=true;status("✓ Heard you","success");
           if(panelMsg)panelMsg.textContent=`You: ${text}`;
           answer(text);
-        }else{
-          interim+=text;
-        }
+        }else interim+=text;
       }
       if(interim&&panelMsg)panelMsg.textContent=`You: ${interim}`;
     };
-
     recognition.onerror=e=>{
-      status("⚠ "+(e.error||"Microphone error"),"error");
-      if(e.error==="not-allowed"||e.error==="service-not-allowed"){
-        say("Microphone permission Allow করো, তারপর আবার Talk to Me চাপো। 🎙️",false);
-      }else if(e.error==="no-speech"){
-        say("আমি শুনতে পাইনি। একটু কাছে এসে পরিষ্কার করে আবার বলো। 😊",false);
-      }else if(e.error==="audio-capture"){
-        say("Microphone পাওয়া যাচ্ছে না। Windows/Chrome-এ input microphone ঠিক করে আবার চেষ্টা করো।",false);
-      }else{
-        say("Voice recognition-এ সমস্যা হয়েছে। আবার চেষ্টা করো।",false);
-      }
+      if(e.error==="aborted")return;
+      status("⚠ "+e.error,"error");
+      if(e.error==="not-allowed"||e.error==="service-not-allowed")say("Microphone permission Allow করো।",false);
+      else if(e.error==="no-speech")say("আমি এখনো তোমার voice পাইনি। আবার বলো। 😊",false);
+      else if(e.error==="audio-capture")say("Microphone পাওয়া যাচ্ছে না। Windows microphone check করো।",false);
+      else say("Voice recognition-এ সমস্যা হয়েছে। আবার চেষ্টা করো।",false);
     };
-
     recognition.onend=()=>{
-      listeningNow=false;
-      wrap.classList.remove("mic-active");
-      listening?.classList.remove("show");
+      listeningNow=false;wrap.classList.remove("mic-active");listening?.classList.remove("show");
+      if(!gotFinal && lang==="bn-IN" && retryCount<1){
+        retryCount++;
+        status("🔄 Trying English recognition...","listening");
+        setTimeout(()=>beginRecognition("en-IN"),300);
+        return;
+      }
+      if(!gotFinal && lang==="en-IN" && retryCount<2){
+        retryCount++;
+        status("🔄 Trying Bengali recognition...","listening");
+        setTimeout(()=>beginRecognition("bn-BD"),300);
+        return;
+      }
       if(!connection?.classList.contains("error"))status("🎙️ Mic ready","success");
     };
-
     try{
-      recognition.start();
-    }catch(err){
-      listeningNow=false;
-      wrap.classList.remove("mic-active");
-      listening?.classList.remove("show");
-      status("⚠ Could not start microphone","error");
+      setTimeout(()=>recognition.start(),120);
+    }catch(e){
+      listeningNow=false;wrap.classList.remove("mic-active");listening?.classList.remove("show");status("⚠ Could not start microphone","error");
     }
   }
 
-  btn.addEventListener("click",()=>{wrap.classList.toggle("panel-open");const msgs=["Hi! Welcome to my portfolio!","আমি তোমার সঙ্গে কথা বলতে পারি। 🎙️","আমাকে কিছু জিজ্ঞেস করো! 🤖","Let's explore together! ✨"];say(msgs[msgIndex++%msgs.length],true);clickCount++;if(clickCount>=5){clickCount=0;moodSet("secret");secret?.classList.add("show");say("Secret mode unlocked! 😎✨",true);setTimeout(()=>secret?.classList.remove("show"),6000)}});
-  $("robotClose")?.addEventListener("click",()=>{wrap.classList.remove("panel-open");if("speechSynthesis"in window)speechSynthesis.cancel()});
-  muteBtn?.addEventListener("click",e=>{e.stopImmediatePropagation();toggleMute()});
-  muteFloat?.addEventListener("click",e=>{e.stopImmediatePropagation();toggleMute()});
+  // Only ONE event path for Talk to Me: action dispatcher.
+  wrap.querySelectorAll("[data-robot-action]").forEach(b=>{
+    b.addEventListener("click",e=>{
+      e.stopImmediatePropagation();
+      const a=b.dataset.robotAction;
+      if(a==="mic"){startListening();return;}
+      if(a==="mute"){toggleMute();return;}
+      if(a==="voice"){say("Welcome to my portfolio! Let's explore my projects and games.",true);return;}
+      const map={projects:["#projects","Here are my projects.","coding"],games:["#gameTools","Let's play! Here are my games.","excited"],skills:["#skills","These are my skills.","thinking"],contact:["#contact","Let's go to Contact.","happy"],featured:["#featuredGameName","Here's the featured game!","excited"]};
+      if(map[a])go(...map[a]);
+    });
+  });
 
-  // Single click dispatcher: Talk to Me is handled HERE only, preventing double starts.
-  wrap.querySelectorAll("[data-robot-action]").forEach(b=>b.addEventListener("click",e=>{
-    e.stopImmediatePropagation();
-    const a=b.dataset.robotAction;
-    if(a==="mic"){startListening();return}
-    if(a==="mute"){toggleMute();return}
-    if(a==="voice"){say("Welcome to my portfolio! Let's explore my projects and games.",true);return}
-    const map={projects:["#projects","Here are my projects.","coding"],games:["#gameTools","Let's play! Here are my games.","excited"],skills:["#skills","These are my skills and technologies.","thinking"],contact:["#contact","Let's go to the contact section.","happy"],featured:["#featuredGameName","Here's the featured game!","excited"]};
-    if(map[a])go(...map[a]);
+  typedSend?.addEventListener("click",()=>{const t=typed?.value.trim();if(t){typed.value="";answer(t);}});
+  typed?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();typedSend?.click();}});
+
+  $("robotClose")?.addEventListener("click",e=>{e.stopImmediatePropagation();wrap.classList.remove("panel-open");if("speechSynthesis"in window)speechSynthesis.cancel();});
+  muteBtn?.addEventListener("click",e=>{e.stopImmediatePropagation();toggleMute();});
+  muteFloat?.addEventListener("click",e=>{e.stopImmediatePropagation();toggleMute();});
+
+  btn.addEventListener("click",()=>{
+    wrap.classList.toggle("panel-open");
+    const msgs=["Hi! Welcome to my portfolio!","আমি তোমার সঙ্গে কথা বলতে পারি। 🎙️","আমাকে কিছু জিজ্ঞেস করো! 🤖","Let's explore together! ✨"];
+    say(msgs[msgIndex++%msgs.length],true);
+    clickCount++;
+    if(clickCount>=5){clickCount=0;moodSet("secret");secret?.classList.add("show");say("Secret mode unlocked! 😎✨",true);setTimeout(()=>secret?.classList.remove("show"),6000);}
+  });
+
+  document.addEventListener("mousemove",e=>wrap.querySelectorAll(".robot-eye").forEach(eye=>{
+    const r=eye.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,a=Math.atan2(dy,dx);
+    eye.style.setProperty("--look-x",`${Math.cos(a)*2.5}px`);
+    eye.style.setProperty("--look-y",`${Math.sin(a)*2.5}px`);
   }));
 
-  document.addEventListener("mousemove",e=>wrap.querySelectorAll(".robot-eye").forEach(eye=>{const r=eye.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,a=Math.atan2(dy,dx);eye.style.setProperty("--look-x",`${Math.cos(a)*2.5}px`);eye.style.setProperty("--look-y",`${Math.sin(a)*2.5}px`)}));
-  function rec(){if(!recommend)return;const n=$("featuredGameName")?.textContent?.trim();recommend.textContent=(n&&n!=="—"&&!/loading/i.test(n))?`🔥 Recommended: ${n}`:"🎮 Explore my games!";recommend.classList.add("show")}rec();setTimeout(rec,2200);
-  const v=$("visitCount"),rv=$("robotVisitors");if(v&&rv){const sync=()=>rv.textContent=v.textContent||"—";sync();new MutationObserver(sync).observe(v,{childList:true,subtree:true,characterData:true})}
-  const live=$("robotLiveStatus");let sec=0;setInterval(()=>{sec++;if(live)live.textContent=`Online • Active ${sec}s`},1000);status("🎙️ Mic ready","success");
+  function rec(){if(!recommend)return;const n=$("featuredGameName")?.textContent?.trim();recommend.textContent=(n&&n!=="—"&&!/loading/i.test(n))?`🔥 Recommended: ${n}`:"🎮 Explore my games!";recommend.classList.add("show")}
+  rec();setTimeout(rec,2200);
+
+  const v=$("visitCount"),rv=$("robotVisitors");
+  if(v&&rv){const sync=()=>rv.textContent=v.textContent||"—";sync();new MutationObserver(sync).observe(v,{childList:true,subtree:true,characterData:true})}
+
+  const live=$("robotLiveStatus");let sec=0;setInterval(()=>{sec++;if(live)live.textContent=`Online • Active ${sec}s`},1000);
+  status("🎙️ Mic ready","success");
 });
 </script>
 
