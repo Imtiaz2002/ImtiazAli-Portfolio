@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Flappy Magma Seahorse - Ultimate</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#050208;font-family:Arial,sans-serif;touch-action:none}
+canvas{display:block;width:100%;height:100%}
+#hud{position:fixed;inset:0;pointer-events:none;color:#fff}
+#score{position:absolute;top:13px;left:50%;transform:translateX(-50%);font-size:42px;font-weight:900;text-shadow:0 3px 12px #000}
+#crys{position:absolute;top:61px;left:50%;transform:translateX(-50%);font-weight:bold}
+#mode{position:absolute;top:92px;left:50%;transform:translateX(-50%);font-size:12px;opacity:.8}
+.icon{pointer-events:auto;position:absolute;width:auto;padding:8px 11px;border:1px solid #ff6b20;border-radius:12px;background:#190b10;color:#fff;font-size:18px}
+#pause{right:12px;top:12px} #sound{left:12px;top:12px}
+#combo{position:absolute;left:50%;top:125px;transform:translateX(-50%);font-size:18px;font-weight:900;color:#ffd21c;opacity:0}
+#status{max-width:90vw;text-align:center}
+.overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.68);z-index:5}
+.panel{width:min(92vw,430px);max-height:90vh;overflow:auto;padding:25px;border-radius:25px;text-align:center;background:linear-gradient(145deg,#270914,#0b0409);border:2px solid #ff5b18;box-shadow:0 0 45px #ff360055;color:white}
+h1{font-size:34px;color:#ff7628;text-shadow:0 0 18px #ff2d00;margin-bottom:7px}
+h2{margin:8px 0 15px;color:#ffd2b5}
+.sub{color:#d9aaa0;margin-bottom:15px}
+button{width:100%;padding:12px;margin:5px 0;border:0;border-radius:12px;background:linear-gradient(90deg,#ff3d00,#ff8a00);color:#fff;font-weight:800;font-size:16px}
+button.alt{background:#211018;border:1px solid #814025}
+button.locked{opacity:.45}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.card{padding:10px;border-radius:14px;background:#160a10;border:1px solid #4d2220;text-align:left}
+.card b{display:block;margin-bottom:4px}.price{color:#55f4ff}
+.small{font-size:12px;color:#aaa;margin-top:8px}
+.row{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.bar{height:8px;background:#2a1418;border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:#ff5b18}
+#gameover,#shop,#missions,#modes,#help{display:none}
+.stat{font-size:18px;line-height:1.8}
+.badge{display:inline-block;padding:4px 8px;border-radius:9px;background:#291219;margin:2px;font-size:12px}
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<div id="hud">
+  <div id="score">0</div><div id="crys">💎 0</div><div id="mode">CLASSIC</div>
+  <button class="icon" id="sound">🔊</button><button class="icon" id="pause">Ⅱ</button>
+  <div id="combo">COMBO ×1</div>
+  <div id="status" style="position:absolute;left:50%;bottom:72px;transform:translateX(-50%);font-size:13px;font-weight:800;text-shadow:0 2px 8px #000;opacity:.9"></div>
+  <div id="bossMsg" style="display:none;position:absolute;left:50%;top:145px;transform:translateX(-50%);font-size:18px;font-weight:900;color:#ff7040;text-shadow:0 2px 10px #000">👑 KRAKEN</div>
+</div>
+
+<div id="menu" class="overlay">
+ <div class="panel">
+  <h1>🌋 MAGMA<br>SEAHORSE</h1><div class="sub">ULTIMATE VOLCANIC ARCADE</div>
+  <button id="play">🔥 PLAY</button>
+  <div class="grid">
+   <button class="alt" id="modesBtn">🎮 MODES</button><button class="alt" id="shopBtn">💎 SHOP</button>
+   <button class="alt" id="missionsBtn">🎯 MISSIONS</button><button class="alt" id="helpBtn">❔ HOW TO PLAY</button>
+  </div>
+  <div class="small">Tap / click / SPACE to flap • P to pause</div>
+  <div id="menuInfo" class="small"></div>
+ </div>
+</div>
+
+<div id="modes" class="overlay"><div class="panel">
+ <h2>🎮 GAME MODES</h2>
+ <button data-mode="classic">🌋 Classic<br><span class="small">Endless score chase</span></button>
+ <button data-mode="time">⏱️ Time Attack<br><span class="small">60 seconds • maximum score</span></button>
+ <button data-mode="hardcore">☠️ Hardcore<br><span class="small">Tiny gaps • one mistake</span></button>
+ <button data-mode="abyss">🌑 Endless Abyss<br><span class="small">Faster and more chaotic</span></button>
+ <button data-mode="boss">👑 Boss Fight<br><span class="small">Survive the Lava Kraken</span></button>
+ <button class="alt back">← BACK</button>
+</div></div>
+
+<div id="shop" class="overlay"><div class="panel">
+ <h2>💎 SEAHORSE SHOP</h2><div class="small" id="wallet"></div>
+ <div class="grid" id="shopGrid"></div>
+ <h2>⚡ POWER-UPS</h2><div class="grid" id="powerGrid"></div>
+ <button class="alt back">← BACK</button>
+</div></div>
+
+<div id="missions" class="overlay"><div class="panel">
+ <h2>🎯 MISSIONS & ACHIEVEMENTS</h2><div id="missionList"></div>
+ <button class="alt back">← BACK</button>
+</div></div>
+
+<div id="help" class="overlay"><div class="panel">
+ <h2>❔ HOW TO PLAY</h2>
+ <div class="sub">Guide your seahorse through the magma gates.</div>
+ <div class="card">🔥 <b>FLAP</b> Tap, click or press SPACE.</div>
+ <div class="card">💎 <b>COLLECT</b> Crystals buy skins and power-ups.</div>
+ <div class="card">🛡️ <b>POWER-UPS</b> Shield, magnet, freeze, dash and 2× crystals.</div>
+ <div class="card">🔥 <b>COMBO</b> Consecutive gates increase your combo reward.</div>
+ <div class="card">👑 <b>BOSS</b> In Boss mode, dodge the Kraken and its magma shots.</div>
+ <button class="alt back">← BACK</button>
+</div></div>
+
+<div id="gameover" class="overlay"><div class="panel">
+ <h1 id="goTitle">GAME OVER</h1><div class="stat">
+ Score: <b id="finalScore">0</b><br>Best: <b id="finalBest">0</b><br>💎 Run crystals: <b id="finalRun">0</b>
+</div>
+ <div id="goBadges"></div>
+ <button id="again">🔄 PLAY AGAIN</button><button id="goShop" class="alt">💎 SHOP</button><button id="home" class="alt">🏠 MENU</button>
+</div></div>
+
+<script>
+const c=document.getElementById('game'),x=c.getContext('2d');
+let W,H,dpr;
+function resize(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;c.style.width=W+'px';c.style.height=H+'px';x.setTransform(dpr,0,0,dpr,0,0)}
+addEventListener('resize',resize);resize();
+
+const skins=[
+ {id:'magma',name:'🔥 Magma',price:0,body:'#ff4b0b',accent:'#ffd21c',trail:'#ff5a00'},
+ {id:'thunder',name:'⚡ Thunder',price:100,body:'#5d7cff',accent:'#d7e2ff',trail:'#70a7ff'},
+ {id:'ice',name:'❄️ Ice',price:250,body:'#48d9ff',accent:'#e8ffff',trail:'#50f6ff'},
+ {id:'ocean',name:'🌊 Ocean',price:400,body:'#1475d1',accent:'#70e8ff',trail:'#00baff'},
+ {id:'dark',name:'☠️ Dark',price:650,body:'#652d85',accent:'#ff4fe7',trail:'#b43dff'},
+ {id:'cosmic',name:'🌌 Cosmic',price:900,body:'#d74bff',accent:'#7effff',trail:'#ff55c8'},
+ {id:'gold',name:'👑 Golden',price:1500,body:'#ffad00',accent:'#fff1a8',trail:'#ffd000'}
+];
+const powers=[
+ {id:'shield',name:'🛡️ Shield',price:80},
+ {id:'magnet',name:'🧲 Magnet',price:120},
+ {id:'freeze',name:'❄️ Freeze',price:140},
+ {id:'dash',name:'⚡ Dash',price:160},
+ {id:'double',name:'💎 2× Crystal',price:180},
+ {id:'life',name:'❤️ Extra Life',price:220}
+];
+const missions=[
+ {id:'score25',name:'Score 25',need:25,kind:'score',reward:50},
+ {id:'crystal50',name:'Collect 50 crystals',need:50,kind:'crystal',reward:75},
+ {id:'gates10',name:'Pass 10 gates',need:10,kind:'score',reward:75},
+ {id:'power3',name:'Use 3 power-ups',need:3,kind:'power',reward:100},
+ {id:'combo10',name:'Reach Combo ×10',need:10,kind:'combo',reward:125}
+];
+let save=JSON.parse(localStorage.getItem('magmaSave')||'{}');
+save.crystals=save.crystals||0;save.owned=save.owned||['magma'];save.power=save.power||{};save.equipped=save.equipped||'magma';save.done=save.done||{};save.best=save.best||{};
+function persist(){localStorage.setItem('magmaSave',JSON.stringify(save))}
+let mode='classic',running=false,paused=false,muted=false,score=0,runC=0,combo=0,comboBest=0,timeLeft=60;
+let pipes=[],gems=[],shots=[],parts=[],powerItems=[],effects={},spawn=0,powerSpawn=0,boss=null,last=0,life=0,shake=0;
+const sea={x:0,y:0,vy:0,r:22,rot:0};
+
+function show(id){document.querySelectorAll('.overlay').forEach(e=>e.style.display='none');document.getElementById(id).style.display='flex'}
+function hideAll(){document.querySelectorAll('.overlay').forEach(e=>e.style.display='none')}
+function menu(){running=false;paused=false;show('menu');updateMenuInfo()}
+function updateMenuInfo(){const day=Math.floor(Date.now()/86400000), challenges=[
+ '🌋 Daily: Score 15 in one run',
+ '💎 Daily: Collect 20 crystals',
+ '⚡ Daily: Reach Combo ×8',
+ '☠️ Daily: Survive Hardcore for 20 gates'
+];
+document.getElementById('menuInfo').innerHTML=`💎 ${save.crystals} crystals • Skin: ${skins.find(s=>s.id===save.equipped).name}<br>${challenges[day%challenges.length]}`}
+function startGame(){
+ score=0;runC=0;combo=0;comboBest=0;timeLeft=60;pipes=[];gems=[];shots=[];parts=[];powerItems=[];effects={};spawn=0;powerSpawn=0;shake=0;life=mode==='hardcore'?1:3;
+ sea.x=W*.24;sea.y=H*.45;sea.vy=0;
+ if(mode==='boss')boss={hp:30,max:30,t:0,x:W-110,y:H*.45,vy:1};
+ running=true;paused=false;hideAll();last=performance.now();requestAnimationFrame(loop);
+}
+function flap(){if(!running||paused)return;sea.vy=-7.8;particles(sea.x-10,sea.y,6)}
+function gameOver(reason='GAME OVER'){
+ if(!running)return;running=false;
+ let key=mode;save.best[key]=Math.max(save.best[key]||0,score);
+ save.crystals+=runC;
+ save.totalCrystal=(save.totalCrystal||0)+runC;
+ save.comboBest=Math.max(save.comboBest||0,comboBest);
+ persist();
+ document.getElementById('goTitle').textContent=reason;
+ document.getElementById('finalScore').textContent=score;
+ document.getElementById('finalBest').textContent=save.best[mode]||score;
+ document.getElementById('finalRun').textContent=runC;
+ let b=[];if(score>=25)b.push('🔥 25+ Score');if(comboBest>=10)b.push('⚡ Combo Master');if(runC>=20)b.push('💎 Crystal Hunter');document.getElementById('goBadges').innerHTML=b.map(v=>`<span class="badge">${v}</span>`).join('');
+ show('gameover');
+}
+function pipeSpawn(){
+ let gap=mode==='hardcore'?118:mode==='abyss'?145:Math.max(145,205-score*1.0);
+ let top=70+Math.random()*Math.max(60,H-220-gap);
+ pipes.push({x:W+60,top,gap,width:70,passed:false});
+ if(Math.random()<.9)gems.push({x:W+95,y:top+gap/2,r:11,rot:0});
+ if(Math.random()<.23)powerItems.push({x:W+120,y:top+gap/2+(Math.random()-.5)*35,r:13,type:powers[Math.floor(Math.random()*powers.length)].id});
+}
+function particles(px,py,n=4){
+ for(let i=0;i<n;i++)parts.push({x:px,y:py,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,life:1,s:2+Math.random()*5});
+}
+function hitCircle(a,b){let dx=a.x-b.x,dy=a.y-b.y;return Math.hypot(dx,dy)<a.r+b.r}
+function activate(type){
+ const durations={shield:720,magnet:600,freeze:520,dash:280,double:620};
+ effects[type]=(effects[type]||0)+(durations[type]||1);
+ if(type==='life'){life=Math.min(5,life+1);effects[type]=0}
+ save.power[type]=(save.power[type]||0)-1;
+ save.powerUsed=(save.powerUsed||0)+1;
+ persist();
+ particles(sea.x,sea.y,18);
+ const m=missions.find(q=>q.id==='power3'); if(m) missionProgress(m);
+}
+function missionProgress(m){
+ let val=m.kind==='score'?score:m.kind==='crystal'?runC:m.kind==='combo'?comboBest:(save.powerUsed||0);
+ if(val>=m.need&&!save.done[m.id]){save.done[m.id]=1;save.crystals+=m.reward;persist()}
+}
+function usePower(type){
+ if((save.power[type]||0)<=0)return;
+ activate(type);
+}
+function update(dt){
+ const slow=effects.freeze>0?.48:1;
+ const sp=((mode==='abyss'?4.2:3.25)+score*.028)*(effects.dash>0?2.15:1);
+ sea.vy+=.42*dt;sea.y+=sea.vy*dt;sea.rot=Math.max(-.55,Math.min(.8,sea.vy*.055));
+ if(sea.y-sea.r<0){sea.y=sea.r;sea.vy=1}
+ if(sea.y+sea.r>H){if(effects.shield>0){effects.shield=0;sea.vy=-6;sea.y=H-sea.r-5}else{loseLife('🌋 CRUSHED BY LAVA')}}
+ if(mode==='time'){timeLeft-=dt/60;if(timeLeft<=0){timeLeft=0;gameOver('⏱️ TIME UP')}}
+ spawn+=dt;if(spawn>(mode==='abyss'?78:105)){pipeSpawn();spawn=0}
+ powerSpawn+=dt;
+ for(let p of pipes){
+  p.x-=sp*dt*slow;
+  if(!p.passed&&p.x+p.width<sea.x){p.passed=true;score++;combo++;
+  if(mode==='boss'&&boss){boss.hp=Math.max(0,boss.hp-1);particles(boss.x,boss.y,8);if(boss.hp<=0){gameOver('👑 KRAKEN DEFEATED!');return}}
+comboBest=Math.max(comboBest,combo);runC+=effects.double>0?2:1;document.getElementById('score').textContent=score;document.getElementById('combo').textContent='COMBO ×'+combo;document.getElementById('combo').style.opacity=combo>1?1:0;particles(sea.x,sea.y,8)}
+  if(sea.x+sea.r>p.x&&sea.x-sea.r<p.x+p.width&&(sea.y-sea.r<p.top||sea.y+sea.r>p.top+p.gap)){if(effects.shield>0){effects.shield=0;particles(sea.x,sea.y,20);p.x=-999}else loseLife('💥 MAGMA HIT')}
+ }
+ pipes=pipes.filter(p=>p.x+p.width>-30);
+ for(let g of gems){g.x-=sp*dt*slow;g.rot+=.08*dt;if(effects.magnet>0&&g.x<sea.x+180){g.x+=(sea.x-g.x)*.08*dt;g.y+=(sea.y-g.y)*.08*dt}if(hitCircle(sea,g)){runC+=effects.double>0?2:1;particles(g.x,g.y,12);g.collected=true}}
+ gems=gems.filter(g=>g.x>-30&&!g.collected);
+ for(let q of powerItems){q.x-=sp*dt*slow;if(effects.magnet>0&&q.x<sea.x+180){q.x+=(sea.x-q.x)*.07*dt;q.y+=(sea.y-q.y)*.07*dt}if(hitCircle(sea,q)){usePower(q.type);q.collected=true}}
+ powerItems=powerItems.filter(q=>q.x>-30&&!q.collected);
+ for(let k of Object.keys(effects)){if(effects[k]>0&&k!=='life')effects[k]-=dt;if(effects[k]<=0)delete effects[k]}
+ for(let p of parts){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=.08*dt;p.life-=.025*dt}parts=parts.filter(p=>p.life>0);
+ if(mode==='boss')updateBoss(dt);
+ for(const m of missions)missionProgress(m);
+ save.comboBest=Math.max(save.comboBest||0,comboBest);
+ document.getElementById('crys').textContent='💎 '+(save.crystals+runC);
+ const active=Object.keys(effects).filter(k=>effects[k]>0).map(k=>({shield:'🛡️ Shield',magnet:'🧲 Magnet',freeze:'❄️ Freeze',dash:'⚡ Dash',double:'💎 2×'}[k])).filter(Boolean);
+ document.getElementById('status').textContent=active.join('   ')||('❤️ '+life+'   •   '+mode.toUpperCase());
+ document.getElementById('bossMsg').style.display=(mode==='boss'&&running)?'block':'none';
+ document.getElementById('mode').textContent=mode.toUpperCase()+(mode==='time'?' • '+Math.ceil(timeLeft)+'s':'');
+}
+function loseLife(reason){
+ if(!running)return;
+ life--;combo=0;document.getElementById('combo').style.opacity=0;shake=15;particles(sea.x,sea.y,25);
+ if(life<=0)gameOver(reason);else{sea.y=H*.45;sea.vy=-6;pipes=[]}
+}
+function updateBoss(dt){
+ if(!boss)return;
+ boss.t+=dt;boss.y+=boss.vy*dt;
+ if(boss.y<100||boss.y>H-100)boss.vy*=-1;
+ if(Math.random()<.032*dt)shots.push({x:boss.x-35,y:boss.y,r:10,vx:-5.5});
+ if(Math.random()<.009*dt)shots.push({x:boss.x-35,y:boss.y+(Math.random()-.5)*110,r:7,vx:-7});
+ for(let s of shots){s.x+=s.vx*dt;if(hitCircle(sea,s)){if(effects.shield>0)effects.shield=0;else loseLife('👑 KRAKEN ATTACK');s.x=-999}}
+ shots=shots.filter(s=>s.x>-30);
+ if(boss.hp<=0){gameOver('👑 KRAKEN DEFEATED!');return}
+}
+function bg(){
+ let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#09030d');g.addColorStop(.5,'#28060b');g.addColorStop(1,'#090105');x.fillStyle=g;x.fillRect(0,0,W,H);
+ let rg=x.createRadialGradient(W*.5,H*.85,10,W*.5,H*.85,H*.75);rg.addColorStop(0,'#ff4a002b');rg.addColorStop(1,'#ff000000');x.fillStyle=rg;x.fillRect(0,0,W,H);
+ for(let i=0;i<22;i++){let xx=(i*139+performance.now()*.025*(i%4+1))%W,yy=H-(i*71)%H;x.fillStyle='#ff8a1430';x.beginPath();x.arc(xx,yy,2+i%4,0,7);x.fill()}
+ x.fillStyle='#2c0804';x.fillRect(0,H-28,W,28);x.strokeStyle='#ff4b00';x.lineWidth=5;x.beginPath();for(let xx=0;xx<W;xx+=18){let yy=H-27+Math.sin(xx*.03+performance.now()*.003)*4;xx?x.lineTo(xx,yy):x.moveTo(xx,yy)}x.stroke();
+}
+function pipeDraw(p){
+ let g=x.createLinearGradient(p.x,0,p.x+p.width,0);g.addColorStop(0,'#571006');g.addColorStop(.45,'#ff4c00');g.addColorStop(1,'#3b0704');x.fillStyle=g;
+ x.fillRect(p.x,0,p.width,p.top);x.fillRect(p.x,p.top+p.gap,p.width,H-p.top-p.gap);
+ x.fillStyle='#ff7b00';x.fillRect(p.x-8,p.top-12,p.width+16,14);x.fillRect(p.x-8,p.top+p.gap-2,p.width+16,14);
+ x.strokeStyle='#ffd21c';x.lineWidth=3;for(let yy=35;yy<p.top;yy+=55){x.beginPath();x.moveTo(p.x+12,yy);x.lineTo(p.x+34,yy+16);x.lineTo(p.x+22,yy+30);x.stroke()}
+}
+function gemDraw(g){x.save();x.translate(g.x,g.y);x.rotate(g.rot);x.shadowBlur=16;x.shadowColor='#00eaff';x.fillStyle='#45f4ff';x.beginPath();x.moveTo(0,-13);x.lineTo(10,0);x.lineTo(0,13);x.lineTo(-10,0);x.closePath();x.fill();x.restore()}
+function powerDraw(q){let map={shield:'🛡️',magnet:'🧲',freeze:'❄️',dash:'⚡',double:'💎',life:'❤️'};x.font='24px Arial';x.textAlign='center';x.fillText(map[q.type]||'⚡',q.x,q.y+8)}
+function seahorse(){
+ const s=skins.find(q=>q.id===save.equipped)||skins[0];
+ if(save.equipped==='thunder' && Math.random()<.08) particles(sea.x-20,sea.y,2);
+ if(save.equipped==='ice' && effects.freeze<=0 && Math.random()<.04) particles(sea.x-18,sea.y,2);
+ x.save();x.translate(sea.x,sea.y);x.rotate(sea.rot);x.shadowBlur=20;x.shadowColor=s.trail;
+ x.strokeStyle=s.accent;x.lineWidth=8;x.beginPath();x.arc(-5,8,16,0,Math.PI*1.5);x.stroke();
+ x.fillStyle=s.body;x.beginPath();x.ellipse(0,4,15,23,0,0,7);x.fill();
+ x.strokeStyle=s.accent;x.lineWidth=11;x.beginPath();x.moveTo(4,-8);x.quadraticCurveTo(3,-20,11,-25);x.stroke();
+ x.fillStyle=s.body;x.beginPath();x.arc(14,-27,13,0,7);x.fill();
+ x.beginPath();x.moveTo(20,-27);x.lineTo(35,-22);x.lineTo(20,-18);x.closePath();x.fill();
+ x.fillStyle='#fff';x.beginPath();x.arc(18,-30,4,0,7);x.fill();x.fillStyle='#050505';x.beginPath();x.arc(19,-30,2,0,7);x.fill();
+ x.fillStyle=s.accent;x.beginPath();x.moveTo(3,-34);x.lineTo(0,-49);x.lineTo(9,-40);x.lineTo(12,-51);x.lineTo(17,-36);x.closePath();x.fill();
+ x.fillStyle=s.accent;x.beginPath();x.moveTo(-10,-3);x.lineTo(-29,-13);x.lineTo(-18,8);x.closePath();x.fill();
+ if(effects.shield){x.strokeStyle='#6ff';x.lineWidth=3;x.shadowColor='#6ff';x.beginPath();x.arc(0,0,31,0,7);x.stroke()}
+ x.restore();
+}
+function bossDraw(){if(!boss)return;x.save();x.translate(boss.x,boss.y);x.fillStyle='#54116d';x.shadowBlur=25;x.shadowColor='#ff2b00';x.beginPath();x.arc(0,0,48,0,7);x.fill();x.fillStyle='#ff3c00';for(let i=0;i<6;i++){let a=i*Math.PI/3;x.beginPath();x.moveTo(Math.cos(a)*35,Math.sin(a)*35);x.lineTo(Math.cos(a)*75,Math.sin(a)*75);x.lineTo(Math.cos(a+.18)*45,Math.sin(a+.18)*45);x.fill()}x.fillStyle='#fff';x.beginPath();x.arc(-15,-10,8,0,7);x.arc(15,-10,8,0,7);x.fill();x.fillStyle='#000';x.beginPath();x.arc(-15,-10,3,0,7);x.arc(15,-10,3,0,7);x.fill();x.restore();
+ x.fillStyle='#291016';x.fillRect(W/2-120,20,240,11);
+ x.fillStyle='#ff3100';x.fillRect(W/2-120,20,240*(boss.hp/boss.max),11);
+ x.strokeStyle='#ffd21c';x.lineWidth=1;x.strokeRect(W/2-120,20,240,11);
+ x.fillStyle='#fff';x.font='bold 11px Arial';x.textAlign='center';x.fillText('KRAKEN '+boss.hp+'/'+boss.max,W/2,17);
+}
+function draw(){
+ bg();for(let p of pipes)pipeDraw(p);for(let g of gems)gemDraw(g);for(let q of powerItems)powerDraw(q);for(let s of shots){x.fillStyle='#ff5a00';x.shadowBlur=15;x.shadowColor='#ff2d00';x.beginPath();x.arc(s.x,s.y,s.r,0,7);x.fill();x.shadowBlur=0}bossDraw();
+ for(let p of parts){x.globalAlpha=p.life;x.fillStyle=Math.random()>.5?'#ff6500':'#ffd21c';x.beginPath();x.arc(p.x,p.y,p.s,0,7);x.fill()}x.globalAlpha=1;seahorse();
+ if(paused){x.fillStyle='#0008';x.fillRect(0,0,W,H);x.fillStyle='#fff';x.font='bold 42px Arial';x.textAlign='center';x.fillText('PAUSED',W/2,H/2)}
+ if(life>0&&running){x.font='18px Arial';x.textAlign='left';x.fillStyle='#fff';x.fillText('❤️'.repeat(Math.min(life,5)),15,H-42)}
+}
+function loop(t){if(!running)return;let dt=Math.min(2,(t-last)/16.67);last=t;if(!paused)update(dt);draw();if(running)requestAnimationFrame(loop)}
+
+function renderShop(){
+ document.getElementById('wallet').textContent='💎 '+save.crystals+' crystals';
+ document.getElementById('shopGrid').innerHTML=skins.map(s=>{let own=save.owned.includes(s.id),eq=save.equipped===s.id;return `<div class="card"><b>${s.name}</b><span class="price">${s.price? '💎 '+s.price:'FREE'}</span><button data-skin="${s.id}" class="${own?'':'locked'}">${eq?'EQUIPPED':own?'EQUIP': 'BUY'}</button></div>`}).join('');
+ document.getElementById('powerGrid').innerHTML=powers.map(p=>`<div class="card"><b>${p.name}</b><span class="price">💎 ${p.price}</span><div class="small">Owned: ${save.power[p.id]||0}</div><button data-power="${p.id}">BUY</button></div>`).join('');
+ document.querySelectorAll('[data-skin]').forEach(b=>b.onclick=()=>{let id=b.dataset.skin,s=skins.find(q=>q.id===id);if(save.owned.includes(id))save.equipped=id;else if(save.crystals>=s.price){save.crystals-=s.price;save.owned.push(id);save.equipped=id}else return;persist();renderShop();updateMenuInfo()});
+ document.querySelectorAll('[data-power]').forEach(b=>b.onclick=()=>{let p=powers.find(q=>q.id===b.dataset.power);if(save.crystals>=p.price){save.crystals-=p.price;save.power[p.id]=(save.power[p.id]||0)+1;persist();renderShop()}});
+}
+function renderMissions(){
+ document.getElementById('missionList').innerHTML=missions.map(m=>{let val=m.kind==='score'?Math.max(save.best.classic||0,score):m.kind==='crystal'?(save.totalCrystal||0):m.kind==='combo'?Math.max(save.comboBest||0,comboBest):(save.powerUsed||0);let done=save.done[m.id];return `<div class="card"><b>${done?'✅ ':''}${m.name}</b><div class="small">${Math.min(val,m.need)} / ${m.need} • Reward 💎 ${m.reward}</div><div class="bar"><i style="width:${Math.min(100,val/m.need*100)}%"></i></div></div>`}).join('');
+}
+document.getElementById('play').onclick=startGame;
+document.getElementById('again').onclick=startGame;
+document.getElementById('home').onclick=menu;
+document.getElementById('goShop').onclick=()=>{renderShop();show('shop')};
+document.getElementById('shopBtn').onclick=()=>{renderShop();show('shop')};
+document.getElementById('missionsBtn').onclick=()=>{renderMissions();show('missions')};
+document.getElementById('modesBtn').onclick=()=>show('modes');
+document.getElementById('helpBtn').onclick=()=>show('help');
+document.querySelectorAll('.back').forEach(b=>b.onclick=()=>{show('menu');updateMenuInfo()});
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;show('menu');updateMenuInfo()});
+document.getElementById('pause').onclick=()=>{if(running){paused=!paused;if(!paused){last=performance.now();requestAnimationFrame(loop)}}};
+document.getElementById('sound').onclick=()=>{muted=!muted;document.getElementById('sound').textContent=muted?'🔇':'🔊'};
+addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON')return;flap()});
+addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();flap()}if(e.code==='KeyP'&&running){paused=!paused;if(!paused){last=performance.now();requestAnimationFrame(loop)}}});
+menu();draw();
+</script>
+</body>
+</html>
