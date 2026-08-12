@@ -1,0 +1,18 @@
+# Robot V10 AI Conversation
+
+This version adds real free-form AI conversation to the portfolio robot.
+
+## Files
+- index.html — updated robot frontend
+- ai-chat.php — secure server-side AI bridge
+- ai-config.example.php — configuration template
+
+## Setup
+1. Upload `index.html`, `ai-chat.php`, and `ai-config.php` to the same PHP-enabled hosting folder.
+2. Copy `ai-config.example.php` to `ai-config.php`.
+3. Put your API key in `ai-config.php`, OR set the server environment variable `OPENAI_API_KEY`.
+4. Do not put the API key in JavaScript or publish it in GitHub.
+5. Open the portfolio over HTTP/HTTPS and allow microphone access when using “Talk to Me”.
+
+The backend uses OpenAI's Responses API. The API key must stay server-side.
+If the site is hosted on GitHub Pages, PHP will not execute; use PHP hosting/cPanel/XAMPP or another server backend.
