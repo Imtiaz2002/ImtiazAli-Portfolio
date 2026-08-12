@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Lava Rush — Volcano Escape</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#070708;font-family:Arial,sans-serif;color:#fff;touch-action:none}
+body{user-select:none}
+#app{position:fixed;inset:0;overflow:hidden;background:#090607}
+canvas{position:absolute;inset:0;width:100%;height:100%}
+.screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.68);backdrop-filter:blur(7px);z-index:20}
+.hidden{display:none!important}
+.card{width:min(94vw,470px);padding:24px;border:1px solid #ff6a00;border-radius:24px;background:linear-gradient(145deg,rgba(45,15,6,.98),rgba(8,8,10,.98));box-shadow:0 0 45px rgba(255,75,0,.3);text-align:center}
+.logo{font-size:clamp(38px,11vw,60px);font-weight:1000;letter-spacing:-2px;color:#ff7514;text-shadow:0 0 10px #ff2b00,0 0 35px #ff5a00;margin:0}
+.subtitle{color:#ffc28f;margin:4px 0 20px}
+.btn{border:0;border-radius:14px;padding:13px 20px;margin:5px;color:#fff;font-size:16px;font-weight:800;background:linear-gradient(#ff8a22,#e63700);box-shadow:0 4px 0 #7b1800;cursor:pointer}
+.btn:active{transform:translateY(3px);box-shadow:none}
+.btn.alt{background:linear-gradient(#393939,#1c1c1c);box-shadow:0 4px 0 #090909}
+.btn.small{font-size:13px;padding:9px 12px}
+#hud{position:absolute;top:10px;left:10px;right:10px;z-index:10;display:flex;align-items:flex-start;gap:7px;pointer-events:none}
+.hudbox{background:rgba(10,7,6,.72);border:1px solid rgba(255,116,35,.5);border-radius:12px;padding:7px 10px;box-shadow:0 0 12px rgba(255,80,0,.12);font-size:13px}
+.hudbox.grow{flex:1;min-width:105px}
+#healthTrack{height:8px;margin-top:4px;background:#35100c;border-radius:99px;overflow:hidden}
+#healthBar{height:100%;width:100%;background:linear-gradient(90deg,#ff2a00,#ffb000)}
+#progress{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:min(31vw,180px);height:7px;background:#20100b;border:1px solid #60301b;border-radius:99px;overflow:hidden}
+#progressBar{height:100%;width:0;background:#ffd23d}
+#pause{position:absolute;right:12px;top:58px;z-index:11;min-width:54px;min-height:46px;font-size:20px} #fullscreen{position:absolute;right:74px;top:58px;z-index:11;min-width:54px;min-height:46px;font-size:20px}
+#controls{position:absolute;left:0;right:0;bottom:14px;z-index:12;display:flex;justify-content:space-between;padding:0 14px;pointer-events:none}
+.pad{display:flex;gap:10px}.ctrl{width:66px;height:66px;border-radius:50%;border:2px solid #ff6710;background:rgba(15,10,8,.7);color:white;display:grid;place-items:center;font-size:25px;font-weight:900;pointer-events:auto;touch-action:none;-webkit-user-select:none;user-select:none;box-shadow:0 0 18px rgba(255,70,0,.18)}
+#shopGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0;max-height:50vh;overflow:auto}
+.item{background:#120b08;border:1px solid #4b2517;border-radius:14px;padding:12px}
+.item.selected{border-color:#1eeaff;box-shadow:0 0 14px rgba(30,234,255,.25)}
+.swatch{height:35px;border-radius:10px;margin-bottom:8px}
+.price{color:#ffd33d;font-weight:800}
+#toast{position:absolute;left:50%;top:20%;transform:translate(-50%,-50%);z-index:30;background:rgba(0,0,0,.78);border:1px solid #ff7b19;padding:10px 16px;border-radius:12px;opacity:0;transition:.2s;pointer-events:none}
+#toast.show{opacity:1}
+#missionHud{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);z-index:11;background:rgba(10,6,4,.72);border:1px solid rgba(255,185,55,.55);padding:7px 12px;border-radius:12px;font-size:12px;white-space:nowrap;pointer-events:none}
+.statline{display:flex;justify-content:space-between;padding:5px 0;color:#ddd}
+.mission{font-size:12px;color:#ffcfaa;margin-top:8px}
+@media(max-height:560px){
+ .ctrl{width:74px;height:74px;border-radius:20px;font-size:27px}
+ #controls{padding:0 12px}
+ .pad{gap:10px}
+ .card{padding:16px}
+}
+@media(max-width:390px){
+ .ctrl{width:78px;height:78px;border-radius:20px;font-size:28px}
+ .pad{gap:8px}
+ #controls{padding:0 10px}
+}
+@media(min-width:700px){
+ .ctrl{width:82px;height:82px;font-size:32px;border-radius:22px}
+ #controls{padding:0 28px;bottom:22px}
+ #missionHud{bottom:112px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div class="hudbox">❤️ <b id="lives">3</b><div id="healthTrack"><div id="healthBar"></div></div></div>
+  <div class="hudbox">💎 <b id="coins">0</b></div>
+  <div class="hudbox grow">🏆 <b id="score">0</b><div id="progress"><div id="progressBar"></div></div></div>
+  <div class="hudbox">🔥 <b id="best">0</b></div><div class="hudbox">🌋 L<b id="levelHud">1</b></div>
+</div>
+<button id="fullscreen" class="btn small alt">⛶</button><button id="pause" class="btn small alt">Ⅱ</button>
+
+<div id="controls">
+  <div class="pad"><div class="ctrl" id="left">◀</div><div class="ctrl" id="right">▶</div></div>
+  <div class="pad"><div class="ctrl" id="jump">▲</div><div class="ctrl" id="fire">🔥</div></div>
+</div>
+
+<div id="toast"></div><div id="missionHud">🎯 <b id="missionText">Collect 10 crystals</b> <span id="missionCount">0/10</span></div>
+
+<section id="menu" class="screen">
+ <div class="card">
+  <div class="logo">🌋 LAVA RUSH</div><div style="font-size:11px;color:#888;letter-spacing:2px">FINAL EDITION</div>
+  <div class="subtitle">VOLCANO ESCAPE</div>
+  <p>Run upward. Collect crystals. Defeat monsters. Stay above the lava.</p>
+  <button id="start" class="btn">🔥 START RUN</button>
+  <button id="shopOpen" class="btn alt">🛒 SHOP</button><button id="howto" class="btn alt">🎮 HOW TO PLAY</button>
+  <p class="mission">◀ ▶ Move &nbsp; ▲ Double Jump &nbsp; 🔥 Fire</p><p class="mission">Mission: reach Level 5 • collect 25 crystals • survive!</p>
+ </div>
+</section>
+
+<section id="howtoScreen" class="screen hidden">
+ <div class="card">
+  <h2>🎮 HOW TO PLAY</h2>
+  <p>💻 PC: A/D or ←/→ to move • W/Space/↑ to jump • F to fire • Esc to pause</p>
+  <p>📱 Mobile: use the large on-screen controls.</p>
+  <p>💎 Collect crystals, defeat enemies, complete missions and stay above the lava.</p>
+  <button id="closeHowto" class="btn">GOT IT</button>
+ </div>
+</section>
+<section id="pauseScreen" class="screen hidden">
+ <div class="card"><h2>⏸ PAUSED</h2><p>Take a breath, the volcano can wait.</p><button id="resume" class="btn">▶ RESUME</button><button id="pauseMenu" class="btn alt">MENU</button></div>
+</section>
+
+<section id="over" class="screen hidden">
+ <div class="card">
+  <h2 style="color:#ff6811">💀 RUN OVER</h2>
+  <div class="statline"><span>Score</span><b id="finalScore">0</b></div>
+  <div class="statline"><span>Crystals</span><b id="finalCoins">0</b></div>
+  <div class="statline"><span>Level</span><b id="finalLevel">1</b></div>
+  <button id="again" class="btn">🔥 PLAY AGAIN</button>
+  <button id="overShop" class="btn alt">🛒 SHOP</button>
+  <button id="overMenu" class="btn alt">MENU</button>
+ </div>
+</section>
+
+<section id="shop" class="screen hidden">
+ <div class="card">
+  <h2>🛒 LAVA GARAGE</h2>
+  <p>💎 Balance: <b id="balance">0</b></p>
+  <div id="shopGrid"></div>
+  <button id="closeShop" class="btn alt">CLOSE</button>
+ </div>
+</section>
+</div>
+
+<script>
+"use strict";
+const C=document.getElementById("game"),ctx=C.getContext("2d");
+let W=innerWidth,H=innerHeight,DPR=1;
+function resize(){W=innerWidth;H=innerHeight;DPR=Math.min(devicePixelRatio||1,2);C.width=W*DPR;C.height=H*DPR;C.style.width=W+"px";C.style.height=H+"px";ctx.setTransform(DPR,0,0,DPR,0,0)}
+addEventListener("resize",resize);resize();
+
+const $=id=>document.getElementById(id);
+const store={
+ best:+localStorage.getItem("lr_best")||0,
+ crystals:+localStorage.getItem("lr_crystals")||0,
+ skin:localStorage.getItem("lr_skin")||"ember"
+};
+const skins={
+ ember:{name:"Ember",price:0,a:"#ff6b0a",b:"#ffce38"},
+ frost:{name:"Frost",price:40,a:"#21d9ff",b:"#b7ffff"},
+ toxic:{name:"Toxic",price:75,a:"#62ff48",b:"#d6ff7b"},
+ shadow:{name:"Shadow",price:120,a:"#a855ff",b:"#f0c5ff"},
+ gold:{name:"Volcanic Gold",price:180,a:"#ffd12e",b:"#fff1a2"}
+};
+function owned(id){return id==="ember"||localStorage.getItem("lr_owned_"+id)==="1"}
+
+let state="menu",score=0,runCrystals=0,lives=3,hp=100,level=1,levelDist=0,missionType="crystals",missionGoal=10,missionStart=0,missionDone=false,shots=0,enemyKills=0;
+let world=0,lava=0,shake=0,spawn=0,gemSpawn=0,enemySpawn=0,powerSpawn=0;
+let player,platforms,gems,enemies,powers,particles,rocks,fireballs,meteors,boss=null;
+let input={l:false,r:false},last=0,inv=0,jumps=0;
+let audio=null;
+
+function initAudio(){if(audio)return;try{audio=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}
+function beep(freq=440,dur=.06,type="sine",vol=.025){
+ if(!audio)return;try{let o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.value=freq;g.gain.value=vol;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+dur);o.stop(audio.currentTime+dur)}catch(e){}
+}
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>$("toast").classList.remove("show"),1200)}
+
+function reset(){
+ score=0;runCrystals=0;lives=3;hp=100;level=1;levelDist=0;world=0;
+ lava=H+80;shake=0;spawn=0;gemSpawn=500;enemySpawn=1400;powerSpawn=3500;
+ boss=null;inv=0;jumps=0;fireballs=[];meteors=[];missionStart=0;missionDone=false;shots=0;enemyKills=0;setMission();
+ player={x:W/2-18,y:H-155,w:36,h:50,vx:0,vy:0,on:false,coyote:0,face:1};
+ platforms=[];gems=[];enemies=[];powers=[];particles=[];rocks=[];fireballs=[];meteors=[];
+ let y=H-95;
+ platforms.push({x:0,y,w:W,h:30,type:"solid",vx:0});
+ let stairX=W/2-75;
+ for(let i=0;i<11;i++){
+   y-=88;
+   const w=150;
+   const shift=(Math.random()-.5)*95;
+   stairX=Math.max(12,Math.min(W-w-12,stairX+shift));
+   platforms.push({
+     x:stairX,y,w,h:18,
+     type:i>2 && Math.random()<.12?"moving":"solid",
+     vx:(Math.random()<.5?-1:1)*.35,
+     phase:Math.random()*10
+   });
+ }
+ for(let i=0;i<18;i++)rocks.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*3,a:.2+Math.random()*.5});
+ missionProgress();
+ worldCheck();
+ updateHUD();
+}
+function addPlatform(y){
+  const minW=125, maxW=185;
+  const w=minW+Math.random()*(maxW-minW);
+  const prev=platforms.length?platforms[platforms.length-1]:null;
+  let x;
+  if(prev){
+    // Keep the next platform within a reachable horizontal distance.
+    const maxShift=Math.min(105,Math.max(55,prev.w*.62));
+    const center=prev.x+prev.w/2+(Math.random()-.5)*maxShift;
+    x=center-w/2;
+    x=Math.max(12,Math.min(W-w-12,x));
+  }else{
+    x=(W-w)/2;
+  }
+  platforms.push({
+    x,y,w,h:18,type:Math.random()<Math.min(.22,.06+level*.018)?"moving":"solid",
+    vx:(Math.random()<.5?-1:1)*(0.25+Math.random()*.45),
+    phase:Math.random()*10
+  });
+}
+function spawnGem(){
+ let p=platforms[(Math.random()*platforms.length)|0];
+ gems.push({x:p.x+12+Math.random()*Math.max(8,p.w-24),y:p.y-22,r:8,spin:Math.random()*6});
+}
+function spawnEnemy(){
+ let p=platforms[(Math.random()*platforms.length)|0];
+ enemies.push({x:p.x+10+Math.random()*Math.max(5,p.w-30),y:p.y-34,w:30,h:34,vx:(Math.random()<.5?-1:1)*(0.7+level*.06),p,kind:Math.random()<.18?"fly":"ground"});
+}
+function spawnPower(){
+ let p=platforms[(Math.random()*platforms.length)|0];
+ let types=["shield","heal","magnet","score"];
+ powers.push({x:p.x+p.w/2,y:p.y-28,r:11,type:types[(Math.random()*types.length)|0]});
+}
+function burst(x,y,col,n=10){
+ for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.8)*6,life:25+Math.random()*35,s:2+Math.random()*3,c:col});
+}
+function hurt(d=34){
+ if(inv>0)return;
+ hp-=d;inv=55;shake=8;beep(90,.12,"sawtooth",.04);burst(player.x+18,player.y+25,"#ff2b00",16);
+ if(hp<=0){lives--;beep(55,.2,"square",.04);if(lives<=0)return gameOver();hp=100;player.x=W/2;player.y=H-230;player.vy=0;toast("❤️ LAST CHANCE!")}
+}
+function jump(){
+ if(state!=="play")return;
+ initAudio();
+ if(player.on||player.coyote>0){
+   player.vy=-13.5;
+   player.on=false;
+   player.coyote=0;
+   jumps=1;
+   burst(player.x+18,player.y+48,"#ff8b16",7);
+   beep(520,.06,"triangle");
+ }else if(jumps===1){
+   player.vy=-11.8;
+   jumps=2;
+   burst(player.x+18,player.y+25,"#fff06a",12);
+   beep(760,.06,"triangle");
+ }
+}
+function rect(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function circleRect(c,o){let x=Math.max(o.x,Math.min(c.x,o.x+o.w)),y=Math.max(o.y,Math.min(c.y,o.y+o.h));return (c.x-x)**2+(c.y-y)**2<c.r**2}
+
+function update(dt){
+ let s=dt/16.67;
+ if(inv>0)inv-=s;
+ level=1+Math.floor(levelDist/900);
+ score+=.22*(1+level*.16)*s;
+ levelDist+=.9*s;
+ lava-=.035*(1+level*.09)*s;
+ if(lava<H*.69)lava=H*.69;
+
+ let accel=0.55;
+ if(input.l){player.vx-=accel*s;player.face=-1;}
+ if(input.r){player.vx+=accel*s;player.face=1;}
+ if(!input.l&&!input.r)player.vx*=Math.pow(.80,s);
+ player.vx=Math.max(-6,Math.min(6,player.vx));
+ player.vx=Math.max(-6,Math.min(6,player.vx));
+ player.vy+=.58*s;
+ player.x+=player.vx*s;player.y+=player.vy*s;
+ if(player.x<0)player.x=0;if(player.x+player.w>W)player.x=W-player.w;
+ player.on=false;
+
+ for(const p of platforms){
+   if(p.type==="moving"){
+    p.phase+=.018*s;
+    p.x+=p.vx*s;
+    if(p.x<10||p.x+p.w>W-10){p.vx*=-1;p.x=Math.max(10,Math.min(W-p.w-10,p.x))}
+  }
+   if(player.vy>=0&&player.x+player.w>p.x&&player.x<p.x+p.w&&player.y+player.h>=p.y&&player.y+player.h<=p.y+28){
+     player.y=p.y-player.h;player.vy=0;player.on=true;player.coyote=7;jumps=0;
+   }
+ }
+ if(!player.on)player.coyote=Math.max(0,player.coyote-s);
+ if(player.y+player.h>lava)hurt(100);
+
+ if(player.y<H*.35){
+   let dy=H*.35-player.y;player.y+=dy;world+=dy;levelDist+=dy*.45;lava+=dy;
+   for(const p of platforms)p.y+=dy;for(const g of gems)g.y+=dy;for(const e of enemies)e.y+=dy;for(const p of powers)p.y+=dy;
+ }
+
+ spawn-=dt;gemSpawn-=dt;enemySpawn-=dt;powerSpawn-=dt;
+ if(Math.random()<0.0025*s*(1+level*.08))spawnMeteor();
+ if(spawn<=0){
+  let top=Math.min(...platforms.map(p=>p.y));
+  addPlatform(top-(84+Math.random()*18));
+  spawn=Math.max(360,720-level*20);
+}
+ if(gemSpawn<=0){spawnGem();gemSpawn=520+Math.random()*650}
+ if(enemySpawn<=0){spawnEnemy();enemySpawn=Math.max(550,1500-level*55)}
+ if(powerSpawn<=0){spawnPower();powerSpawn=4200+Math.random()*4000}
+
+ for(let i=gems.length-1;i>=0;i--){
+   let g=gems[i];g.spin+=.1*s;
+   if(circleRect(g,player)){runCrystals++;score+=55;burst(g.x,g.y,"#20eaff",12);beep(850,.05,"triangle");gems.splice(i,1)}
+   else if(g.y>H+120)gems.splice(i,1);
+ }
+ for(let i=powers.length-1;i>=0;i--){
+   let p=powers[i];
+   if(circleRect(p,player)){
+     if(p.type==="heal")hp=Math.min(100,hp+45);
+     if(p.type==="shield")inv=230;
+     if(p.type==="magnet")magnetTime=420;
+     if(p.type==="score")score+=350;
+     toast({heal:"❤️ HEALTH!",shield:"🛡️ SHIELD!",magnet:"🧲 MAGNET!",score:"⭐ +350"}[p.type]);
+     burst(p.x,p.y,"#fff",15);beep(950,.08,"sine");powers.splice(i,1)
+   }
+ }
+ for(const e of enemies){
+   if(e.kind==="fly"){e.y+=Math.sin(performance.now()*.004+e.x)*.7*s;e.x+=e.vx*s}
+   else {e.x+=e.vx*s;if(e.x<e.p.x||e.x+e.w>e.p.x+e.p.w)e.vx*=-1}
+   if(rect(player,e))hurt(32)
+ }
+ if(magnetTime>0){
+   magnetTime-=s;
+   for(const g of gems){let dx=player.x+18-g.x,dy=player.y+20-g.y,dd=Math.hypot(dx,dy);if(dd<150){g.x+=dx*.07*s;g.y+=dy*.07*s}}
+ }
+ platforms=platforms.filter(p=>p.y<H+160);
+ if(platforms.length<7){
+   let top=Math.min(...platforms.map(p=>p.y));
+   addPlatform(top-90);
+ }
+ gems=gems.filter(g=>g.y<H+150);enemies=enemies.filter(e=>e.y<H+180);powers=powers.filter(p=>p.y<H+150);
+
+ if(level>=5&&!boss)spawnBoss();
+ missionProgress();
+ if(boss)updateBoss(s);
+ 
+ for(let i=fireballs.length-1;i>=0;i--){
+   const f=fireballs[i];f.x+=f.vx*s;f.life-=s;
+   for(let j=enemies.length-1;j>=0;j--){
+     if(circleRect(f,enemies[j])){
+       score+=100;enemyKills++;burst(enemies[j].x+15,enemies[j].y+15,"#ff9d00",18);beep(300,.06,"square");
+       enemies.splice(j,1);f.life=0;break;
+     }
+   }
+   if(boss&&f.x>boss.x&&f.x<boss.x+boss.w&&f.y>boss.y&&f.y<boss.y+boss.h){
+     boss.hp=Math.max(0,boss.hp-1);score+=80;f.life=0;burst(f.x,f.y,"#ffdb37",10);
+     if(boss.hp<=0){score+=2500;runCrystals+=10;toast("👑 GUARDIAN DEFEATED!");burst(boss.x+55,boss.y+55,"#ffd43b",50);boss=null;}
+   }
+   if(f.life<=0||f.x<-30||f.x>W+30)fireballs.splice(i,1);
+ }
+ for(let i=meteors.length-1;i>=0;i--){
+   const m=meteors[i];m.x+=m.vx*s;m.y+=m.vy*s;m.vy+=.06*s;
+   if(rect({x:m.x-m.r,y:m.y-m.r,w:m.r*2,h:m.r*2},player)){hurt(28);m.y=H+100}
+   if(m.y>H+50){burst(m.x,m.y,"#ff5b00",10);meteors.splice(i,1)}
+ }
+for(let i=particles.length-1;i>=0;i--){let p=particles[i];p.x+=p.vx*s;p.y+=p.vy*s;p.vy+=.08*s;p.life-=s;if(p.life<=0)particles.splice(i,1)}
+ shake*=.88;
+ updateHUD();
+}
+let magnetTime=0;
+function spawnBoss(){
+ boss={x:W/2-55,y:Math.min(...platforms.map(p=>p.y))-130,w:110,h:110,hp:25,max:25,vx:1.5,t:0};
+ toast("👹 VOLCANO GUARDIAN!");
+ beep(120,.3,"sawtooth",.05);
+}
+function updateBoss(s){
+ boss.t+=s;boss.x+=boss.vx*s;
+ if(boss.x<10||boss.x+boss.w>W-10)boss.vx*=-1;
+ boss.y+=Math.sin(boss.t*.025)*.5*s;
+ if(Math.random()<.025*s){
+   enemies.push({x:boss.x+boss.w/2,y:boss.y+boss.h,w:26,h:26,vx:(Math.random()-.5)*3,p:{x:0,w:W},kind:"fly"});
+ }
+ if(rect(player,boss))hurt(45);
+}
+function hitBoss(){
+ if(!boss)return;
+ if(player.y+player.h<boss.y+25&&Math.abs(player.x+player.w/2-(boss.x+boss.w/2))<65&&player.vy>0){
+   boss.hp--;player.vy=-10;score+=150;shake=5;burst(player.x+18,player.y,"#ffdb37",15);beep(180,.06,"square");
+   if(boss.hp<=0){score+=2500;runCrystals+=10;toast("👑 GUARDIAN DEFEATED!");burst(boss.x+55,boss.y+55,"#ffd43b",50);boss=null;levelDist+=1200}
+ }
+}
+
+function setMission(){
+  const missions=[
+    ["crystals",10,"Collect 10 crystals"],
+    ["kills",6,"Defeat 6 lava monsters"],
+    ["distance",700,"Travel 700m"],
+    ["shots",12,"Cast 12 fireballs"]
+  ];
+  const m=missions[(Math.random()*missions.length)|0];
+  missionType=m[0];missionGoal=m[1];missionStart=0;missionDone=false;
+  $("missionText").textContent=m[2];$("missionCount").textContent="0/"+missionGoal;
+}
+function missionProgress(){
+  let v=0;
+  if(missionType==="crystals")v=runCrystals-missionStart;
+  if(missionType==="kills")v=enemyKills-missionStart;
+  if(missionType==="distance")v=Math.floor(levelDist-missionStart);
+  if(missionType==="shots")v=shots-missionStart;
+  if(!missionDone && v>=missionGoal){
+    missionDone=true;score+=500;runCrystals+=5;toast("🏅 MISSION COMPLETE! +500 +5💎");beep(1100,.12,"triangle");burst(player.x+18,player.y+20,"#ffd43b",28);
+  }
+  $("missionCount").textContent=Math.min(v,missionGoal)+"/"+missionGoal;
+}
+function fire(){
+  if(state!=="play")return;
+  initAudio();
+  const dir=player.face||1;
+  fireballs.push({x:player.x+18+dir*12,y:player.y+22,vx:dir*10,life:70,r:7});
+  shots++;score+=5;burst(player.x+18,player.y+22,"#ffb21c",6);beep(620,.045,"square");
+}
+function spawnMeteor(){
+  meteors.push({x:20+Math.random()*(W-40),y:-30,vx:(Math.random()-.5)*1.5,vy:5+level*.2,r:12});
+}
+
+const worldNames=["VOLCANO VALLEY","LAVA CAVES","MAGMA FACTORY","HELL CASTLE","VOLCANO CORE","MAGMA THRONE"];
+let lastWorld=1;
+function worldCheck(){
+  if(level!==lastWorld){
+    lastWorld=level;
+    if(level<=6) toast("🌋 "+worldNames[level-1]+" • LEVEL "+level);
+  }
+}
+
+function updateHUD(){
+ $("score").textContent=Math.floor(score);$("coins").textContent=runCrystals;$("best").textContent=store.best;
+ $("lives").textContent=lives;$("healthBar").style.width=Math.max(0,hp)+"%";if($("levelHud"))$("levelHud").textContent=level;
+ $("progressBar").style.width=Math.min(100,(levelDist%900)/900*100)+"%";
+}
+function gameOver(){
+ state="over";
+ if(score>store.best){store.best=Math.floor(score);localStorage.setItem("lr_best",store.best)}
+ store.crystals+=runCrystals;localStorage.setItem("lr_crystals",store.crystals);
+ $("finalScore").textContent=Math.floor(score);$("finalCoins").textContent=runCrystals;$("finalLevel").textContent=level;
+ $("over").classList.remove("hidden");beep(65,.3,"sawtooth",.05);
+}
+function startGame(){
+ if(state==="play")return;
+ initAudio();if(audio&&audio.state==="suspended")audio.resume();
+ reset();state="play";$("menu").classList.add("hidden");$("over").classList.add("hidden");$("pauseScreen").classList.add("hidden");last=performance.now();requestAnimationFrame(loop)
+}
+function pauseGame(){if(state!=="play")return;state="pause";$("pauseScreen").classList.remove("hidden")}
+function resumeGame(){if(state!=="pause")return;state="play";$("pauseScreen").classList.add("hidden");last=performance.now();requestAnimationFrame(loop)}
+function toMenu(){state="menu";$("pauseScreen").classList.add("hidden");$("over").classList.add("hidden");$("shop").classList.add("hidden");$("menu").classList.remove("hidden")}
+
+
+function drawRouteHint(){
+  if(state!=="play"||!platforms.length)return;
+  let current=null,bestY=Infinity;
+  for(const p of platforms){
+    if(p.y<player.y+player.h-8 && p.y>bestY-H){} 
+    if(p.y<player.y-10 && p.y<bestY){bestY=p.y;current=p}
+  }
+  if(!current)return;
+  const tx=current.x+current.w/2, ty=current.y-7;
+  ctx.save();ctx.globalAlpha=.22;ctx.strokeStyle="#ffd35a";ctx.setLineDash([5,7]);
+  ctx.beginPath();ctx.moveTo(player.x+player.w/2,player.y);ctx.lineTo(tx,ty);ctx.stroke();
+  ctx.restore();
+}
+
+function draw(){
+ let sx=(Math.random()-.5)*shake,sy=(Math.random()-.5)*shake;ctx.save();ctx.translate(sx,sy);
+ let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,"#0b0606");g.addColorStop(.55,"#2a0b03");g.addColorStop(1,"#060506");ctx.fillStyle=g;ctx.fillRect(-20,-20,W+40,H+40);
+ for(const r of rocks){ctx.fillStyle=`rgba(255,100,25,${r.a})`;ctx.beginPath();ctx.arc(r.x,r.y,r.r,0,7);ctx.fill()}
+ // volcano silhouettes
+ ctx.fillStyle="#160604";
+ for(let x=-120;x<W+200;x+=190){ctx.beginPath();ctx.moveTo(x,H*.58);ctx.lineTo(x+95,H*.20);ctx.lineTo(x+210,H*.58);ctx.fill()}
+ // ash
+ ctx.fillStyle="rgba(255,150,70,.35)";
+ for(let i=0;i<35;i++){let x=(i*97+world*.18)%W,y=(i*53+world*.35)%(H*.6);ctx.fillRect(x,y,2,2)}
+ // platforms
+ for(const p of platforms){
+   ctx.fillStyle="#21130e";ctx.fillRect(p.x,p.y,p.w,p.h);
+   ctx.fillStyle=p.type==="moving"?"#ffb52b":"#ff6510";ctx.fillRect(p.x,p.y,p.w,4);
+   ctx.fillStyle="#6e260e";ctx.fillRect(p.x+8,p.y+8,p.w-16,4);
+   ctx.fillStyle="rgba(255,210,90,.22)";ctx.fillRect(p.x+4,p.y+3,Math.max(0,p.w-8),2)
+ }
+ drawRouteHint();
+ // lava
+ ctx.fillStyle="#dc3000";ctx.beginPath();ctx.moveTo(0,lava);
+ for(let x=0;x<=W;x+=18)ctx.lineTo(x,lava+Math.sin(x*.035+performance.now()*.003)*6);
+ ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill();
+ ctx.fillStyle="#ff8a00";ctx.fillRect(0,lava,W,4);
+ // gems
+ for(const q of gems){ctx.save();ctx.translate(q.x,q.y);ctx.rotate(q.spin);ctx.shadowBlur=16;ctx.shadowColor="#00eaff";ctx.fillStyle="#1eeaff";ctx.beginPath();ctx.moveTo(0,-11);ctx.lineTo(8,0);ctx.lineTo(0,11);ctx.lineTo(-8,0);ctx.closePath();ctx.fill();ctx.restore()}
+ // powers
+ for(const p of powers){let col={heal:"#48ff68",shield:"#fff",magnet:"#28cfff",score:"#ffd23c"}[p.type];ctx.shadowBlur=18;ctx.shadowColor=col;ctx.fillStyle=col;ctx.beginPath();ctx.arc(p.x,p.y,p.r+Math.sin(performance.now()*.008)*2,0,7);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle="#111";ctx.font="bold 12px Arial";ctx.textAlign="center";ctx.fillText({heal:"+",shield:"S",magnet:"M",score:"★"}[p.type],p.x,p.y+4)}
+ // fireballs and meteors
+ for(const f of fireballs){ctx.save();ctx.shadowBlur=20;ctx.shadowColor="#ff5a00";ctx.fillStyle="#ffb21c";ctx.beginPath();ctx.arc(f.x,f.y,f.r,0,7);ctx.fill();ctx.fillStyle="#fff2a6";ctx.beginPath();ctx.arc(f.x,f.y,3,0,7);ctx.fill();ctx.restore()}
+ for(const m of meteors){ctx.save();ctx.translate(m.x,m.y);ctx.rotate(performance.now()*.003);ctx.shadowBlur=18;ctx.shadowColor="#ff3b00";ctx.fillStyle="#ff6a00";ctx.beginPath();ctx.moveTo(-m.r,0);ctx.lineTo(0,-m.r*1.4);ctx.lineTo(m.r,0);ctx.lineTo(0,m.r*1.4);ctx.closePath();ctx.fill();ctx.restore()}
+ // enemies
+ for(const e of enemies){
+   ctx.fillStyle="#9d1704";ctx.beginPath();ctx.arc(e.x+e.w/2,e.y+16,e.w/2,0,7);ctx.fill();
+   ctx.fillStyle="#ff3d00";ctx.beginPath();ctx.moveTo(e.x+3,e.y+8);ctx.lineTo(e.x+8,e.y-7);ctx.lineTo(e.x+15,e.y+5);ctx.lineTo(e.x+22,e.y-8);ctx.lineTo(e.x+28,e.y+8);ctx.fill();
+   ctx.fillStyle="#ffe000";ctx.fillRect(e.x+7,e.y+13,4,5);ctx.fillRect(e.x+19,e.y+13,4,5)
+ }
+ // boss
+ if(boss){
+   ctx.save();ctx.shadowBlur=25;ctx.shadowColor="#ff2700";ctx.fillStyle="#671005";ctx.beginPath();ctx.arc(boss.x+55,boss.y+55,55,0,7);ctx.fill();ctx.shadowBlur=0;
+   ctx.fillStyle="#ff3000";ctx.beginPath();ctx.moveTo(boss.x+8,boss.y+28);ctx.lineTo(boss.x+25,boss.y-8);ctx.lineTo(boss.x+43,boss.y+22);ctx.lineTo(boss.x+62,boss.y-12);ctx.lineTo(boss.x+85,boss.y+24);ctx.lineTo(boss.x+102,boss.y-4);ctx.lineTo(boss.x+104,boss.y+40);ctx.fill();
+   ctx.fillStyle="#ffff00";ctx.fillRect(boss.x+27,boss.y+43,12,9);ctx.fillRect(boss.x+70,boss.y+43,12,9);
+   ctx.fillStyle="#250000";ctx.fillRect(boss.x+24,boss.y-17,62,7);ctx.fillStyle="#ffce27";ctx.fillRect(boss.x+24,boss.y-17,62*(boss.hp/boss.max),7);
+   ctx.restore()
+ }
+ // player
+ if(player){
+   ctx.save();if(inv>0&&Math.floor(inv)%10<5)ctx.globalAlpha=.45;
+   let sk=skins[store.skin];ctx.shadowBlur=18;ctx.shadowColor=sk.a;ctx.fillStyle=sk.a;
+   ctx.fillRect(player.x,player.y+12,player.w,player.h-12);ctx.beginPath();ctx.arc(player.x+18,player.y+10,15,0,7);ctx.fill();
+   ctx.shadowBlur=0;ctx.fillStyle=sk.b;ctx.fillRect(player.x+7,player.y+5,6,6);ctx.fillRect(player.x+23,player.y+5,6,6);
+   ctx.fillStyle="#17100d";ctx.fillRect(player.x+8,player.y+21,20,4);ctx.restore()
+ }
+ for(const p of particles){ctx.globalAlpha=Math.max(0,p.life/45);ctx.fillStyle=p.c;ctx.fillRect(p.x,p.y,p.s,p.s)}
+ ctx.globalAlpha=1;ctx.restore();
+}
+function loop(t){if(state!=="play")return;let dt=Math.min(34,t-last);last=t;update(dt);hitBoss();draw();requestAnimationFrame(loop)}
+
+function renderShop(){
+ $("balance").textContent=store.crystals;let grid=$("shopGrid");grid.innerHTML="";
+ for(const [id,s] of Object.entries(skins)){
+   let d=document.createElement("div");d.className="item"+(store.skin===id?" selected":"");
+   d.innerHTML=`<div class="swatch" style="background:linear-gradient(135deg,${s.a},${s.b})"></div><b>${s.name}</b><div class="price">${s.price?"💎 "+s.price:"FREE"}</div><button class="btn small">${store.skin===id?"EQUIPPED":owned(id)?"USE":"BUY"}</button>`;
+   d.querySelector("button").onclick=()=>{
+     if(!owned(id)){if(store.crystals<s.price){toast("💎 Not enough crystals");return}store.crystals-=s.price;localStorage.setItem("lr_crystals",store.crystals);localStorage.setItem("lr_owned_"+id,"1")}
+     store.skin=id;localStorage.setItem("lr_skin",id);renderShop();beep(700,.07,"triangle")
+   };grid.appendChild(d)
+ }
+}
+function openShop(){state="shop";$("menu").classList.add("hidden");$("over").classList.add("hidden");$("shop").classList.remove("hidden");renderShop()}
+function closeShop(){state="menu";$("shop").classList.add("hidden");$("menu").classList.remove("hidden")}
+
+$("start").addEventListener("click",function(e){
+ e.preventDefault();
+ startGame();
+});$("again").onclick=startGame;$("pause").onclick=pauseGame;$("resume").onclick=resumeGame;
+$("pauseMenu").onclick=toMenu;$("overMenu").onclick=toMenu;$("shopOpen").onclick=openShop;$("overShop").onclick=openShop;$("closeShop").onclick=closeShop;
+
+function bindHold(id,key){
+ const e=$(id);
+ const down=x=>{x.preventDefault();initAudio();input[key]=true;e.classList.add("pressed")};
+ const up=x=>{x.preventDefault();input[key]=false;e.classList.remove("pressed")};
+ e.addEventListener("pointerdown",down,{passive:false});
+ e.addEventListener("pointerup",up,{passive:false});
+ e.addEventListener("pointercancel",up,{passive:false});
+}
+bindHold("left","l");bindHold("right","r");
+$("jump").addEventListener("pointerdown",e=>{e.preventDefault();$("jump").classList.add("pressed");jump()},{passive:false});
+$("jump").addEventListener("pointerup",()=> $("jump").classList.remove("pressed"));
+$("jump").addEventListener("pointercancel",()=> $("jump").classList.remove("pressed"));
+$("fire").addEventListener("pointerdown",e=>{e.preventDefault();$("fire").classList.add("pressed");fire()},{passive:false});
+$("fire").addEventListener("pointerup",()=> $("fire").classList.remove("pressed"));
+$("fire").addEventListener("pointercancel",()=> $("fire").classList.remove("pressed"));
+
+addEventListener("keydown",e=>{if(["ArrowLeft","ArrowRight","ArrowUp"," ","a","d","w","f","F"].includes(e.key))e.preventDefault();if(e.repeat)return;if(e.key==="ArrowLeft"||e.key==="a")input.l=true;if(e.key==="ArrowRight"||e.key==="d")input.r=true;if(["ArrowUp"," ","w"].includes(e.key))jump();if(e.key==="f"||e.key==="F")fire();if(e.key==="Escape"){if(state==="play")pauseGame();else if(state==="pause")resumeGame()}});
+addEventListener("keyup",e=>{if(e.key==="ArrowLeft"||e.key==="a")input.l=false;if(e.key==="ArrowRight"||e.key==="d")input.r=false});
+
+
+$("fullscreen").onclick=async()=>{
+  try{
+    if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    else await document.exitFullscreen();
+  }catch(e){toast("Fullscreen not available")}
+};
+
+
+let mouseDown=false;
+C.addEventListener("pointerdown",e=>{
+  if(state!=="play")return;
+  if(e.pointerType==="mouse" && state==="play"){
+    mouseDown=true;
+    const half=W/2;
+    if(e.clientX<half) input.l=true; else input.r=true;
+  }
+});
+C.addEventListener("pointerup",e=>{
+  if(e.pointerType==="mouse" && state==="play"){
+    mouseDown=false;input.l=false;input.r=false;
+  }
+});
+C.addEventListener("pointerleave",e=>{
+  if(e.pointerType==="mouse" && state==="play"){mouseDown=false;input.l=false;input.r=false;}
+});
+
+reset();draw();
+</script>
+</body>
+</html>
