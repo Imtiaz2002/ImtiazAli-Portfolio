@@ -1580,12 +1580,25 @@ function resetBattle() {
       });
     }
 
-    // Local visit counter — works on static GitHub Pages.
-    const visitKey = "imtiaz-portfolio-visits";
-    let visits = Number(localStorage.getItem(visitKey) || "0") + 1;
-    localStorage.setItem(visitKey, visits);
+    // Global portfolio visit counter — shared across devices/browsers.
+    // CounterAPI stores the count online, so it is not tied to localStorage.
     const visitCount = document.getElementById("visitCount");
-    if (visitCount) visitCount.textContent = visits.toLocaleString();
+    const counterUrl = "https://api.counterapi.dev/v1/imtiazali-portfolio-2026/visits/up";
+
+    fetch(counterUrl, { cache: "no-store" })
+      .then(response => {
+        if (!response.ok) throw new Error("Counter request failed");
+        return response.json();
+      })
+      .then(data => {
+        const total = data?.data?.up ?? data?.data ?? data?.value;
+        if (visitCount && Number.isFinite(Number(total))) {
+          visitCount.textContent = Number(total).toLocaleString();
+        }
+      })
+      .catch(() => {
+        // Keep the counter unchanged if the external service is unavailable.
+      });
 
     // Testimonial slider
     const quoteCards = [...document.querySelectorAll(".quote-card")];
