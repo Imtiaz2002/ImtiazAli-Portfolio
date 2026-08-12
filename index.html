@@ -517,7 +517,71 @@
   .dynamic-featured h3{font-size:20px}
 }
 
+
+/* ===== Requested upgrades ===== */
+.feedback-layout{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:18px;align-items:start}
+.feedback-form{padding:22px}
+.feedback-form input,.feedback-form textarea{width:100%;box-sizing:border-box;margin:8px 0;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.035);color:inherit;outline:0;font:inherit}
+.feedback-form textarea{min-height:125px;resize:vertical}
+.rating-input{display:flex;gap:4px;margin-bottom:8px}
+.rating-input button{border:0;background:transparent;color:rgba(255,255,255,.25);font-size:27px;cursor:pointer;padding:0 3px;transition:.15s}
+.rating-input button.active,.rating-input button:hover{color:#ffd45a;transform:scale(1.08)}
+.feedback-status{display:block;margin-top:10px;color:var(--muted)}
+.feedback-list{display:grid;gap:10px}
+.feedback-item{padding:18px;border:1px solid var(--line);background:var(--panel);border-radius:17px}
+.feedback-stars{color:#ffd45a;letter-spacing:2px}
+.feedback-item p{font-size:12px;line-height:1.65;color:var(--muted);margin:8px 0}
+.feedback-item strong{font-size:12px}
+.rating-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rating-card{padding:18px;border:1px solid var(--line);background:var(--panel);border-radius:18px}
+.rating-card h3{font:700 17px "Space Grotesk";margin:0 0 8px}
+.rating-card .rating-buttons{display:flex;gap:2px}
+.rating-buttons button{border:0;background:transparent;color:rgba(255,255,255,.25);font-size:22px;cursor:pointer;padding:0 2px}
+.rating-buttons button.active{color:#ffd45a}
+.rating-summary{font-size:10px;color:var(--muted);margin-top:7px}
+.github-contribution{padding:20px;overflow:auto}
+.github-contribution img{display:block;width:100%;min-width:650px;height:auto;border-radius:12px;margin-bottom:16px}
+.skills-chart{padding:22px}
+.skill-row{display:grid;grid-template-columns:130px 1fr 45px;align-items:center;gap:12px;margin:14px 0}
+.skill-name{font-size:12px;font-weight:700}
+.skill-track{height:9px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}
+.skill-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#8b5cf6,#22d3ee);transition:width 1s ease}
+.skill-percent{font-size:11px;text-align:right;color:var(--muted)}
+.cursor-dot,.cursor-ring{position:fixed;pointer-events:none;z-index:10000;border-radius:50%;transform:translate(-50%,-50%);display:none}
+.cursor-dot{width:6px;height:6px;background:#22d3ee;box-shadow:0 0 16px #22d3ee}
+.cursor-ring{width:28px;height:28px;border:1px solid rgba(139,92,246,.75);transition:width .18s,height .18s}
+.reveal-up{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal-up.visible{opacity:1;transform:none}
+.install-prompt{position:fixed;right:18px;bottom:18px;z-index:8000;display:none;gap:10px;align-items:center;padding:13px 15px;border:1px solid var(--line);background:rgba(12,12,21,.92);backdrop-filter:blur(14px);border-radius:16px;box-shadow:0 16px 50px rgba(0,0,0,.35)}
+.install-prompt.show{display:flex}
+.install-prompt button{border:1px solid var(--line);background:var(--panel);color:inherit;border-radius:9px;padding:8px 11px;cursor:pointer}
+@media(max-width:900px){.feedback-layout{grid-template-columns:1fr}.rating-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.rating-grid{grid-template-columns:1fr}.skill-row{grid-template-columns:95px 1fr 38px}.install-prompt{left:12px;right:12px;bottom:82px}}
+@media(pointer:fine){body.custom-cursor{cursor:none}.cursor-dot,.cursor-ring{display:block}}
+
+.lang-toggle{font-family:inherit}
+
+/* ===== Theme selector ===== */
+.theme-toggle{position:fixed;right:18px;top:62px;z-index:7000;border:1px solid var(--line);background:var(--panel);color:inherit;border-radius:999px;padding:8px 12px;cursor:pointer;font-weight:800}
+.theme-menu{position:fixed;right:18px;top:106px;z-index:7001;display:none;gap:6px;padding:8px;border:1px solid var(--line);background:var(--panel);border-radius:14px;box-shadow:0 15px 45px rgba(0,0,0,.3)}
+.theme-menu.open{display:flex}
+.theme-menu button{border:1px solid var(--line);background:transparent;color:inherit;border-radius:9px;padding:7px 9px;cursor:pointer;font-size:11px}
+.theme-menu button:hover{background:rgba(255,255,255,.08)}
+html[data-theme="light"] body{background:#f6f7fb;color:#151522}
+html[data-theme="light"]{--panel:#ffffff;--line:rgba(20,20,40,.12);--muted:#606275}
+html[data-theme="purple"] body{background:#100819}
+html[data-theme="cyber"] body{background:#050b12}
+@media(max-width:620px){.theme-toggle{right:12px;top:58px}.theme-menu{right:12px;top:100px;flex-wrap:wrap;max-width:180px}}
+
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#080812">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 </head>
 
 <body>
@@ -888,7 +952,27 @@
       <div class="no-results" id="noResults">No project matched your search. Try another keyword.</div>
     </section>
 
-    <section id="journey">
+    
+<section id="rating">
+  <div class="section-head reveal">
+    <div class="section-label">GAME RATINGS</div>
+    <h2 class="section-title">Rate my games.</h2>
+    <p class="section-desc">Your rating is saved on this device.</p>
+  </div>
+  <div class="rating-grid" id="ratingGrid"></div>
+</section>
+
+
+<section id="skillsChart">
+  <div class="section-head reveal">
+    <div class="section-label">SKILLS</div>
+    <h2 class="section-title">My tech stack.</h2>
+    <p class="section-desc">A visual overview of the technologies used across my projects.</p>
+  </div>
+  <div class="skills-chart glass" id="skillsChartBox"></div>
+</section>
+
+<section id="journey">
       <div class="section-head reveal">
         <div class="section-label">04 / JOURNEY</div>
         <h2 class="section-title">Learn. Experiment. Improve.</h2>
@@ -989,7 +1073,45 @@
     </section>
 
 
-    <section id="contact">
+    
+<section id="feedback">
+  <div class="section-head reveal">
+    <div class="section-label">FEEDBACK</div>
+    <h2 class="section-title">How was the portfolio?</h2>
+    <p class="section-desc">Leave a rating and a short message.</p>
+  </div>
+  <div class="feedback-layout">
+    <form class="glass feedback-form" id="feedbackForm">
+      <div class="rating-input" id="ratingInput" aria-label="Choose a rating">
+        <button type="button" data-rating="1">★</button>
+        <button type="button" data-rating="2">★</button>
+        <button type="button" data-rating="3">★</button>
+        <button type="button" data-rating="4">★</button>
+        <button type="button" data-rating="5">★</button>
+      </div>
+      <input id="feedbackName" class="full" placeholder="Your name (optional)" maxlength="60">
+      <textarea id="feedbackMessage" class="full" placeholder="Write your feedback..." maxlength="500" required></textarea>
+      <button class="btn primary" type="submit">💬 Submit Feedback</button>
+      <small id="feedbackStatus" class="feedback-status"></small>
+    </form>
+    <div class="feedback-list" id="feedbackList"></div>
+  </div>
+</section>
+
+
+<section id="githubContributions">
+  <div class="section-head reveal">
+    <div class="section-label">GITHUB ACTIVITY</div>
+    <h2 class="section-title">Contribution activity.</h2>
+    <p class="section-desc">Public GitHub activity at a glance.</p>
+  </div>
+  <div class="github-contribution glass">
+    <img src="https://ghchart.rshah.org/imtiaz2002" alt="GitHub contribution graph for Imtiaz Ali" loading="lazy" decoding="async">
+    <a class="btn" href="https://github.com/imtiaz2002" target="_blank" rel="noopener">🐙 Open GitHub</a>
+  </div>
+</section>
+
+<section id="contact">
       <div class="contact reveal">
         <div class="section-label">07 / CONTACT</div>
         <h2>Let's build something interesting.</h2>
@@ -1661,7 +1783,11 @@ function resetBattle() {
         if (!visitCount.textContent.trim()) visitCount.textContent = "176";
       }
     }
-    updatePortfolioVisits();
+
+    // Start only after the DOM is ready and after the baseline initializer has had a chance to exist.
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(updatePortfolioVisits, 0);
+    });
 // Testimonial slider
     const quoteCards = [...document.querySelectorAll(".quote-card")];
     let quoteIndex = 0;
@@ -1687,16 +1813,28 @@ function resetBattle() {
     showQuote(quoteIndex);
     window.addEventListener("resize", () => showQuote(quoteIndex));
 
-    // Lightweight custom 404 behavior for paths on this single-page site.
-    const knownPaths = ["/", "/index.html", "/ImtiazAli-Portfolio/", "/ImtiazAli-Portfolio/index.html"];
-    const path = window.location.pathname;
+    // Custom 404: only run on a real web server.
+    // Do NOT trigger it for local Android/Windows file previews (file:// or content://),
+    // because those paths are not website routes.
     const error404 = document.getElementById("error404");
-    if (path && !knownPaths.some(p => path.endsWith(p))) {
+    const protocol = window.location.protocol;
+    const path = window.location.pathname || "/";
+    const knownPaths = [
+      "/", "/index.html",
+      "/ImtiazAli-Portfolio/", "/ImtiazAli-Portfolio/index.html"
+    ];
+    const isWebPage = protocol === "http:" || protocol === "https:";
+    const isKnownRoute = knownPaths.some(p => path === p || path.endsWith(p));
+
+    if (isWebPage && !isKnownRoute) {
       if (error404) error404.classList.add("open");
     }
 
-    document.getElementById("backHome")?.addEventListener("click", () => {
-      error404.classList.remove("open");
+    document.getElementById("backHome")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (error404) error404.classList.remove("open");
+      const home = document.getElementById("home");
+      if (home) home.scrollIntoView({behavior:"smooth"});
     });
 
   
@@ -1731,7 +1869,6 @@ function resetBattle() {
   apply();
 })();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 
 <script>
 /* ===== Global game play counters + Most Played Featured Game ===== */
@@ -1842,7 +1979,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 <script>
 /* ===== Counter baseline initialization ===== */
 window.counterBaselineReady = (async () => {
-  if (typeof Counter === "undefined") return;
+  if (typeof Counter === "undefined") {
+    await new Promise(resolve => setTimeout(resolve, 250));
+  }
+  if (typeof Counter === "undefined") throw new Error("CounterAPI client unavailable");
 
   const visitCounter = new Counter({
     version: "v1",
@@ -1873,7 +2013,7 @@ window.counterBaselineReady = (async () => {
     "lava-rush-volcano-escape": 24,
     "stick-hero": 21,
     "catch-the-falling-elements": 18,
-    "frost-vs-inferno-game": 15,
+    "missile-command-frost-vs-inferno": 15,
     "flappy-magma-seahorse": 12,
     "lion-vs-tiger-jungle-battle": 9
   };
@@ -1908,6 +2048,153 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   if (problems.length) console.warn("Portfolio integrity warnings:", problems);
   else console.log("Portfolio integrity check: OK");
+});
+</script>
+
+<script>
+/* ===== Ratings, feedback, GitHub graph, skills, PWA/offline, language toggle, cursor/scroll ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  // 3) Game ratings — local per-device.
+  const ratingGrid=document.getElementById("ratingGrid");
+  const gameCards=[...document.querySelectorAll("#projectGrid .project")].filter(c=>c.querySelector('a[href*="games/"]'));
+  const ratingKey="imtiaz-game-ratings-v1";
+  let ratings=JSON.parse(localStorage.getItem(ratingKey)||"{}");
+  if(ratingGrid){
+    gameCards.forEach(card=>{
+      const title=card.querySelector("h3")?.textContent?.trim()||"Game";
+      const slug=title.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+      const item=document.createElement("div"); item.className="rating-card";
+      const value=Number(ratings[slug]||0);
+      item.innerHTML=`<h3>🎮 ${title}</h3><div class="rating-buttons">${[1,2,3,4,5].map(n=>`<button type="button" data-rate="${n}" aria-label="${n} stars">★</button>`).join("")}</div><div class="rating-summary">${value?`Your rating: ${value}/5`:"Not rated yet"}</div>`;
+      item.querySelectorAll("button").forEach(btn=>{
+        btn.classList.toggle("active",Number(btn.dataset.rate)<=value);
+        btn.addEventListener("click",()=>{
+          ratings[slug]=Number(btn.dataset.rate);
+          localStorage.setItem(ratingKey,JSON.stringify(ratings));
+          item.querySelectorAll("button").forEach(b=>b.classList.toggle("active",Number(b.dataset.rate)<=ratings[slug]));
+          item.querySelector(".rating-summary").textContent=`Your rating: ${ratings[slug]}/5`;
+        });
+      });
+      ratingGrid.appendChild(item);
+    });
+  }
+
+  // 10 + portfolio feedback — stored locally, with a mailto option.
+  const feedbackForm=document.getElementById("feedbackForm");
+  const feedbackList=document.getElementById("feedbackList");
+  const status=document.getElementById("feedbackStatus");
+  let selectedRating=0;
+  const feedbackKey="imtiaz-portfolio-feedback-v1";
+  const feedbacks=JSON.parse(localStorage.getItem(feedbackKey)||"[]");
+  const renderFeedback=()=>{
+    if(!feedbackList)return;
+    feedbackList.innerHTML=feedbacks.slice(-6).reverse().map(f=>`<article class="feedback-item"><div class="feedback-stars">${"★".repeat(f.rating||0)}${"☆".repeat(5-(f.rating||0))}</div><strong>${(f.name||"Visitor").replace(/[<>&"]/g,"")}</strong><p>${f.message.replace(/[<>&"]/g,"")}</p></article>`).join("")||'<div class="glass" style="padding:20px;color:var(--muted)">Be the first to leave feedback.</div>';
+  };
+  renderFeedback();
+  document.querySelectorAll("#ratingInput button").forEach(b=>b.addEventListener("click",()=>{
+    selectedRating=Number(b.dataset.rating);
+    document.querySelectorAll("#ratingInput button").forEach(x=>x.classList.toggle("active",Number(x.dataset.rating)<=selectedRating));
+  }));
+  feedbackForm?.addEventListener("submit",e=>{
+    e.preventDefault();
+    const message=document.getElementById("feedbackMessage").value.trim();
+    if(!message)return;
+    feedbacks.push({name:document.getElementById("feedbackName").value.trim()||"Visitor",message,rating:selectedRating||5,date:Date.now()});
+    localStorage.setItem(feedbackKey,JSON.stringify(feedbacks));
+    document.getElementById("feedbackMessage").value="";
+    document.getElementById("feedbackName").value="";
+    selectedRating=0;
+    document.querySelectorAll("#ratingInput button").forEach(x=>x.classList.remove("active"));
+    if(status)status.textContent="Thanks for your feedback!";
+    renderFeedback();
+  });
+
+  // 14) Language switcher — toggles key UI text between English/Bangla.
+  const langBtn=document.createElement("button");
+  langBtn.type="button"; langBtn.className="lang-toggle"; langBtn.textContent="বাংলা";
+  langBtn.style.cssText="position:fixed;right:18px;top:18px;z-index:7000;border:1px solid var(--line);background:var(--panel);color:inherit;border-radius:999px;padding:8px 12px;cursor:pointer;font-weight:800";
+  document.body.appendChild(langBtn);
+  let bangla=false;
+  const translations=new Map([
+    ["About","সম্পর্কে"],["Skills","দক্ষতা"],["Projects","প্রজেক্ট"],["Journey","যাত্রা"],["Contact","যোগাযোগ"],
+    ["GAME HUB","গেম হাব"],["FEEDBACK","ফিডব্যাক"],["GAME RATINGS","গেম রেটিং"],["GITHUB ACTIVITY","গিটহাব অ্যাক্টিভিটি"],
+    ["Portfolio Visits","পোর্টফোলিও ভিজিট"],["Play Game","গেম খেলুন"],["View Code","কোড দেখুন"]
+  ]);
+  function translate(){
+    document.querySelectorAll("a,button,.section-label,.section-title,.section-desc,span").forEach(el=>{
+      if(el.children.length) return;
+      const original=el.dataset.en||el.textContent.trim();
+      el.dataset.en=original;
+      if(translations.has(original)) el.textContent=bangla?translations.get(original):original;
+    });
+    langBtn.textContent=bangla?"English":"বাংলা";
+  }
+  langBtn.addEventListener("click",()=>{bangla=!bangla;translate()});
+
+  // 19) Skills visual bars.
+  const skillBox=document.getElementById("skillsChartBox");
+  if(skillBox){
+    const skills=[["HTML",95],["CSS",90],["JavaScript",84],["Python",86],["MySQL",78],["Git / GitHub",82]];
+    skillBox.innerHTML=skills.map(([name,p])=>`<div class="skill-row"><div class="skill-name">${name}</div><div class="skill-track"><div class="skill-fill" data-p="${p}"></div></div><div class="skill-percent">${p}%</div></div>`).join("");
+    requestAnimationFrame(()=>skillBox.querySelectorAll(".skill-fill").forEach(x=>x.style.width=x.dataset.p+"%"));
+  }
+
+  // 20) Scroll reveal + custom cursor.
+  const reveal=document.querySelectorAll(".reveal,section,.skill-row");
+  const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")}),{threshold:.08});
+  reveal.forEach(el=>{el.classList.add("reveal-up");observer.observe(el)});
+  if(matchMedia("(pointer:fine)").matches){
+    document.body.classList.add("custom-cursor");
+    const dot=document.createElement("div"),ring=document.createElement("div");
+    dot.className="cursor-dot";ring.className="cursor-ring";document.body.append(dot,ring);
+    window.addEventListener("pointermove",e=>{dot.style.left=e.clientX+"px";dot.style.top=e.clientY+"px";ring.style.left=e.clientX+"px";ring.style.top=e.clientY+"px"});
+    document.querySelectorAll("a,button").forEach(el=>el.addEventListener("mouseenter",()=>{ring.style.width="38px";ring.style.height="38px"}));
+    document.querySelectorAll("a,button").forEach(el=>el.addEventListener("mouseleave",()=>{ring.style.width="28px";ring.style.height="28px"}));
+  }
+
+  // 11/12) PWA install + service worker/offline support.
+  if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  let deferredPrompt=null;
+  window.addEventListener("beforeinstallprompt",e=>{
+    e.preventDefault();deferredPrompt=e;
+    const box=document.createElement("div");box.className="install-prompt show";
+    box.innerHTML="<span>📱 Install this portfolio</span><button id='installNow'>Install</button><button id='installLater'>×</button>";
+    document.body.appendChild(box);
+    box.querySelector("#installNow").onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null}box.remove()};
+    box.querySelector("#installLater").onclick=()=>box.remove();
+  });
+});
+</script>
+
+<script>
+/* ===== Theme selector ===== */
+document.addEventListener("DOMContentLoaded",()=>{
+  const saved=localStorage.getItem("imtiaz-theme")||"dark";
+  document.documentElement.dataset.theme=saved;
+
+  const toggle=document.createElement("button");
+  toggle.className="theme-toggle";
+  toggle.type="button";
+  toggle.textContent="🎨 Theme";
+  toggle.setAttribute("aria-label","Choose theme");
+
+  const menu=document.createElement("div");
+  menu.className="theme-menu";
+  menu.innerHTML='<button data-theme="dark">🌑 Dark</button><button data-theme="light">☀️ Light</button><button data-theme="purple">🟣 Purple</button><button data-theme="cyber">⚡ Cyber</button>';
+
+  document.body.append(toggle,menu);
+  toggle.addEventListener("click",()=>menu.classList.toggle("open"));
+  menu.querySelectorAll("button").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      const theme=btn.dataset.theme;
+      document.documentElement.dataset.theme=theme;
+      localStorage.setItem("imtiaz-theme",theme);
+      menu.classList.remove("open");
+    });
+  });
+  document.addEventListener("click",e=>{
+    if(!menu.contains(e.target)&&e.target!==toggle)menu.classList.remove("open");
+  });
 });
 </script>
 </body>
