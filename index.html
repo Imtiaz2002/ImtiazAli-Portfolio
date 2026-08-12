@@ -573,6 +573,57 @@ html[data-theme="purple"] body{background:#100819}
 html[data-theme="cyber"] body{background:#050b12}
 @media(max-width:620px){.theme-toggle{right:12px;top:58px}.theme-menu{right:12px;top:100px;flex-wrap:wrap;max-width:180px}}
 
+
+/* ===== Clean top controls ===== */
+.top-controls{
+  position:fixed;top:18px;right:18px;z-index:10001;
+  display:flex;align-items:center;gap:8px;
+}
+.top-controls .lang-toggle,
+.top-controls .theme-toggle{
+  position:static !important;
+  margin:0 !important;
+  white-space:nowrap;
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:inherit;
+  border-radius:999px;
+  padding:8px 12px;
+  cursor:pointer;
+  font-weight:800;
+  backdrop-filter:blur(14px);
+}
+.top-controls .theme-menu{
+  position:absolute;
+  top:calc(100% + 8px);
+  right:0;
+  display:none;
+  flex-wrap:wrap;
+  width:180px;
+  gap:6px;
+  padding:8px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:14px;
+  box-shadow:0 15px 45px rgba(0,0,0,.3);
+}
+.top-controls .theme-menu.open{display:flex}
+.top-controls .theme-menu button{
+  flex:1 1 75px;
+  border:1px solid var(--line);
+  background:transparent;
+  color:inherit;
+  border-radius:9px;
+  padding:8px 7px;
+  cursor:pointer;
+  font-size:11px;
+}
+.top-controls .theme-menu button:hover{background:rgba(255,255,255,.08)}
+@media(max-width:620px){
+  .top-controls{top:12px;right:12px;gap:6px}
+  .top-controls .lang-toggle,.top-controls .theme-toggle{padding:7px 10px;font-size:12px}
+}
+
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#080812">
@@ -1762,31 +1813,45 @@ function resetBattle() {
         showToast("Opening your email app...");
       });
     }
-    // Global portfolio visits — CounterAPI V1.
+    // Global portfolio visits — direct CounterAPI V1 REST endpoint.
+    // Using the documented endpoint directly avoids browser-client loading/order issues.
     const visitCount = document.getElementById("visitCount");
+    const VISIT_API = "https://api.counterapi.dev/v1/imtiaz-portfolio-2026/visits";
+
     async function updatePortfolioVisits() {
-      if (!visitCount || typeof Counter === "undefined") return;
+      if (!visitCount) return;
+
       try {
-        if (window.counterBaselineReady) {
-          try { await window.counterBaselineReady; } catch (e) {}
+        // Initialize the requested starting value only if the public counter is still below 176.
+        let current = 0;
+        try {
+          const getRes = await fetch(VISIT_API, {cache:"no-store"});
+          const getData = await getRes.json();
+          current = Number(getData?.data?.count ?? getData?.count ?? getData?.value ?? 0);
+        } catch (_) {}
+
+        if (!Number.isFinite(current) || current < 176) {
+          await fetch(VISIT_API + "/set?count=176", {cache:"no-store"});
         }
-        const counter = new Counter({
-          version: "v1",
-          namespace: "imtiaz-portfolio-2026",
-          timeout: 8000
-        });
-        const result = await counter.up("visits");
-        const value = Number(result?.value ?? result?.data?.count ?? result?.count ?? result?.data);
-        if (Number.isFinite(value)) visitCount.textContent = value.toLocaleString();
+
+        const upRes = await fetch(VISIT_API + "/up", {cache:"no-store"});
+        const upData = await upRes.json();
+        const value = Number(upData?.data?.count ?? upData?.count ?? upData?.value);
+
+        if (Number.isFinite(value)) {
+          visitCount.textContent = value.toLocaleString();
+        } else {
+          // If the API returns an unexpected shape, keep a useful fallback.
+          visitCount.textContent = Math.max(current + 1, 177).toLocaleString();
+        }
       } catch (error) {
-        console.warn("Portfolio counter unavailable:", error);
+        console.warn("Portfolio visitor counter unavailable:", error);
         if (!visitCount.textContent.trim()) visitCount.textContent = "176";
       }
     }
 
-    // Start only after the DOM is ready and after the baseline initializer has had a chance to exist.
     document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(updatePortfolioVisits, 0);
+      updatePortfolioVisits();
     });
 // Testimonial slider
     const quoteCards = [...document.querySelectorAll(".quote-card")];
@@ -1977,63 +2042,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 <script>
-/* ===== Counter baseline initialization ===== */
-window.counterBaselineReady = (async () => {
-  if (typeof Counter === "undefined") {
-    await new Promise(resolve => setTimeout(resolve, 250));
-  }
-  if (typeof Counter === "undefined") throw new Error("CounterAPI client unavailable");
-
-  const visitCounter = new Counter({
-    version: "v1",
-    namespace: "imtiaz-portfolio-2026",
-    timeout: 8000
-  });
-
-  try {
-    const current = await visitCounter.get("visits");
-    const value = Number(current?.value ?? 0);
-    if (Number.isFinite(value) && value < 176) {
-      await visitCounter.set("visits", 176);
-      const visitEl = document.getElementById("visitCount");
-      if (visitEl) visitEl.textContent = "176";
-    }
-  } catch (e) {
-    console.warn("Visitor baseline initialization failed:", e);
-  }
-
-  const gameCounter = new Counter({
-    version: "v1",
-    namespace: "imtiaz-games-2026",
-    timeout: 8000
-  });
-
-  const baselines = {
-    "zombie-rush-zombie-survival": 27,
-    "lava-rush-volcano-escape": 24,
-    "stick-hero": 21,
-    "catch-the-falling-elements": 18,
-    "missile-command-frost-vs-inferno": 15,
-    "flappy-magma-seahorse": 12,
-    "lion-vs-tiger-jungle-battle": 9
-  };
-
-  await Promise.all(Object.entries(baselines).map(async ([slug, baseline]) => {
-    try {
-      const current = await gameCounter.get("game-" + slug);
-      const value = Number(current?.value ?? 0);
-      if (Number.isFinite(value) && value < baseline) {
-        await gameCounter.set("game-" + slug, baseline);
-      }
-    } catch (e) {
-      console.warn("Game baseline initialization failed:", slug, e);
-    }
-  }));
-})()
-.catch(e => console.warn("Counter baseline initialization failed:", e));
-</script>
-
-<script>
 /* ===== Final integrity check ===== */
 document.addEventListener("DOMContentLoaded", () => {
   const problems = [];
@@ -2108,30 +2116,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(status)status.textContent="Thanks for your feedback!";
     renderFeedback();
   });
-
-  // 14) Language switcher — toggles key UI text between English/Bangla.
-  const langBtn=document.createElement("button");
-  langBtn.type="button"; langBtn.className="lang-toggle"; langBtn.textContent="বাংলা";
-  langBtn.style.cssText="position:fixed;right:18px;top:18px;z-index:7000;border:1px solid var(--line);background:var(--panel);color:inherit;border-radius:999px;padding:8px 12px;cursor:pointer;font-weight:800";
-  document.body.appendChild(langBtn);
-  let bangla=false;
-  const translations=new Map([
-    ["About","সম্পর্কে"],["Skills","দক্ষতা"],["Projects","প্রজেক্ট"],["Journey","যাত্রা"],["Contact","যোগাযোগ"],
-    ["GAME HUB","গেম হাব"],["FEEDBACK","ফিডব্যাক"],["GAME RATINGS","গেম রেটিং"],["GITHUB ACTIVITY","গিটহাব অ্যাক্টিভিটি"],
-    ["Portfolio Visits","পোর্টফোলিও ভিজিট"],["Play Game","গেম খেলুন"],["View Code","কোড দেখুন"]
-  ]);
-  function translate(){
-    document.querySelectorAll("a,button,.section-label,.section-title,.section-desc,span").forEach(el=>{
-      if(el.children.length) return;
-      const original=el.dataset.en||el.textContent.trim();
-      el.dataset.en=original;
-      if(translations.has(original)) el.textContent=bangla?translations.get(original):original;
-    });
-    langBtn.textContent=bangla?"English":"বাংলা";
-  }
-  langBtn.addEventListener("click",()=>{bangla=!bangla;translate()});
-
-  // 19) Skills visual bars.
+// 19) Skills visual bars.
   const skillBox=document.getElementById("skillsChartBox");
   if(skillBox){
     const skills=[["HTML",95],["CSS",90],["JavaScript",84],["Python",86],["MySQL",78],["Git / GitHub",82]];
@@ -2167,33 +2152,68 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <script>
-/* ===== Theme selector ===== */
+/* ===== Top controls: Language + Theme ===== */
 document.addEventListener("DOMContentLoaded",()=>{
+  const oldLang=document.querySelector(".lang-toggle");
+  const oldTheme=document.querySelector(".theme-toggle");
+  const oldMenu=document.querySelector(".theme-menu");
+
+  const controls=document.createElement("div");
+  controls.className="top-controls";
+  controls.innerHTML=`
+    <button type="button" class="lang-toggle" aria-label="Switch language">বাংলা</button>
+    <button type="button" class="theme-toggle" aria-label="Choose theme">🎨 Theme</button>
+    <div class="theme-menu" aria-label="Theme options">
+      <button type="button" data-theme="dark">🌑 Dark</button>
+      <button type="button" data-theme="light">☀️ Light</button>
+      <button type="button" data-theme="purple">🟣 Purple</button>
+      <button type="button" data-theme="cyber">⚡ Cyber</button>
+    </div>`;
+  document.body.appendChild(controls);
+
+  oldLang?.remove();
+  oldTheme?.remove();
+  oldMenu?.remove();
+
+  const langBtn=controls.querySelector(".lang-toggle");
+  const themeBtn=controls.querySelector(".theme-toggle");
+  const menu=controls.querySelector(".theme-menu");
+
   const saved=localStorage.getItem("imtiaz-theme")||"dark";
   document.documentElement.dataset.theme=saved;
 
-  const toggle=document.createElement("button");
-  toggle.className="theme-toggle";
-  toggle.type="button";
-  toggle.textContent="🎨 Theme";
-  toggle.setAttribute("aria-label","Choose theme");
+  let bangla=false;
+  const translations=new Map([
+    ["About","সম্পর্কে"],["Skills","দক্ষতা"],["Projects","প্রজেক্ট"],["Journey","যাত্রা"],["Contact","যোগাযোগ"],
+    ["GAME HUB","গেম হাব"],["FEEDBACK","ফিডব্যাক"],["GAME RATINGS","গেম রেটিং"],["GITHUB ACTIVITY","গিটহাব অ্যাক্টিভিটি"],
+    ["Portfolio Visits","পোর্টফোলিও ভিজিট"],["Play Game","গেম খেলুন"],["View Code","কোড দেখুন"]
+  ]);
 
-  const menu=document.createElement("div");
-  menu.className="theme-menu";
-  menu.innerHTML='<button data-theme="dark">🌑 Dark</button><button data-theme="light">☀️ Light</button><button data-theme="purple">🟣 Purple</button><button data-theme="cyber">⚡ Cyber</button>';
+  function translate(){
+    document.querySelectorAll("a,button,.section-label,.section-title,.section-desc,span").forEach(el=>{
+      if(el.closest(".top-controls")) return;
+      if(el.children.length) return;
+      const original=el.dataset.en||el.textContent.trim();
+      el.dataset.en=original;
+      if(translations.has(original)) el.textContent=bangla?translations.get(original):original;
+    });
+    langBtn.textContent=bangla?"English":"বাংলা";
+  }
+  langBtn.addEventListener("click",()=>{bangla=!bangla;translate()});
 
-  document.body.append(toggle,menu);
-  toggle.addEventListener("click",()=>menu.classList.toggle("open"));
+  themeBtn.addEventListener("click",e=>{
+    e.stopPropagation();
+    menu.classList.toggle("open");
+  });
   menu.querySelectorAll("button").forEach(btn=>{
     btn.addEventListener("click",()=>{
-      const theme=btn.dataset.theme;
-      document.documentElement.dataset.theme=theme;
-      localStorage.setItem("imtiaz-theme",theme);
+      document.documentElement.dataset.theme=btn.dataset.theme;
+      localStorage.setItem("imtiaz-theme",btn.dataset.theme);
       menu.classList.remove("open");
     });
   });
   document.addEventListener("click",e=>{
-    if(!menu.contains(e.target)&&e.target!==toggle)menu.classList.remove("open");
+    if(!controls.contains(e.target)) menu.classList.remove("open");
   });
 });
 </script>
