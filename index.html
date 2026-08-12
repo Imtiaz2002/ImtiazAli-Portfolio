@@ -498,6 +498,25 @@
 .no-results.show{display:block}
 @media(max-width:600px){.filter-row{gap:8px}.filter{flex:1;min-width:calc(50% - 8px);padding:11px 10px}.search-wrap{margin-bottom:14px}}
 
+
+/* ===== Most Played Featured Game ===== */
+.dynamic-featured{
+  max-width:1156px;margin:0 auto 18px;padding:20px 22px;
+  border:1px solid var(--line);background:var(--panel);border-radius:20px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;overflow:hidden;
+}
+.dynamic-featured-copy{min-width:0}
+.dynamic-featured h3{font:700 25px "Space Grotesk";margin:5px 0 6px}
+.dynamic-featured p{font-size:12px;color:var(--muted);margin:0 0 13px;max-width:650px}
+.dynamic-featured-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dynamic-featured-meta span{font-size:11px;font-weight:800;color:var(--cyan)}
+.dynamic-featured img{width:230px;height:130px;object-fit:cover;border-radius:14px;border:1px solid var(--line);flex:0 0 230px}
+@media(max-width:620px){
+  .dynamic-featured{align-items:flex-start;padding:17px;gap:14px}
+  .dynamic-featured img{width:105px;height:78px;flex-basis:105px}
+  .dynamic-featured h3{font-size:20px}
+}
+
 </style>
 </head>
 
@@ -654,7 +673,20 @@
       </div>
     </section>
 
-    <section id="projects">
+    
+<div class="dynamic-featured reveal" id="dynamicFeaturedGame" aria-live="polite">
+  <div class="dynamic-featured-copy">
+    <div class="section-label">⭐ MOST PLAYED — FEATURED</div>
+    <h3 id="featuredGameName">Loading featured game…</h3>
+    <p id="featuredGameText">Finding the most played game.</p>
+    <div class="dynamic-featured-meta">
+      <span id="featuredGamePlays">0 plays</span>
+      <a id="featuredGameLink" class="btn primary" href="#">🎮 Play Game</a>
+    </div>
+  </div>
+  <img id="featuredGameImage" src="" alt="" loading="lazy">
+</div>
+<section id="projects">
       <div class="section-head reveal">
         <div class="section-label">03 / PROJECT LAB</div>
         <h2 class="section-title">Things I've built and experimented with.</h2>
@@ -676,6 +708,10 @@
 
         <article class="project reveal" data-category="python creative" data-project="air">
           <div class="project-number">PROJECT 01</div><div class="project-icon">🖐️</div>
+          <div class="project-image">
+            <img src="assets/air-canvas.webp" alt="Air Canvas" loading="lazy" decoding="async">
+          </div>
+
           <h3>Air Canvas</h3>
           <p>Computer-vision drawing experiment using hand tracking to turn gestures into a virtual canvas.</p>
           <div class="tags"><span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">MediaPipe</span></div>
@@ -684,6 +720,10 @@
 
         <article class="project reveal" data-category="python" data-project="assistant">
           <div class="project-number">PROJECT 02</div><div class="project-icon">🎙️</div>
+          <div class="project-image">
+            <img src="assets/voice-assistant.webp" alt="Voice Assistant" loading="lazy" decoding="async">
+          </div>
+
           <h3>Voice Assistant</h3>
           <p>A simple command-based Python assistant for opening websites, checking time and handling commands.</p>
           <div class="tags"><span class="tag">Python</span><span class="tag">Automation</span><span class="tag">Webbrowser</span></div>
@@ -692,6 +732,10 @@
 
         <article class="project reveal" data-category="web creative" data-project="portfolio">
           <div class="project-number">PROJECT 03</div><div class="project-icon">💻</div>
+          <div class="project-image">
+            <img src="assets/developer-portfolio.webp" alt="Developer Portfolio" loading="lazy" decoding="async">
+          </div>
+
           <h3>Developer Portfolio</h3>
           <p>This responsive personal portfolio with animations, filters, theme switching and interactive code previews.</p>
           <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
@@ -700,6 +744,10 @@
 
         <article class="project reveal" data-category="web" data-project="php">
           <div class="project-number">PROJECT 04</div><div class="project-icon">📨</div>
+          <div class="project-image">
+            <img src="assets/php-contact-form.webp" alt="PHP Contact Form" loading="lazy" decoding="async">
+          </div>
+
           <h3>PHP Contact Form</h3>
           <p>Contact form experiment combining HTML/CSS UI with PHP server-side form handling concepts.</p>
           <div class="tags"><span class="tag">PHP</span><span class="tag">HTML</span><span class="tag">CSS</span></div>
@@ -964,7 +1012,7 @@
         </form>
 
         <div class="counter-grid">
-          <div class="counter-box"><strong id="visitCount">0</strong><span>Portfolio Visits</span></div>
+          <div class="counter-box"><strong id="visitCount">176</strong><span>Portfolio Visits</span></div>
           <div class="counter-box"><strong>10+</strong><span>Projects</span></div>
           <div class="counter-box"><strong>15+</strong><span>Technologies</span></div>
         </div>
@@ -1592,37 +1640,29 @@ function resetBattle() {
         showToast("Opening your email app...");
       });
     }
-    // Global portfolio visit counter — shared across devices/browsers.
-    // CounterAPI V1 returns the current value as data.count.
+    // Global portfolio visits — CounterAPI V1.
     const visitCount = document.getElementById("visitCount");
-    const counterUrl = "https://api.counterapi.dev/v1/imtiaz-portfolio-2026/visits/up";
-
     async function updatePortfolioVisits() {
-      if (!visitCount) return;
+      if (!visitCount || typeof Counter === "undefined") return;
       try {
-        const response = await fetch(counterUrl, {
-          method: "GET",
-          cache: "no-store",
-          headers: { "Accept": "application/json" }
-        });
-        if (!response.ok) throw new Error("Counter request failed: " + response.status);
-
-        const data = await response.json();
-        const total = Number(data?.count);
-
-        if (Number.isFinite(total)) {
-          visitCount.textContent = total.toLocaleString();
-        } else {
-          console.warn("Unexpected CounterAPI response:", data);
+        if (window.counterBaselineReady) {
+          try { await window.counterBaselineReady; } catch (e) {}
         }
+        const counter = new Counter({
+          version: "v1",
+          namespace: "imtiaz-portfolio-2026",
+          timeout: 8000
+        });
+        const result = await counter.up("visits");
+        const value = Number(result?.value ?? result?.data?.count ?? result?.count ?? result?.data);
+        if (Number.isFinite(value)) visitCount.textContent = value.toLocaleString();
       } catch (error) {
-        console.warn("Portfolio visit counter unavailable:", error);
+        console.warn("Portfolio counter unavailable:", error);
+        if (!visitCount.textContent.trim()) visitCount.textContent = "176";
       }
     }
-
     updatePortfolioVisits();
-
-    // Testimonial slider
+// Testimonial slider
     const quoteCards = [...document.querySelectorAll(".quote-card")];
     let quoteIndex = 0;
 
@@ -1690,6 +1730,185 @@ function resetBattle() {
   search?.addEventListener('input',apply);
   apply();
 })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
+
+<script>
+/* ===== Global game play counters + Most Played Featured Game ===== */
+document.addEventListener("DOMContentLoaded", async () => {
+  if (typeof Counter === "undefined") {
+    console.warn("CounterAPI client did not load.");
+    return;
+  }
+
+  const namespace = "imtiaz-games-2026";
+  const counter = new Counter({ version:"v1", namespace, timeout:8000 });
+
+  if (window.counterBaselineReady) {
+    try { await window.counterBaselineReady; } catch (e) {}
+  }
+
+  const cards = [...document.querySelectorAll("#projectGrid .project")].filter(card => {
+    const category = card.dataset.category || "";
+    return /(^|\s)game(\s|$)/i.test(category) ||
+           !!card.querySelector('a[href*="games/"]');
+  });
+  const games = cards.map((card, index) => {
+    const title = card.querySelector("h3")?.textContent?.trim() || `Game ${index+1}`;
+    const linkEl = card.querySelector('a[href*="games/"]');
+    const imgEl = card.querySelector(".project-image img");
+    if (!linkEl) return null;
+    const slug = (title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || `game-${index+1}`);
+    return {
+      title,
+      slug,
+      link: linkEl.getAttribute("href"),
+      image: imgEl?.getAttribute("src") || "",
+      description: card.querySelector("p")?.textContent?.trim() || "Play this browser game."
+    };
+  }).filter(Boolean);
+
+  // If the data-category is missing on a game, use the known game links as fallback.
+  if (!games.length) {
+    document.querySelectorAll('#projectGrid a[href*="games/"]').forEach((linkEl,index)=>{
+      const card=linkEl.closest(".project");
+      if(!card) return;
+      const title=card.querySelector("h3")?.textContent?.trim()||`Game ${index+1}`;
+      const imgEl=card.querySelector(".project-image img");
+      const slug=title.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||`game-${index+1}`;
+      games.push({title,slug,link:linkEl.getAttribute("href"),image:imgEl?.getAttribute("src")||"",description:card.querySelector("p")?.textContent?.trim()||"Play this browser game."});
+    });
+  }
+
+  // Count a game only when its Play Game link is clicked.
+  games.forEach(game => {
+    document.querySelectorAll(`#projectGrid a[href="${CSS.escape(game.link)}"]`).forEach(linkEl => {
+      if (linkEl.dataset.playCounterBound) return;
+      linkEl.dataset.playCounterBound="1";
+      linkEl.addEventListener("click", async (event) => {
+        event.preventDefault();
+        const target=linkEl.href;
+        try {
+          await counter.up(`game-${game.slug}`);
+        } catch (e) {
+          console.warn("Game play counter failed:", game.title, e);
+        }
+        window.location.href=target;
+      });
+    });
+  });
+
+  // Read every game counter and choose the highest count.
+  const results = await Promise.all(games.map(async game => {
+    try {
+      const result=await counter.get(`game-${game.slug}`);
+      const value=Number(result?.value ?? result?.data?.count ?? result?.count ?? result?.data ?? 0);
+      return {...game, plays:Number.isFinite(value)?value:0};
+    } catch {
+      return {...game, plays:0};
+    }
+  }));
+
+  results.sort((a,b)=>b.plays-a.plays);
+  const featured=results[0];
+  if (!featured) return;
+
+  const name=document.getElementById("featuredGameName");
+  const text=document.getElementById("featuredGameText");
+  const plays=document.getElementById("featuredGamePlays");
+  const link=document.getElementById("featuredGameLink");
+  const image=document.getElementById("featuredGameImage");
+
+  if(name) name.textContent=featured.title;
+  if(text) text.textContent=featured.description;
+  if(plays) plays.textContent=`${featured.plays.toLocaleString()} plays`;
+  if(link) link.href=featured.link;
+  if(image){image.src=featured.image;image.alt=featured.title}
+
+  // Featured button also counts a play.
+  if(link && !link.dataset.playCounterBound){
+    link.dataset.playCounterBound="1";
+    link.addEventListener("click",async e=>{
+      e.preventDefault();
+      const target=link.href;
+      try{await counter.up(`game-${featured.slug}`)}catch{}
+      window.location.href=target;
+    });
+  }
+});
+</script>
+
+
+<script>
+/* ===== Counter baseline initialization ===== */
+window.counterBaselineReady = (async () => {
+  if (typeof Counter === "undefined") return;
+
+  const visitCounter = new Counter({
+    version: "v1",
+    namespace: "imtiaz-portfolio-2026",
+    timeout: 8000
+  });
+
+  try {
+    const current = await visitCounter.get("visits");
+    const value = Number(current?.value ?? 0);
+    if (Number.isFinite(value) && value < 176) {
+      await visitCounter.set("visits", 176);
+      const visitEl = document.getElementById("visitCount");
+      if (visitEl) visitEl.textContent = "176";
+    }
+  } catch (e) {
+    console.warn("Visitor baseline initialization failed:", e);
+  }
+
+  const gameCounter = new Counter({
+    version: "v1",
+    namespace: "imtiaz-games-2026",
+    timeout: 8000
+  });
+
+  const baselines = {
+    "zombie-rush-zombie-survival": 27,
+    "lava-rush-volcano-escape": 24,
+    "stick-hero": 21,
+    "catch-the-falling-elements": 18,
+    "frost-vs-inferno-game": 15,
+    "flappy-magma-seahorse": 12,
+    "lion-vs-tiger-jungle-battle": 9
+  };
+
+  await Promise.all(Object.entries(baselines).map(async ([slug, baseline]) => {
+    try {
+      const current = await gameCounter.get("game-" + slug);
+      const value = Number(current?.value ?? 0);
+      if (Number.isFinite(value) && value < baseline) {
+        await gameCounter.set("game-" + slug, baseline);
+      }
+    } catch (e) {
+      console.warn("Game baseline initialization failed:", slug, e);
+    }
+  }));
+})()
+.catch(e => console.warn("Counter baseline initialization failed:", e));
+</script>
+
+<script>
+/* ===== Final integrity check ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  const problems = [];
+  document.querySelectorAll("#projectGrid .project").forEach(card => {
+    const title = card.querySelector("h3")?.textContent?.trim() || "Untitled project";
+    const img = card.querySelector(".project-image img");
+    if (img && !img.getAttribute("src")) problems.push(title + ": missing image path");
+    const gameLink = card.querySelector('a[href*="games/"]');
+    if (gameLink && !gameLink.getAttribute("href").startsWith("games/")) {
+      problems.push(title + ": invalid game path");
+    }
+  });
+  if (problems.length) console.warn("Portfolio integrity warnings:", problems);
+  else console.log("Portfolio integrity check: OK");
+});
 </script>
 </body>
 </html>
